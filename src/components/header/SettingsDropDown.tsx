@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import Label from "../form/Label";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 
 const ToggleSwitcher = ({
   enabled,
@@ -27,6 +30,8 @@ const ToggleSwitcher = ({
 const SettingsSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+
+  const { direction, setDirection } = useLocaliztionStore();
 
   return (
     <div className="relative">
@@ -57,9 +62,15 @@ const SettingsSidebar = () => {
       </button>
 
       <div
-        className={`fixed right-0 top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 z-50 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed  top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 z-50 ${
+          direction === "ltr"
+            ? isOpen
+              ? "translate-x-0"
+              : "translate-x-full"
+            : isOpen
+            ? "translate-x-0"
+            : "-translate-x-full"
+        } ${direction === "rtl" ? "left-0" : "right-0"}`}
       >
         <div className="p-3 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
           <h2 className="text-lg font-bold"></h2>
@@ -95,8 +106,18 @@ const SettingsSidebar = () => {
             <h3 className="font-semibold mb-2 p-2  text-xs text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700">
               LTR AND RTL VERSIONS
             </h3>
-            <div className="space-y-2 p-4 ">
-              <div className="flex items-center gap-2">
+            <div className="space-y-2 p-4 " dir="ltr">
+              <RadioGroup value={direction} onValueChange={setDirection}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="ltr" id="ltr" />
+                  <Label htmlFor="ltr">LTR</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="rtl" id="rtl" />
+                  <Label htmlFor="rtl">RTL</Label>
+                </div>
+              </RadioGroup>
+              {/* <div className="flex items-center gap-2">
                 <span className="text-gray-500 text-[13px] dark:text-gray-300">
                   LTR
                 </span>
@@ -105,7 +126,7 @@ const SettingsSidebar = () => {
                 <span className="text-gray-500 text-[13px] dark:text-gray-300">
                   RTL
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
 

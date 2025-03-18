@@ -3,9 +3,12 @@ import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar from "./AppSidebar";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+
+  const { direction } = useLocaliztionStore();
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] xl:flex">
@@ -15,8 +18,16 @@ const LayoutContent: React.FC = () => {
       </div>
       <div
         className={`flex-1 transition-all duration-300 ease-in-out ${
-          isExpanded || isHovered ? "lg:ml-[210px]" : "lg:ml-[90px]"
-        } ${isMobileOpen ? "ml-0" : ""}`}
+          isMobileOpen ? "ml-0" : ""
+        } ${
+          direction === "ltr"
+            ? isExpanded || isHovered
+              ? "lg:ml-[210px]"
+              : "lg:ml-[90px]"
+            : isExpanded || isHovered
+            ? "lg:mr-[210px]"
+            : "lg:mr-[90px]"
+        }`}
       >
         <AppHeader />
         <div className="mx-auto px-4 max-w-screen-2xl">
