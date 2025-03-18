@@ -4,9 +4,18 @@ import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
 import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+
+  const { language, setLanguage } = useLocaliztionStore();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -181,6 +190,19 @@ const AppHeader: React.FC = () => {
             <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="uppercase bg-[#f5f5f5] p-1.5 rounded-lg text-sm">
+              {language}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setLanguage("en")}>
+                EN
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage("ar")}>
+                AR
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {/* <!-- User Area --> */}
           <div className="flex justify-end rigth">
             <UserDropdown />
