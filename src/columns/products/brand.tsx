@@ -37,7 +37,7 @@ export const brandColumns: ColumnDef<IBrand>[] = [
   },
   {
     id: "Actions",
-    accessorKey: "Actions",
+    // accessorKey: "Actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}

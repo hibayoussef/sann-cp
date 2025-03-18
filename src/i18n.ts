@@ -16,7 +16,7 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: language, // Use Zustand language
+  lng: language, 
   fallbackLng: "en",
   ns: ["common", "items"],
   defaultNS: "common",
