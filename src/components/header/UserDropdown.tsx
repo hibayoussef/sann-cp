@@ -3,11 +3,14 @@ import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useFetchMe } from "../../hooks/useMe";
 import { _AuthApi } from "../../services/auth.service";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 
 const UserDropdown = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { data: userData } = useFetchMe();
+
+  const { direction } = useLocaliztionStore();
 
   return (
     <div>
@@ -22,9 +25,17 @@ const UserDropdown = () => {
       {/* Sidebar Dropdown */}
       {isDropdownOpen && (
         <div className="relative">
-          <div className="absolute right-3 top-[0px] transform rotate-45 w-4 h-4 bg-white border-l border-t border-gray-200 z-50" />
+          <div
+            className={`absolute top-[0px] transform rotate-45 w-4 h-4 bg-white border-l border-t border-gray-200 z-50 ${
+              direction === "rtl" ? "left-3" : "right-3"
+            }`}
+          />
 
-          <div className="fixed right-0 top-13 h-full w-96 bg-white shadow-xl border-l border-gray-200 z-50 flex flex-col">
+          <div
+            className={`fixed top-13 h-full w-96 bg-white shadow-xl border-l border-gray-200 z-50 flex flex-col ${
+              direction === "rtl" ? "left-0" : "right-0 "
+            }`}
+          >
             <div className="mt-4 p-4 space-y-4">
               <div className="space-y-1 border-b border-gray-200 pb-6">
                 <div className="flex justify-between items-start">
