@@ -122,6 +122,15 @@ export function DataTable<TData, TValue>({
                     }}
                     className="cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-colors"
                   >
+                    <TableHead
+                      colSpan={1}
+                      className="w-fit px-0 absolute top-1"
+                    >
+                      {/* <CustomizeColumnsModal
+                        setColumns={setTableColumns}
+                        table={table}
+                      /> */}
+                    </TableHead>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(
