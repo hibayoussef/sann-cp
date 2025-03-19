@@ -6,6 +6,7 @@ import { ChevronDownIcon, HorizontaLDots } from "../icons";
 import { _AuthApi } from "../services/auth.service";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useTranslation } from "react-i18next";
 
 type NavItem = {
   name: string;
@@ -21,40 +22,50 @@ type NavItem = {
   }[];
 };
 
-const navItems: NavItem[] = [
-  {
-    icon: <MonitorIcon />,
-    name: "Dashboard",
-    path: "/home",
-  },
-  {
-    name: "Items",
-    icon: <Box />,
-    subItems: [
-      { name: "Brands", path: "/brands", permissionKey: "brands.view" },
-      {
-        name: "Categories",
-        path: "/categories",
-        permissionKey: "categories.view",
-      },
-      {
-        name: "Sub Categories",
-        path: "/sub-categories",
-        permissionKey: "sub_categories.view",
-      },
-      { name: "Units", path: "/units", permissionKey: "units.view" },
-    ],
-  },
-  {
-    icon: <LogOut />,
-    name: "Logout",
-  },
-];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered } = useSidebar();
 
   const { direction } = useLocaliztionStore();
+  const { t } = useTranslation("items");
+
+    const navItems: NavItem[] = [
+      {
+        icon: <MonitorIcon />,
+        name: t("dashboard"),
+        path: "/home",
+      },
+      {
+        name: t("items"),
+        icon: <Box />,
+        subItems: [
+          {
+            name: t("brands"),
+            path: "/brands",
+            permissionKey: "brands.view",
+          },
+          {
+            name: t("categories"),
+            path: "/categories",
+            permissionKey: "categories.view",
+          },
+          {
+            name: t("subCategories"),
+            path: "/sub-categories",
+            permissionKey: "sub_categories.view",
+          },
+          {
+            name: t("units"),
+            path: "/units",
+            permissionKey: "units.view",
+          },
+        ],
+      },
+      {
+        icon: <LogOut />,
+        name: t("logout"),
+      },
+    ];
 
   const location = useLocation();
   const navigate = useNavigate();

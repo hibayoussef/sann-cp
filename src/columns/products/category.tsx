@@ -3,13 +3,14 @@ import { DataTableColumnHeader } from "@/components/ui/table-data/data-table-col
 import { DataTableRowActions } from "@/components/ui/table-data/data-table-row-actions";
 import type { ICategory } from "@/types/products/categories";
 import { ColumnDef } from "@tanstack/react-table";
+import { t } from "i18next";
 
 export const categoryColumns: ColumnDef<ICategory>[] = [
   {
     id: "id",
     accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
+      <DataTableColumnHeader column={column} title={t("items:id")} />
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
     enableSorting: true,
@@ -19,7 +20,7 @@ export const categoryColumns: ColumnDef<ICategory>[] = [
     id: "category_name_en",
     accessorKey: "category_name_en",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title={t("items:name")} />
     ),
     cell: ({ row }) => (
       <div className="font-lg">{row.getValue("category_name_en")}</div>
@@ -29,7 +30,7 @@ export const categoryColumns: ColumnDef<ICategory>[] = [
     id: "description_en",
     accessorKey: "description_en",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Description" />
+      <DataTableColumnHeader column={column} title={t("items:description")} />
     ),
     cell: ({ row }) => (
       <div className="max-w-[500px] truncate">
@@ -41,7 +42,7 @@ export const categoryColumns: ColumnDef<ICategory>[] = [
     id: "code",
     accessorKey: "code",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Code" />
+      <DataTableColumnHeader column={column} title={t("items:code")} />
     ),
     cell: ({ row }) => (
       <div className="max-w-[500px] truncate">{row.getValue("code")}</div>

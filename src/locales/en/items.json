@@ -1,3 +1,13 @@
 {
-  "brands": "Brands"
+  "brands": "Brands",
+  "dashboard": "Dashboard",
+  "items": "Items",
+  "categories": "Categories",
+  "subCategories": "subCategories",
+  "units": "Units",
+  "logout": "Logout",
+  "description": "Description",
+  "name": "Name",
+  "id": "ID",
+  "code": "Code"
 }

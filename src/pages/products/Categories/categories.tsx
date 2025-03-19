@@ -4,10 +4,13 @@ import { useFetchCategories } from "@/hooks/prouducts/useCategories";
 import { Home } from "lucide-react";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
+import { useTranslation } from "react-i18next";
+
 
 export default function Categories() {
   const { data } = useFetchCategories();
   const categories: any = data || [];
+  const { t } = useTranslation("items");
 
   return (
     <>
@@ -17,8 +20,8 @@ export default function Categories() {
       />
       <div className="space-y-4 px-1 py-6">
         <PageBreadcrumb
-          baseTitle="Dashboard"
-          pageTitle="Categories"
+          baseTitle={t("dashboard")}
+          pageTitle={t("categories")}
           icon={<Home className="w-5 h-5" />}
         />
 

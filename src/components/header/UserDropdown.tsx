@@ -26,13 +26,13 @@ const UserDropdown = () => {
       {isDropdownOpen && (
         <div className="relative">
           <div
-            className={`absolute top-[0px] transform rotate-45 w-4 h-4 bg-white border-l border-t border-gray-200 z-50 ${
+            className={`absolute top-[-5px] transform rotate-45 w-3 h-4 bg-white border-l border-t border-gray-200 z-50 ${
               direction === "rtl" ? "left-3" : "right-3"
             }`}
           />
 
           <div
-            className={`fixed top-13 h-full w-96 bg-white shadow-xl border-l border-gray-200 z-50 flex flex-col ${
+            className={`fixed top-12 h-full w-96 bg-white shadow-xl border-l border-gray-200 z-50 flex flex-col ${
               direction === "rtl" ? "left-0" : "right-0 "
             }`}
           >

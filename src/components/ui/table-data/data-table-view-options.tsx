@@ -121,13 +121,13 @@ export function DataTableViewOptions<TData>({
         className="h-8 lg:flex"
         onClick={handlePrint}
       >
-        <Printer className="mr-2 h-4 w-4" />
+        <Printer className="ml-auto mr-2 h-4 w-4" />
         Print
       </Button>
       {/* Export options dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="h-8 lg:flex">
+          <Button variant="outline" size="sm" className=" ml-auto h-8 lg:flex">
             <FileText className="mr-2 h-4 w-4" />
             Export
           </Button>
