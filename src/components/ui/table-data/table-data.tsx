@@ -26,6 +26,7 @@ import type { ICategory } from "@/types/products/categories";
 import { useNavigate } from "react-router";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { CustomizeColumnsModal } from "./customize-columns-modal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,16 +43,19 @@ export function DataTable<TData, TValue>({
   hasDetails,
   detailsLink,
 }: DataTableProps<TData, TValue>) {
+  const [tableColumns, setTableColumns] = React.useState<any>(columns);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
-    columns,
+    columns: tableColumns,
     state: {
       sorting,
       columnVisibility,
@@ -81,6 +85,12 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                <TableHead colSpan={1} className="w-fit px-0 absolute top-1">
+                  <CustomizeColumnsModal
+                    setColumns={setTableColumns}
+                    table={table}
+                  />
+                </TableHead>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -112,6 +122,15 @@ export function DataTable<TData, TValue>({
                     }}
                     className="cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-colors"
                   >
+                    <TableHead
+                      colSpan={1}
+                      className="w-fit px-0 absolute top-1"
+                    >
+                      {/* <CustomizeColumnsModal
+                        setColumns={setTableColumns}
+                        table={table}
+                      /> */}
+                    </TableHead>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(

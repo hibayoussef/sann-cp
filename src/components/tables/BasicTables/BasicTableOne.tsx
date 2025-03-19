@@ -12,30 +12,30 @@ interface TableProps<T> {
   columnDefs: ColDef<T>[];
 }
 
-const ActionCellRenderer = (props: any) => {
-  const handleUpdate = () => {
-    console.log("Update row with ID:", props.data.id);
-    // تنفيذ منطق التحديث هنا
-  };
+// const ActionCellRenderer = (props: any) => {
+//   const handleUpdate = () => {
+//     console.log("Update row with ID:", props.data.id);
+//     // تنفيذ منطق التحديث هنا
+//   };
 
-  const handleDelete = () => {
-    console.log("Delete row with ID:", props.data.id);
-    // تنفيذ منطق الحذف هنا
-  };
+//   const handleDelete = () => {
+//     console.log("Delete row with ID:", props.data.id);
+//     // تنفيذ منطق الحذف هنا
+//   };
 
-  const handleDetails = () => {
-    console.log("Details for row with ID:", props.data.id);
-    // تنفيذ منطق التفاصيل هنا
-  };
+//   const handleDetails = () => {
+//     console.log("Details for row with ID:", props.data.id);
+//     // تنفيذ منطق التفاصيل هنا
+//   };
 
-  return (
-    <div>
-      <button onClick={handleUpdate}>Update</button>
-      <button onClick={handleDelete}>Delete</button>
-      <button onClick={handleDetails}>Details</button>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <button onClick={handleUpdate}>Update</button>
+//       <button onClick={handleDelete}>Delete</button>
+//       <button onClick={handleDetails}>Details</button>
+//     </div>
+//   );
+// };
 
 const Table = <T,>({ rowData, columnDefs }: TableProps<T>) => {
   const gridRef = useRef<AgGridReact<T>>(null);

@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaLanguage } from "react-icons/fa";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState<"en" | "ar">(
-    i18n.language as "en" | "ar"
-  );
+  // const [currentLang, setCurrentLang] = useState<"en" | "ar">(
+  //   i18n.language as "en" | "ar"
+  // );
 
   const changeLanguage = (lng: "en" | "ar") => {
     i18n.changeLanguage(lng);
-    setCurrentLang(lng);
+    // setCurrentLang(lng);
     localStorage.setItem("language", lng);
     document.documentElement.dir = lng === "ar" ? "rtl" : "ltr";
     setIsOpen(false);

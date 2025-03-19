@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Row } from "@tanstack/react-table";
 import { Copy, Eye, MoreHorizontal, Pencil } from "lucide-react";
-import * as React from "react";
+import React from "react";
 import { useNavigate } from "react-router";
 import { ZodSchema } from "zod";
 
@@ -28,13 +28,13 @@ export function DataTableRowActions<TData>({
   viewDetails,
   editItem,
 }: DataTableRowActionsProps<TData>) {
-  const [dialogContent, setDialogContent] =
+  const [dialogContent] =
     React.useState<React.ReactNode | null>(null);
   const navigate = useNavigate();
   const hasViewDetails = Boolean(viewDetails);
 
   try {
-    const data = schema.safeParse(row.original);
+    // const data = schema.safeParse(row.original);
 
     return (
       <Dialog>

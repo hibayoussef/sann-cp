@@ -6,6 +6,7 @@ import type { IUnit } from "@/types/products/unit";
 
 export const unitColumns: ColumnDef<IUnit>[] = [
   {
+    id: "Id",
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
@@ -13,6 +14,7 @@ export const unitColumns: ColumnDef<IUnit>[] = [
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   },
   {
+    id: "Unit Name",
     accessorKey: "unit_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Unit Name" />
@@ -22,6 +24,7 @@ export const unitColumns: ColumnDef<IUnit>[] = [
     ),
   },
   {
+    id: "Short Name",
     accessorKey: "short_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Short Name" />
@@ -31,6 +34,7 @@ export const unitColumns: ColumnDef<IUnit>[] = [
     ),
   },
   {
+    id: "Multiplier",
     accessorKey: "multiplier",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Multiplier" />
@@ -40,6 +44,7 @@ export const unitColumns: ColumnDef<IUnit>[] = [
     ),
   },
   {
+    id: "Sub Units",
     accessorKey: "sub_units",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Subunits" />
@@ -62,7 +67,8 @@ export const unitColumns: ColumnDef<IUnit>[] = [
     },
   },
   {
-    id: "actions",
+    id: "Actions",
+    accessorKey: "actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}

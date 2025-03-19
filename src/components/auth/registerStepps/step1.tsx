@@ -21,7 +21,7 @@ export default function Step1() {
       language: string;
     }>();
 
-  const handleCountryChange = (event) => {
+  const handleCountryChange = (event:any) => {
     const countryId = event.target.value;
     setFieldValue("country_id", countryId);
     setSelectedCountry(countryId);
@@ -38,7 +38,7 @@ export default function Step1() {
     }
   };
 
-  const handleStateChange = (event) => {
+  const handleStateChange = (event: any) => {
     const stateId = event.target.value;
     setFieldValue("country_state_id", stateId);
     const selectedState = countryStates.find(

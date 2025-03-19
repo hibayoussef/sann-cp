@@ -26,13 +26,10 @@ export function DataTableToolbar<TData>({
           <Input
             placeholder="Filter categories..."
             value={
-              (table.getColumn("brand_name_en")?.getFilterValue() as string) ??
-              ""
+              (table.getColumn("Brand Name")?.getFilterValue() as string) ?? ""
             }
             onChange={(event) =>
-              table
-                .getColumn("brand_name_en")
-                ?.setFilterValue(event.target.value)
+              table.getColumn("Brand Name")?.setFilterValue(event.target.value)
             }
             className="h-8 w-[150px] pl-8 transition-all duration-500 ease-in-out 
                focus:w-[250px] lg:w-[250px] lg:focus:w-[350px]"

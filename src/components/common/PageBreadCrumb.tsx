@@ -1,6 +1,6 @@
-import { Link } from "react-router";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { JSX } from "react";
+import { Link } from "react-router";
 
 interface BreadcrumbProps {
   baseTitle?: string;
@@ -16,7 +16,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({
   icon,
 }) => {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+    <div className="flex py-5 flex-wrap items-center justify-between gap-3 mb-3">
       <nav>
         <ol className="flex items-center gap-1.5">
           <li className="flex items-center">

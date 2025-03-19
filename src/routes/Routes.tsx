@@ -1,6 +1,9 @@
 // src/routes/Routes.tsx
 
 import Categories from "@/pages/products/Categories/categories";
+import CategoriesLayout from "@/pages/products/Categories/categoriesLayout";
+import SubCategories from "@/pages/products/SubCategories/subCategories";
+import Units from "@/pages/products/Units/units";
 import { Navigate, Route, Routes } from "react-router";
 import AppLayout from "../layout/AppLayout";
 import ForgotPassword from "../pages/AuthPages/ForgotPassword";
@@ -22,10 +25,6 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import CreateUnit from "../pages/products/Units/createUnit";
-import CategoryDetails from "@/pages/products/Categories/categoryDetails";
-import SubCategories from "@/pages/products/SubCategories/subCategories";
-import Units from "@/pages/products/Units/units";
-import CategoriesLayout from "@/pages/products/Categories/categoriesLayout";
 
 const RoutesComponent = () => {
   return (

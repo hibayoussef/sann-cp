@@ -15,7 +15,7 @@ export default function CreateWarranty() {
   const addWarranty = useAddWarranty();
   const organizationId = useMeStore((state) => state.organizationId);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     await addWarranty.mutateAsync({
       organization_id: organizationId,

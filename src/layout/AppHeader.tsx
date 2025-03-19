@@ -1,5 +1,11 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useEffect, useRef, useState } from "react";
-import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
 import UserDropdown from "../components/header/UserDropdown";
@@ -7,6 +13,8 @@ import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+
+  const { setLanguage } = useLocaliztionStore();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -173,10 +181,80 @@ const AppHeader: React.FC = () => {
             isApplicationMenuOpen ? "flex" : "hidden"
           } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-sm">
+              {/* {language} */}
+              <button
+                className="h-4.5 w-4.5 relative flex items-center justify-center text-gray-500 
+   transition-colors dropdown-toggle hover:text-gray-700 dark:text-gray-400 
+   dark:hover:text-white"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22M12 2C9.49872 4.73835 8.07725 8.29203 8 12C8.07725 15.708 9.49872 19.2616 12 22M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22M2.50002 9H21.5M2.5 15H21.5"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={() => setLanguage("en")}
+                className="flex items-center gap-2"
+              >
+                <svg
+                  width="20"
+                  height="15"
+                  viewBox="0 0 20 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M0 0H20V15H0V0Z" fill="#B22234" />
+                  <path d="M0 0H20V1.5H0V0Z" fill="white" />
+                  <path d="M0 3H20V4.5H0V3Z" fill="white" />
+                  <path d="M0 6H20V7.5H0V6Z" fill="white" />
+                  <path d="M0 9H20V10.5H0V9Z" fill="white" />
+                  <path d="M0 12H20V13.5H0V12Z" fill="white" />
+                  <path d="M0 0H8.57143V9H0V0Z" fill="#3C3B6E" />
+                  <path d="M1.5 1.5L2 3H1L1.5 1.5Z" fill="white" />
+                </svg>
+                English
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => setLanguage("ar")}
+                className="flex items-center gap-2"
+              >
+                <svg
+                  width="20"
+                  height="15"
+                  viewBox="0 0 20 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect width="5" height="15" fill="#CE1126" />{" "}
+                  <rect x="5" width="15" height="5" fill="#00732F" />{" "}
+                  <rect x="5" y="5" width="15" height="5" fill="white" />{" "}
+                  <rect x="5" y="10" width="15" height="5" fill="black" />{" "}
+                </svg>
+                العربية
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="flex items-end gap-1 2xsm:gap-3">
             {/* <!-- Dark Mode Toggler --> */}
             {/* <LanguageSwitcher /> */}
-            <ThemeToggleButton />
+            {/* <ThemeToggleButton /> */}
             {/* <!-- Dark Mode Toggler --> */}
             <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}

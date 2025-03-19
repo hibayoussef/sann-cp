@@ -6,6 +6,7 @@ import type { IBrand } from "@/types/products/brand";
 
 export const brandColumns: ColumnDef<IBrand>[] = [
   {
+    id: "Id",
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
@@ -13,6 +14,7 @@ export const brandColumns: ColumnDef<IBrand>[] = [
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   },
   {
+    id: "Brand Name",
     accessorKey: "brand_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Brand Name" />
@@ -22,6 +24,7 @@ export const brandColumns: ColumnDef<IBrand>[] = [
     ),
   },
   {
+    id: "Description",
     accessorKey: "description_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
@@ -33,7 +36,14 @@ export const brandColumns: ColumnDef<IBrand>[] = [
     ),
   },
   {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} schema={brandSchema} editItem={`/brands/update/${row.original.id}`} />,
+    id: "Actions",
+    // accessorKey: "Actions",
+    cell: ({ row }) => (
+      <DataTableRowActions
+        row={row}
+        schema={brandSchema}
+        editItem={`/brands/update/${row.original.id}`}
+      />
+    ),
   },
 ];

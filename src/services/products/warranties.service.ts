@@ -1,8 +1,7 @@
+import { IWarranty, WarrantyForm } from "@/types/products/warranty";
 import { AxiosResponse } from "axios";
 import { _axios } from "../../interceptor/http-config";
 import type { BrandForm, IBrand } from "../../types/products/brand";
-import { UnitForm } from "@/types/products/unit";
-import { IWarranty, WarrantyForm } from "@/types/products/warranty";
 
 export const _WarrantiesApi = {
   // GET WARRANTIES

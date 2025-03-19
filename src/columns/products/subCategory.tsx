@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
   {
+    id: "Id",
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
@@ -15,6 +16,7 @@ export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
     enableHiding: false,
   },
   {
+    id: "Sub Category",
     accessorKey: "sub_category_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
@@ -24,6 +26,7 @@ export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
     ),
   },
   {
+    id: "Description",
     accessorKey: "description_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
@@ -35,7 +38,8 @@ export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
     ),
   },
   {
-    id: "actions",
+    id: "Actions",
+    accessorKey: "actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}
