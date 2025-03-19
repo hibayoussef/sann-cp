@@ -12,9 +12,14 @@ type NavItem = {
   icon: React.ReactNode;
   path?: string;
   permissionKey?: string;
-  subItems?: { name: string; path: string; permissionKey?: string; pro?: boolean; new?: boolean }[];
+  subItems?: {
+    name: string;
+    path: string;
+    permissionKey?: string;
+    pro?: boolean;
+    new?: boolean;
+  }[];
 };
-
 
 const navItems: NavItem[] = [
   {
