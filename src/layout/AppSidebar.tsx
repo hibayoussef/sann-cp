@@ -82,7 +82,7 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
-  const hasPermission = (key?: string) => !key || permissions?.includes(key);
+  const hasPermission = (key?: any) => !key || permissions?.includes(key);
 
   const filteredNavItems = navItems
     .map((item) => ({
