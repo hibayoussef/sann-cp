@@ -5,13 +5,16 @@ import { useSidebar } from "../context/SidebarContext";
 import { ChevronDownIcon, HorizontaLDots } from "../icons";
 import { _AuthApi } from "../services/auth.service";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 type NavItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  permissionKey?: string;
+  subItems?: { name: string; path: string; permissionKey?: string; pro?: boolean; new?: boolean }[];
 };
+
 
 const navItems: NavItem[] = [
   {
@@ -23,13 +26,18 @@ const navItems: NavItem[] = [
     name: "Items",
     icon: <Box />,
     subItems: [
-      // { name: "Products", path: "/products", pro: false },
-      { name: "Brands", path: "/brands", pro: false },
-      { name: "Categories", path: "/categories", pro: false },
-      { name: "Sub Categories", path: "/sub-categories", pro: false },
-      { name: "Units", path: "/units", pro: false },
-      // { name: "SubUnits", path: "/sub-units", pro: false },
-      // { name: "Warran", path: "/basic-tables", pro: false },
+      { name: "Brands", path: "/brands", permissionKey: "brands.view" },
+      {
+        name: "Categories",
+        path: "/categories",
+        permissionKey: "categories.view",
+      },
+      {
+        name: "Sub Categories",
+        path: "/sub-categories",
+        permissionKey: "sub_categories.view",
+      },
+      { name: "Units", path: "/units", permissionKey: "units.view" },
     ],
   },
   {
@@ -45,6 +53,7 @@ const AppSidebar: React.FC = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { permissions } = useAuthStore();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -73,6 +82,21 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
+  const hasPermission = (key?: string) => !key || permissions?.includes(key);
+
+  const filteredNavItems = navItems
+    .map((item) => ({
+      ...item,
+      subItems: item.subItems?.filter((subItem) =>
+        hasPermission(subItem.permissionKey)
+      ),
+    }))
+    .filter(
+      (item) =>
+        hasPermission(item.permissionKey) ||
+        (item.subItems && item.subItems.length > 0)
+    );
+
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
@@ -88,7 +112,7 @@ const AppSidebar: React.FC = () => {
 
   const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
     <ul className="flex flex-col">
-      {items.map((nav, index) => (
+      {filteredNavItems.map((nav, index) => (
         <li key={nav.name}>
           {nav.subItems ? (
             <button
@@ -156,22 +180,10 @@ const AppSidebar: React.FC = () => {
               )}
             </button>
           ) : (
-            nav.path && (
-              <Link
-                to={nav.path}
-                className={`menu-item group ${
-                  isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-                }`}
-              >
-                <span
-                  className={`menu-item-icon-size ${
-                    isActive(nav.path)
-                      ? "menu-item-icon-active"
-                      : "menu-item-icon-inactive"
-                  }`}
-                >
-                  {nav.icon}
-                </span>
+            nav.path &&
+            hasPermission(nav.permissionKey) && (
+              <Link to={nav.path} className="menu-item group">
+                <span className="menu-item-icon-size">{nav.icon}</span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text">{nav.name}</span>
                 )}
@@ -311,7 +323,7 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(filteredNavItems, "main")}
             </div>
           </div>
         </nav>
