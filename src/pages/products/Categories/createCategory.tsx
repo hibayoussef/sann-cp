@@ -75,7 +75,7 @@ export default function CategoryForm() {
 
   return (
     <>
-      <div className="py-4 px-3">
+      <div className="py-4 px-1">
         <PageBreadcrumb
           baseLink="/categories"
           baseTitle="Category"

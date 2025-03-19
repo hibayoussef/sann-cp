@@ -16,7 +16,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({
   icon,
 }) => {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+    <div className="flex py-5 flex-wrap items-center justify-between gap-3 mb-3">
       <nav>
         <ol className="flex items-center gap-1.5">
           <li className="flex items-center">

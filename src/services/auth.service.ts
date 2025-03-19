@@ -8,7 +8,7 @@ export const _AuthApi = {
   },
 
   // LOGIN
-  login: async (data: ILoginRequest) => {
+  login: async (data: any) => {
     const res = await _axios.post<ILoginDTO>("/auth/login", data);
     return res.data;
   },
@@ -48,7 +48,7 @@ export const _AuthApi = {
   logout: async () => {
     try {
       const res = await _axios.post("/auth/logout");
-      _AuthApi.destroyToken(); 
+      _AuthApi.destroyToken();
       return res.data;
     } catch (error) {
       console.error("Logout failed:", error);
@@ -106,6 +106,7 @@ export const _AuthApi = {
   destroyToken: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("permissions");
     // window.location.reload();
   },
 };

@@ -3,6 +3,7 @@ import type { PermissionDTO } from "./user";
 export interface ILoginRequest {
   email: string;
   password: string;
+  permissions?: PermissionDTO[];
 }
 
 export interface ILoginDTO {
