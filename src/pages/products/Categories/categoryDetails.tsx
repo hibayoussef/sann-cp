@@ -2,9 +2,8 @@ import { subCategoryColumns } from "@/columns/products/subCategory";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchCategory } from "@/hooks/prouducts/useCategories";
 import { useFetchSubCategoryById } from "@/hooks/prouducts/useSubCategories";
-import PageMeta from "../../../components/common/PageMeta";
 import { useNavigate } from "react-router";
-import { useParams } from "react-router";
+import PageMeta from "../../../components/common/PageMeta";
 
 interface CategoryDetailsProps {
   categoryId: number;

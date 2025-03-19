@@ -1,5 +1,5 @@
 import { _axios } from "../interceptor/http-config";
-import type { ILoginDTO, ILoginRequest } from "../types/auth";
+import type { ILoginDTO } from "../types/auth";
 
 export const _AuthApi = {
   // CREATE ACCOUNT

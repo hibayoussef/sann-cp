@@ -1,3 +1,5 @@
+import { categorySchema, type CategoryType } from "@/components/lib/validations/category";
+import { useAddCategory, useFetchCategory, useUpdateCategory } from "@/hooks/prouducts/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -8,8 +10,6 @@ import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { useAddCategory, useFetchCategory, useUpdateCategory } from "@/hooks/prouducts/useCategories";
-import { categorySchema, type CategoryType } from "@/components/lib/validations/category";
 
 export default function SubCategoryForm() {
   const { id } = useParams();
@@ -27,7 +27,6 @@ export default function SubCategoryForm() {
     handleSubmit,
     setValue,
     formState: { errors },
-    control,
   } = useForm<CategoryType>({
     resolver: zodResolver(categorySchema),
     defaultValues: {

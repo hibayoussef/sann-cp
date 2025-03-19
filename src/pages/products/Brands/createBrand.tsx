@@ -34,7 +34,6 @@ export default function BrandForm() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-    control,
   } = useForm<BrandType>({
     resolver: zodResolver(brandSchema),
     defaultValues: {

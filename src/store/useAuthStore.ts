@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import type { ILoginRequest } from "../types/auth";
 import type { AuthState } from "../types/store";
 
 export const useAuthStore = create<AuthState>((set) => ({

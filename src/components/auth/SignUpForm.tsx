@@ -53,7 +53,7 @@ export default function SignUpForm() {
 
   const { mutate, isPending } = useRegister();
 
-  const nextStep = async (validateForm, values) => {
+  const nextStep = async (validateForm: any, values: any) => {
     const errors = await validateForm();
     if (Object.keys(errors).length === 0 && step < totalSteps) {
       setFormValues(values);
@@ -61,12 +61,12 @@ export default function SignUpForm() {
     }
   };
 
-  const prevStep = (event) => {
+  const prevStep = (event: any) => {
     event.preventDefault();
     if (step > 1) setStep(step - 1);
   };
 
-  const handleSubmit = async (values, actions) => {
+  const handleSubmit = async (values: any, actions: any) => {
     if (step < totalSteps) {
       setFormValues(values);
       setStep(step + 1);

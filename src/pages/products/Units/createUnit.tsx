@@ -1,3 +1,4 @@
+import { unitSchema, type UnitType } from "@/components/lib/validations/unit";
 import {
   useAddUnit,
   useFetchUnit,
@@ -5,14 +6,13 @@ import {
 } from "@/hooks/prouducts/useUnits";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { unitSchema, type UnitType } from "@/components/lib/validations/unit";
 
 export default function UnitForm() {
   const { id } = useParams();
@@ -65,7 +65,7 @@ export default function UnitForm() {
       setValue("short_name_ar", unitData.short_name_ar ?? "");
       setValue("allow_decimal", unitData.allow_decimal ?? false);
       setValue("multiplier", unitData.multiplier ?? 0);
-      setValue("sub_units", unitData.sub_units ?? []);
+      // setValue("sub_units", unitData.sub_units ?? []);
     }
   }, [unitData, setValue]);
 
@@ -181,15 +181,15 @@ export default function UnitForm() {
                 ))}
                 <button
                   type="button"
-                  onClick={() =>
-                    append({
-                      unit_name_en: "",
-                      unit_name_ar: "",
-                      short_name_en: "",
-                      short_name_ar: "",
-                      multiplier: 1,
-                    })
-                  }
+                  // onClick={() =>
+                  //   append({
+                  //     unit_name_en: "",
+                  //     unit_name_ar: "",
+                  //     short_name_en: "",
+                  //     short_name_ar: "",
+                  //     multiplier: 1,
+                  //   })
+                  // }
                   className="text-blue-500"
                 >
                   + Add Sub Unit

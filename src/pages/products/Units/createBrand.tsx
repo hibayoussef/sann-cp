@@ -2,6 +2,7 @@ import {
   brandSchema,
   type BrandType,
 } from "@/components/lib/validations/brand";
+import Loader from "@/components/ui/loader/loader";
 import {
   useAddBrand,
   useFetchBrand,
@@ -17,7 +18,6 @@ import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import Loader from "@/components/ui/loader/loader";
 
 export default function BrandForm() {
   const { id } = useParams();
@@ -35,7 +35,6 @@ export default function BrandForm() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-    control,
   } = useForm<BrandType>({
     resolver: zodResolver(brandSchema),
     defaultValues: {

@@ -5,7 +5,7 @@ import Label from "../../form/Label";
 
 export default function Step2() {
   const { zipCode, timeZone } = useCommonStore();
-  const { errors, touched, values } = useFormikContext<{
+  const { errors, touched } = useFormikContext<{
     city: string;
     street1: string;
     street2: string;

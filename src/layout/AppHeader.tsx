@@ -1,9 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
-import NotificationDropdown from "../components/header/NotificationDropdown";
-import SettingsDropdown from "../components/header/SettingsDropDown";
-import UserDropdown from "../components/header/UserDropdown";
-import { useSidebar } from "../context/SidebarContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +5,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
-import { Globe } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import NotificationDropdown from "../components/header/NotificationDropdown";
+import SettingsDropdown from "../components/header/SettingsDropDown";
+import UserDropdown from "../components/header/UserDropdown";
+import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
-  const { language, setLanguage } = useLocaliztionStore();
+  const { setLanguage } = useLocaliztionStore();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 

@@ -23,7 +23,7 @@ export const unitSchema = z.object({
         unit_name_ar: z.string().nullable(),
         short_name_en: z.string(),
         short_name_ar: z.string().nullable(),
-        allow_decimal: z.boolean(),
+        // allow_decimal: z.boolean(),
         multiplier: z.number(),
       })
     )

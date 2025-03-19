@@ -1,6 +1,6 @@
-import { Link } from "react-router";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { JSX } from "react";
+import { Link } from "react-router";
 
 interface BreadcrumbProps {
   baseTitle?: string;

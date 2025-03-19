@@ -1,8 +1,6 @@
-import ComponentCard from "../../components/common/ComponentCard";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import EcommerceMetricsTry from "../../components/ecommerce/EcommerceMetricsTry";
-import BasicTableOne from "../../components/tables/BasicTables/BasicTableOne";
 
 export default function BasicTables() {
   return (
