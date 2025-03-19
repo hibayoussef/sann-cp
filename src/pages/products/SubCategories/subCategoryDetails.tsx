@@ -14,7 +14,7 @@ import PageMeta from "../../../components/common/PageMeta";
 export default function CategoryDetails() {
   const { id } = useParams();
 
-  const { data: categoryData, isLoading } = useFetchCategory(Number(id));
+  const { data: categoryData } = useFetchCategory(Number(id));
   const { data } = useFetchSubCategories();
   const subCategories: any = data || [];
 

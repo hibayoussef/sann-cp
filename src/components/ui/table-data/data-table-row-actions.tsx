@@ -23,8 +23,6 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TData>({
-  row,
-  schema,
   viewDetails,
   editItem,
 }: DataTableRowActionsProps<TData>) {

@@ -52,7 +52,7 @@ export default function UnitForm() {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: "sub_units",
   });
