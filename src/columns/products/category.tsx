@@ -5,7 +5,10 @@ import type { ICategory } from "@/types/products/categories";
 import { ColumnDef } from "@tanstack/react-table";
 import { t } from "i18next";
 
-export const categoryColumns = (permissions: { update: boolean; delete: boolean }): ColumnDef<ICategory>[] => [
+export const categoryColumns = (permissions: {
+  update: boolean;
+  delete: boolean;
+}): ColumnDef<ICategory>[] => [
   {
     id: "id",
     accessorKey: "id",
@@ -20,7 +23,29 @@ export const categoryColumns = (permissions: { update: boolean; delete: boolean 
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={t("items:name")} />
     ),
-    cell: ({ row }) => <div className="font-lg">{row.getValue("category_name_en")}</div>,
+    cell: ({ row }) => (
+      <div className="font-lg">{row.getValue("category_name_en")}</div>
+    ),
+  },
+  {
+    id: "description_en",
+    accessorKey: "description_en",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={t("items:description")} />
+    ),
+    cell: ({ row }) => (
+      <div className="font-lg">{row.getValue("description_en")}</div>
+    ),
+  },
+   {
+    id: "code",
+    accessorKey: "code",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={t("items:code")} />
+    ),
+    cell: ({ row }) => (
+      <div className="font-lg">{row.getValue("code")}</div>
+    ),
   },
   {
     id: "actions",

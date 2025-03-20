@@ -281,7 +281,7 @@ const AppSidebar: React.FC = () => {
                       onClick={() => navigate("/categories/create")}
                       className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 z-10"
                     >
-                      <div className="w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center hover:bg-brand-600">
+                      <div className="w-4 h-4 rounded-full bg-brand-500 flex items-center justify-center hover:bg-brand-600">
                         <Plus className="w-3 h-3 text-white" />
                       </div>
                     </button>
