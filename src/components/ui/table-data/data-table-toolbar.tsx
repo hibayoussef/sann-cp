@@ -4,19 +4,26 @@ import type { Table } from "@tanstack/react-table";
 import { Plus, Search, X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { DataTableViewOptions } from "./data-table-view-options";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   createPath: string;
+  permissions: {
+    create: boolean;
+    update: boolean;
+    delete: boolean;
+  };
 }
 
 export function DataTableToolbar<TData>({
   table,
   createPath,
+  permissions,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-
   const navigate = useNavigate();
+  const { hasPermission } = usePermissions();
 
   return (
     <div className="flex items-center justify-between">
@@ -26,29 +33,15 @@ export function DataTableToolbar<TData>({
           <Input
             placeholder="Filter categories..."
             value={
-              (table.getColumn("Brand Name")?.getFilterValue() as string) ?? ""
+              (table.getColumn("Brand Name")?.getFilterValue() as string) || ""
             }
             onChange={(event) =>
               table.getColumn("Brand Name")?.setFilterValue(event.target.value)
             }
             className="h-8 w-[150px] pl-8 transition-all duration-500 ease-in-out 
-               focus:w-[250px] lg:w-[250px] lg:focus:w-[350px]"
+              focus:w-[250px] lg:w-[250px] lg:focus:w-[350px]"
           />
         </div>
-        {/* {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={status_options}
-          />
-        )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priority_options}
-          />
-        )} */}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -63,13 +56,15 @@ export function DataTableToolbar<TData>({
 
       <DataTableViewOptions table={table} />
       <div>
-        <Button
-          variant="outline"
-          className="h-8 px-2 ml-4 lg:px-3 bg-[#465FFF] text-white"
-          onClick={() => navigate(createPath)}
-        >
-          <Plus /> Create
-        </Button>
+        {permissions.create && (
+          <Button
+            variant="outline"
+            className="h-8 px-2 ml-4 lg:px-3 bg-[#465FFF] text-white"
+            onClick={() => navigate(createPath)}
+          >
+            <Plus /> Create
+          </Button>
+        )}
       </div>
     </div>
   );

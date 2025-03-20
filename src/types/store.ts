@@ -10,7 +10,7 @@ export interface AuthState {
   profileImageURL?: string;
   email?: string;
   roleNames?: string[];
-  permissions?: PermissionDTO[];
+  permissions?: any;
   login: (userData: ILoginRequest, token: string) => void;
   logout: () => void;
 }

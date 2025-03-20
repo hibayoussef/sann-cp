@@ -28,48 +28,70 @@ const AppSidebar: React.FC = () => {
 
   const { direction } = useLocaliztionStore();
   const { t } = useTranslation("items");
+  const { permissions } = useAuthStore();
+  const hasPermission = (key?: any) => !key || permissions?.includes(key);
 
-    const navItems: NavItem[] = [
-      {
-        icon: <MonitorIcon />,
-        name: t("dashboard"),
-        path: "/home",
-      },
-      {
-        name: t("items"),
-        icon: <Box />,
-        subItems: [
-          {
-            name: t("brands"),
-            path: "/brands",
-            permissionKey: "brands.view",
-          },
-          {
-            name: t("categories"),
-            path: "/categories",
-            permissionKey: "categories.view",
-          },
-          {
-            name: t("subCategories"),
-            path: "/sub-categories",
-            permissionKey: "sub_categories.view",
-          },
-          {
-            name: t("units"),
-            path: "/units",
-            permissionKey: "units.view",
-          },
-        ],
-      },
-      {
+    //  const navItems: NavItem[] = [
+    //   {
+    //     icon: <MonitorIcon />,
+    //     name: t("dashboard"),
+    //     path: "/home",
+    //   },
+    //   {
+    //     name: t("items"),
+    //     icon: <Box />,
+    //     subItems: [
+    //       {
+    //         name: t("brands"),
+    //         path: "/brands",
+    //         permissionKey: "brands.view",
+    //       },
+    //       {
+    //         name: t("categories"),
+    //         path: "/categories",
+    //         permissionKey: "categories.view",
+    //       },
+    //       {
+    //         name: t("subCategories"),
+    //         path: "/sub-categories",
+    //         permissionKey: "sub_categories.view",
+    //       },
+    //       {
+    //         name: t("units"),
+    //         path: "/units",
+    //         permissionKey: "units.view",
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     icon: <LogOut />,
+    //     name: t("logout"),
+    //   },
+    // ];
+   const navItems: NavItem[] = [
+    {
+      icon: <MonitorIcon />,
+      name: "Dashboard",
+      path: "/home",
+    },
+    {
+      name: "Items",
+      icon: <Box />,
+      subItems: [
+        { name: "Brands", path: "/brands", permissionKey: "brands.view" },
+        { name: "Categories", path: "/categories", permissionKey: "categories.view" },
+        { name: "Units", path: "/units", permissionKey: "units.view" },
+        
+      ].filter((item) => hasPermission(item.permissionKey)), 
+     },
+     {
         icon: <LogOut />,
         name: t("logout"),
       },
-    ];
+  ].filter((item: any) => hasPermission(item.permissionKey) || item.subItems?.length);
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { permissions } = useAuthStore();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -98,7 +120,6 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
-  const hasPermission = (key?: any) => !key || permissions?.includes(key);
 
   const filteredNavItems = navItems
     .map((item) => ({
