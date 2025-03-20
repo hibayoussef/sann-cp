@@ -120,7 +120,6 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     onClick={() => {
-                      console.log("Row Data:", row.original);
                       const id = (row.original as ICategory)?.id;
                       if (hasDetails && id) {
                         navigate(`${detailsLink}/${id}`);

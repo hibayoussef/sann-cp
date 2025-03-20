@@ -4,7 +4,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { brandSchema } from "@/components/lib/validations/brand";
 import type { IBrand } from "@/types/products/brand";
 
-export const brandColumns: ColumnDef<IBrand>[] = [
+export const brandColumns = (permissions: {
+  update: boolean;
+  delete: boolean;
+}): ColumnDef<IBrand>[] => [
   {
     id: "Id",
     accessorKey: "id",
@@ -43,6 +46,8 @@ export const brandColumns: ColumnDef<IBrand>[] = [
         row={row}
         schema={brandSchema}
         editItem={`/brands/update/${row.original.id}`}
+        onDelete={(id) => console.log(`Deleting category ID: ${id}`)}
+        permissions={permissions}
       />
     ),
   },

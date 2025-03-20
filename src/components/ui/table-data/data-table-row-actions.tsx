@@ -99,7 +99,7 @@ export function DataTableRowActions<TData>({
               </DropdownMenuItem>
             )}
 
-            {permissions.update && editItem && (
+            {permissions?.update && editItem && (
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
@@ -111,7 +111,7 @@ export function DataTableRowActions<TData>({
               </DropdownMenuItem>
             )}
 
-            {permissions.delete && (
+            {permissions?.delete && (
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
