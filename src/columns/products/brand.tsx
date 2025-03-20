@@ -9,7 +9,7 @@ export const brandColumns = (permissions: {
   delete: boolean;
 }): ColumnDef<IBrand>[] => [
   {
-    id: "Id",
+    id: "id",
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
@@ -17,7 +17,7 @@ export const brandColumns = (permissions: {
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   },
   {
-    id: "Brand Name",
+    id: "brand_name_en",
     accessorKey: "brand_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Brand Name" />
@@ -27,7 +27,7 @@ export const brandColumns = (permissions: {
     ),
   },
   {
-    id: "Description",
+    id: "description_en",
     accessorKey: "description_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
