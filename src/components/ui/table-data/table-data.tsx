@@ -34,7 +34,7 @@ interface DataTableProps<TData, TValue> {
   createPath: string;
   hasDetails?: boolean;
   detailsLink?: string;
-  permissions: {
+  permissions?: {
     create: boolean;
     update: boolean;
     delete: boolean;

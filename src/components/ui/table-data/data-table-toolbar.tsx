@@ -4,12 +4,11 @@ import type { Table } from "@tanstack/react-table";
 import { Plus, Search, X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { usePermissions } from "@/hooks/usePermissions";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   createPath: string;
-  permissions: {
+  permissions?: {
     create: boolean;
     update: boolean;
     delete: boolean;
@@ -23,7 +22,6 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const navigate = useNavigate();
-  const { hasPermission } = usePermissions();
 
   return (
     <div className="flex items-center justify-between">
@@ -56,7 +54,7 @@ export function DataTableToolbar<TData>({
 
       <DataTableViewOptions table={table} />
       <div>
-        {permissions.create && (
+        {permissions?.create && (
           <Button
             variant="outline"
             className="h-8 px-2 ml-4 lg:px-3 bg-[#465FFF] text-white"

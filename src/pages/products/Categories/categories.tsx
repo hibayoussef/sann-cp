@@ -12,8 +12,8 @@ export default function Categories() {
   const categories: any = data || [];
   const { t } = useTranslation("items");
 
-  const { hasPermission } = usePermissions(); 
-  
+  const { hasPermission } = usePermissions();
+
   return (
     <>
       <PageMeta
@@ -28,16 +28,19 @@ export default function Categories() {
         />
         <div className="space-y-4 pt-10">
           <DataTable
-            columns={categoryColumns}
+           columns={categoryColumns({
+              update: hasPermission("update", "categories"),
+              delete: hasPermission("delete", "categories"),
+            })}
             data={categories}
             createPath="/categories/create"
             hasDetails={true}
             detailsLink="/categories"
-               permissions={{
+            permissions={{
               create: hasPermission("create", "categories"),
               update: hasPermission("update", "categories"),
               delete: hasPermission("delete", "categories"),
-            }} 
+            }}
           />
         </div>
       </div>
