@@ -126,9 +126,7 @@ export default function CategoriesLayout() {
                 {id ? (
                   <CategoryDetails categoryId={Number(id)} />
                 ) : (
-                  <div className="text-gray-500 text-center py-8 h-full flex items-center justify-center">
-                    <p>Please select a category from the list</p>
-                  </div>
+                   <CategoryDetails categoryId={Number(selectedCategoryId)} />
                 )}
               </div>
             </div>

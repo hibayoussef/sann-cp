@@ -21,7 +21,7 @@ interface DataTableRowActionsProps<TData> {
   viewDetails?: string | undefined | null;
   editItem?: string | undefined;
   onDelete?: (id: number) => void;
-  permissions: {
+  permissions?: {
     update: boolean;
     delete: boolean;
   };

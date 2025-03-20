@@ -4,9 +4,12 @@ import { DataTableRowActions } from "@/components/ui/table-data/data-table-row-a
 import type { ISubCategory } from "@/types/products/subCategory";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
+  export const subCategoryColumns = (permissions: {
+    update: boolean;
+    delete: boolean;
+  }): ColumnDef<ISubCategory>[] => [
   {
-    id: "Id",
+    id: "id",
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
@@ -16,7 +19,7 @@ export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
     enableHiding: false,
   },
   {
-    id: "Sub Category",
+    id: "sub_category_name_en",
     accessorKey: "sub_category_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
@@ -26,7 +29,7 @@ export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
     ),
   },
   {
-    id: "Description",
+    id: "description_en",
     accessorKey: "description_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
@@ -39,12 +42,13 @@ export const subCategoryColumns: ColumnDef<ISubCategory>[] = [
   },
   {
     id: "Actions",
-    accessorKey: "actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}
         schema={subCategorySchema}
         editItem={`/sub-categories/update/${row.original.id}`}
+        onDelete={(id) => console.log(`Deleting category ID: ${id}`)}
+        permissions={permissions}
       />
     ),
   },

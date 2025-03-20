@@ -2,6 +2,7 @@ import { subCategoryColumns } from "@/columns/products/subCategory";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchCategory } from "@/hooks/prouducts/useCategories";
 import { useFetchSubCategoryById } from "@/hooks/prouducts/useSubCategories";
+import { usePermissions } from "@/hooks/usePermissions";
 import { useNavigate } from "react-router";
 import PageMeta from "../../../components/common/PageMeta";
 
@@ -13,9 +14,8 @@ export default function CategoryDetails({ categoryId }: CategoryDetailsProps) {
   const { data: categoryData } = useFetchCategory(categoryId);
   const { data } = useFetchSubCategoryById(categoryId);
   const subCategories: any = data?.data || [];
-
   const navigate = useNavigate();
-
+  const { hasPermission } = usePermissions();
 
   return (
     <>
@@ -67,9 +67,17 @@ export default function CategoryDetails({ categoryId }: CategoryDetailsProps) {
         </h4>
 
         <DataTable
-          columns={subCategoryColumns}
+          columns={subCategoryColumns({
+            update: hasPermission("update", "sub_categories"),
+            delete: hasPermission("delete", "sub_categories"),
+          })}
           data={subCategories}
           createPath="/sub-categories/create"
+          permissions={{
+            create: hasPermission("create", "sub_categories"),
+            update: hasPermission("update", "sub_categories"),
+            delete: hasPermission("delete", "sub_categories"),
+          }}
         />
       </div>
     </>
