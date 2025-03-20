@@ -8,7 +8,7 @@ import {
   useUpdateCategory,
 } from "@/hooks/prouducts/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Home } from "lucide-react";
+import { Code, Home, Tag } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -98,6 +98,7 @@ export default function CategoryForm() {
                       {...register("category_name_ar")}
                       error={!!errors.category_name_ar}
                       hint={errors.category_name_ar?.message}
+                      icon={<Tag className="w-4 h-4" />}
                     />
                   </div>
                   <div>
@@ -121,6 +122,7 @@ export default function CategoryForm() {
                       {...register("category_name_en")}
                       error={!!errors.category_name_en}
                       hint={errors.category_name_en?.message}
+                      icon={<Tag className="w-4 h-4" />}
                     />
                   </div>
                   <div>
@@ -144,6 +146,7 @@ export default function CategoryForm() {
                   {...register("code")}
                   error={!!errors.code}
                   hint={errors.code?.message}
+                  icon={<Code className="w-4 h-4" />}
                 />
               </div>
 

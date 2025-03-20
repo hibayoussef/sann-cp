@@ -25,7 +25,10 @@ export default function Brands() {
       <div className="space-y-4">
         <ComponentCard title={t("brands")}>
           <DataTable
-            columns={brandColumns}
+            columns={brandColumns({
+              update: hasPermission("update", "categories"),
+              delete: hasPermission("delete", "categories"),
+            })}
             data={brands}
             createPath="/brands/create"
             permissions={{
