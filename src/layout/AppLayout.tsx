@@ -13,7 +13,6 @@ const LayoutContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFFFF]">
-      {/* الهيدر */}
       <div className="fixed top-0 left-0 w-full z-50 bg-white shadow">
         <AppHeader />
       </div>

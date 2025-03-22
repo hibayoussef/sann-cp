@@ -13,15 +13,17 @@ import { useSidebar } from "../context/SidebarContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useLocation } from "react-router";
 
 const AppHeader: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
-
   const { setLanguage } = useLocaliztionStore();
-
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
-  const navigate = useNavigate();
+  const isSettingsPage = location.pathname.startsWith("/settings");
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {
@@ -73,13 +75,17 @@ const AppHeader: React.FC = () => {
             </span>
           </Link>
           <Separator orientation="vertical" className="mx-5 mr-0 h-13" />
-          <button
-            className="w-8 h-8 flex items-center justify-center text-gray-500 rounded-lg hover:bg-gray-100"
-            onClick={handleToggle}
-            aria-label="Toggle Sidebar"
-          >
-            {isMobileOpen ? "✖" : "☰"}
-          </button>
+          {!isSettingsPage && (
+            <>
+              <button
+                className="w-8 h-8 flex items-center justify-center text-gray-500 rounded-lg hover:bg-gray-100"
+                onClick={handleToggle}
+                aria-label="Toggle Sidebar"
+              >
+                {isMobileOpen ? "✖" : "☰"}
+              </button>
+            </>
+          )}
 
           {/* <Link to="/" className="lg:hidden">
             <img
