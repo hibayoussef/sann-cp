@@ -58,7 +58,6 @@ const RoutesComponent = () => {
 
         <Route path="/categories/sub" element={<Brands />} />
 
-
         {/* <Route path="/categories/sub/create" element={<CreateSubCategory />} /> */}
 
         <Route path="/units" element={<Units />} />
@@ -72,6 +71,7 @@ const RoutesComponent = () => {
         <Route path="/sub-units/:id" element={<Blank />} />
         <Route path="/profile" element={<UserProfiles />} /> */}
 
+
         <Route path="/alerts" element={<Alerts />} />
         <Route path="/avatars" element={<Avatars />} />
         <Route path="/badge" element={<Badges />} />
@@ -81,9 +81,8 @@ const RoutesComponent = () => {
         <Route path="/line-chart" element={<LineChart />} />
         <Route path="/bar-chart" element={<BarChart />} />
       </Route>
-
         <Route path="/settings" element={<Settings />} />
-      
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
