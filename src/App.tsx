@@ -8,17 +8,19 @@ import LanguageSync from "./LanguageSync";
 import { useEffect } from "react";
 import { useAuthStore } from "./store/useAuthStore";
 import { useNavigate } from "react-router";
+import { useLocation } from "react-router";
 
 export default function App() {
   const { direction } = useLocaliztionStore();
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home");
+    if (isAuthenticated && location.pathname === "/signin") {
+      navigate("/home", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, location.pathname, navigate]);
   
   return (
     <div dir={direction}>

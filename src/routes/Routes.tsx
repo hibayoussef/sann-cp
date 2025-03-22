@@ -80,8 +80,9 @@ const RoutesComponent = () => {
         <Route path="/videos" element={<Videos />} />
         <Route path="/line-chart" element={<LineChart />} />
         <Route path="/bar-chart" element={<BarChart />} />
-      </Route>
         <Route path="/settings" element={<Settings />} />
+
+      </Route>
 
       <Route path="*" element={<NotFound />} />
     </Routes>
