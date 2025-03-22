@@ -11,6 +11,7 @@ import SettingsDropdown from "../components/header/SettingsDropDown";
 import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -19,7 +20,7 @@ const AppHeader: React.FC = () => {
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {
@@ -55,6 +56,22 @@ const AppHeader: React.FC = () => {
       {" "}
       <div className="flex flex-col items-center justify-between flex-grow lg:flex-row lg:px-6">
         <div className="flex items-center justify-between w-full gap-1 px-3 py-1 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0">
+        
+            <Link to="/" className="flex items-center gap-2">
+            <img
+              className="dark:hidden"
+              src="/images/logo/logo-icon.svg"
+              alt="Logo"
+              width={26}
+              height={26}
+            />
+            <span
+              className="text-xl font-bold text-[#465FFF]"
+              style={{ fontFamily: "sans-serif" }}
+            >
+              Nexaoma
+            </span>
+          </Link>
           <button
             className="items-center justify-center w-7 h-7 text-gray-500 border-gray-200 rounded-lg z-50 dark:border-gray-800 lg:flex dark:text-gray-400 lg:h-8 lg:w-8 lg:border"
             onClick={handleToggle}
@@ -105,6 +122,8 @@ const AppHeader: React.FC = () => {
               alt="Logo"
             />
           </Link> */}
+
+      
 
           <button
             onClick={toggleApplicationMenu}

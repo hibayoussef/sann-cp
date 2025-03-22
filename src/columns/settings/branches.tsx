@@ -5,10 +5,8 @@ import type { ICategory } from "@/types/products/categories";
 import { ColumnDef } from "@tanstack/react-table";
 import { t } from "i18next";
 
-export const categoryColumns = (permissions?: {
-  update: boolean;
-  delete: boolean;
-}): ColumnDef<ICategory>[] => [
+export const branchColumns = (permissions: { update?: boolean; delete?: boolean } = {}): ColumnDef<ICategory>[] => [
+
   {
     id: "id",
     accessorKey: "id",
@@ -56,7 +54,7 @@ export const categoryColumns = (permissions?: {
         viewDetails={`/categories/${row.original.id}`}
         editItem={`/categories/update/${row.original.id}`}
         onDelete={(id) => console.log(`Deleting category ID: ${id}`)}
-        permissions={permissions}
+        // permissions={permissions}
       />
     ),
   },

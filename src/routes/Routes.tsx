@@ -1,6 +1,7 @@
 // src/routes/Routes.tsx
 
 import Settings from "@/pages/Settings/Settings";
+import Branches from "@/pages/Settings/pages/branches/branches";
 import Categories from "@/pages/products/Categories/categories";
 import CategoriesLayout from "@/pages/products/Categories/categoriesLayout";
 import SubCategories from "@/pages/products/SubCategories/subCategories";
@@ -26,6 +27,7 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import CreateUnit from "../pages/products/Units/createUnit";
+import SettingsLayout from "@/layout/SettingsLayout";
 
 const RoutesComponent = () => {
   return (
@@ -58,10 +60,11 @@ const RoutesComponent = () => {
 
         <Route path="/categories/sub" element={<Brands />} />
 
-        {/* <Route path="/categories/sub/create" element={<CreateSubCategory />} /> */}
+        {/* <Route path="/categories/sub/create" elemOent={<CreateSubCategory />} /> */}
 
         <Route path="/units" element={<Units />} />
         <Route path="/units/create" element={<CreateUnit />} />
+
         {/* <Route path="/categories" element={<Blank />} />
         <Route path="/categories/:id" element={<Blank />} />
         <Route path="/sub-categories" element={<Blank />} />
@@ -82,6 +85,11 @@ const RoutesComponent = () => {
         <Route path="/settings" element={<Settings />} />
       </Route>
 
+      <Route path="/settings" element={<SettingsLayout />}>
+        {/* <Route index element={<Settings />} /> */}
+        <Route path="branches" element={<Branches />} />
+        {/* <Route path="other-settings" element={<OtherSettingsPage />} /> */}
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

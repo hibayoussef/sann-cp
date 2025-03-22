@@ -1,6 +1,6 @@
 export interface ICategory {
-  id: number;
-  category_name_en: string;
+  id?: number;
+  category_name_en?: string;
   category_name_ar?: string | null;
   description_en?: string | null;
   description_ar?: string | null;

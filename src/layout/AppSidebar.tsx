@@ -22,7 +22,6 @@ type NavItem = {
   }[];
 };
 
-
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered } = useSidebar();
 
@@ -31,44 +30,44 @@ const AppSidebar: React.FC = () => {
   const { permissions } = useAuthStore();
   const hasPermission = (key?: any) => !key || permissions?.includes(key);
 
-    //  const navItems: NavItem[] = [
-    //   {
-    //     icon: <MonitorIcon />,
-    //     name: t("dashboard"),
-    //     path: "/home",
-    //   },
-    //   {
-    //     name: t("items"),
-    //     icon: <Box />,
-    //     subItems: [
-    //       {
-    //         name: t("brands"),
-    //         path: "/brands",
-    //         permissionKey: "brands.view",
-    //       },
-    //       {
-    //         name: t("categories"),
-    //         path: "/categories",
-    //         permissionKey: "categories.view",
-    //       },
-    //       {
-    //         name: t("subCategories"),
-    //         path: "/sub-categories",
-    //         permissionKey: "sub_categories.view",
-    //       },
-    //       {
-    //         name: t("units"),
-    //         path: "/units",
-    //         permissionKey: "units.view",
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     icon: <LogOut />,
-    //     name: t("logout"),
-    //   },
-    // ];
-   const navItems: NavItem[] = [
+  //  const navItems: NavItem[] = [
+  //   {
+  //     icon: <MonitorIcon />,
+  //     name: t("dashboard"),
+  //     path: "/home",
+  //   },
+  //   {
+  //     name: t("items"),
+  //     icon: <Box />,
+  //     subItems: [
+  //       {
+  //         name: t("brands"),
+  //         path: "/brands",
+  //         permissionKey: "brands.view",
+  //       },
+  //       {
+  //         name: t("categories"),
+  //         path: "/categories",
+  //         permissionKey: "categories.view",
+  //       },
+  //       {
+  //         name: t("subCategories"),
+  //         path: "/sub-categories",
+  //         permissionKey: "sub_categories.view",
+  //       },
+  //       {
+  //         name: t("units"),
+  //         path: "/units",
+  //         permissionKey: "units.view",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     icon: <LogOut />,
+  //     name: t("logout"),
+  //   },
+  // ];
+  const navItems: NavItem[] = [
     {
       icon: <MonitorIcon />,
       name: "Dashboard",
@@ -79,16 +78,21 @@ const AppSidebar: React.FC = () => {
       icon: <Box />,
       subItems: [
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
-        { name: "Categories", path: "/categories", permissionKey: "categories.view" },
+        {
+          name: "Categories",
+          path: "/categories",
+          permissionKey: "categories.view",
+        },
         { name: "Units", path: "/units", permissionKey: "units.view" },
-        
-      ].filter((item) => hasPermission(item.permissionKey)), 
-     },
-     {
-        icon: <LogOut />,
-        name: t("logout"),
-      },
-  ].filter((item: any) => hasPermission(item.permissionKey) || item.subItems?.length);
+      ].filter((item) => hasPermission(item.permissionKey)),
+    },
+    {
+      icon: <LogOut />,
+      name: t("logout"),
+    },
+  ].filter(
+    (item: any) => hasPermission(item.permissionKey) || item.subItems?.length
+  );
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -119,7 +123,6 @@ const AppSidebar: React.FC = () => {
       }
     }
   }, [openSubmenu]);
-
 
   const filteredNavItems = navItems
     .map((item) => ({
@@ -297,52 +300,16 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 shadow-xl
-    ${isExpanded || isMobileOpen ? "w-[210px]" : "w-[90px]"}
-    ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-    lg:translate-x-0 ${direction === "rtl" ? "right-0" : "left-0"}`}
+      className={`absolute top-0 bg-white shadow-md transition-all z-40 border-r h-screen
+      ${isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"}
+      ${direction === "rtl" ? "right-0" : "left-0"}`}
     >
       <div
         className={`py-0 w-full flex ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
         }`}
-      >
-        <Link to="/">
-          {isExpanded || isHovered || isMobileOpen ? (
-            <>
-              <div className="flex flex-row items-center gap-4 w-full mb-4 mt-3">
-                <img
-                  className="dark:hidden"
-                  src="/images/logo/logo-icon.svg"
-                  alt="Logo"
-                  width={28}
-                  height={30}
-                />
-                <div className="flex items-center">
-                  <span
-                    className="text-xl font-bold p-2 text-[#465FFF]"
-                    style={{ fontFamily: "sans-serif" }}
-                  >
-                    Nexaoma
-                  </span>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col w-full">
-              <div className="flex items-center p-2">
-                <span className="text-2xl font-bold text-[#575db1]">
-                  Nexaoma
-                </span>
-              </div>
-            </div>
-          )}
-        </Link>
-      </div>
-      {/* <div
-        className="w-full h-[2px] border-b border-gray-300 dark:border-gray-700 mb-2 shadow-lg"
-        style={{ boxSizing: "border-box" }}
-      ></div> */}
+      ></div>
+
       <div className="flex flex-col px-2  overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
@@ -353,13 +320,7 @@ const AppSidebar: React.FC = () => {
                     ? "lg:justify-center"
                     : "justify-start"
                 }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
-                ) : (
-                  <HorizontaLDots className="size-6" />
-                )}
-              </h2>
+              ></h2>
               {renderMenuItems(filteredNavItems, "main")}
             </div>
           </div>
