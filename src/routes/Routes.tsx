@@ -25,6 +25,7 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import CreateUnit from "../pages/products/Units/createUnit";
+import Settings from "@/pages/Settings/Settings";
 
 const RoutesComponent = () => {
   return (
@@ -56,6 +57,8 @@ const RoutesComponent = () => {
         <Route path="/sub-categories/update/:id" element={<CreateCategory />} />
 
         <Route path="/categories/sub" element={<Brands />} />
+
+
         {/* <Route path="/categories/sub/create" element={<CreateSubCategory />} /> */}
 
         <Route path="/units" element={<Units />} />
@@ -79,6 +82,8 @@ const RoutesComponent = () => {
         <Route path="/bar-chart" element={<BarChart />} />
       </Route>
 
+        <Route path="/settings" element={<Settings />} />
+      
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
