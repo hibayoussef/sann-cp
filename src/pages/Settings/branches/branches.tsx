@@ -1,16 +1,16 @@
 import { DataTable } from "@/components/ui/table-data/table-data";
-import { useFetchCategories } from "@/hooks/prouducts/useCategories";
 import { Home } from "lucide-react";
 
 import { branchColumns } from "@/columns/settings/branches";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";
+import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useTranslation } from "react-i18next";
 
 export default function Branches() {
-  const { data } = useFetchCategories();
-  const categories: any = data || [];
+  const { data } = useFetchBranches();
+  const branches: any = data || [];
   const { t } = useTranslation("items");
 
   const { hasPermission } = usePermissions();
@@ -29,9 +29,12 @@ export default function Branches() {
         />
         <div className="space-y-4 pt-10">
           <DataTable
-            columns={branchColumns()}
-            data={categories}
-            createPath="/categories/create"
+            columns={branchColumns({
+              update: hasPermission("update", "categories"),
+              delete: hasPermission("delete", "categories"),
+            })}
+            data={branches}
+            createPath="/settings/branches/create"
             hasDetails={true}
             detailsLink="/categories"
             permissions={{

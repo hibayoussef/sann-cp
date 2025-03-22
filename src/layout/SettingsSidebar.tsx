@@ -1,13 +1,12 @@
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import {
-  Building,
-  FileText,
-  LogOut,
-  MonitorIcon,
-  Package,
-  SettingsIcon,
-  ShoppingCart,
-  Users,
+    Building,
+    LogOut,
+    MonitorIcon,
+    Package,
+    SettingsIcon,
+    ShoppingCart,
+    Users
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
