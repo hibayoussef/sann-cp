@@ -1,5 +1,6 @@
 // src/routes/Routes.tsx
 
+import Settings from "@/pages/Settings/Settings";
 import Categories from "@/pages/products/Categories/categories";
 import CategoriesLayout from "@/pages/products/Categories/categoriesLayout";
 import SubCategories from "@/pages/products/SubCategories/subCategories";
@@ -25,7 +26,6 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import CreateUnit from "../pages/products/Units/createUnit";
-import Settings from "@/pages/Settings/Settings";
 
 const RoutesComponent = () => {
   return (
@@ -71,7 +71,6 @@ const RoutesComponent = () => {
         <Route path="/sub-units/:id" element={<Blank />} />
         <Route path="/profile" element={<UserProfiles />} /> */}
 
-
         <Route path="/alerts" element={<Alerts />} />
         <Route path="/avatars" element={<Avatars />} />
         <Route path="/badge" element={<Badges />} />
@@ -81,7 +80,6 @@ const RoutesComponent = () => {
         <Route path="/line-chart" element={<LineChart />} />
         <Route path="/bar-chart" element={<BarChart />} />
         <Route path="/settings" element={<Settings />} />
-
       </Route>
 
       <Route path="*" element={<NotFound />} />

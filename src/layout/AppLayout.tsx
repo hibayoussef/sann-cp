@@ -1,14 +1,31 @@
-import { SidebarProvider, useSidebar } from "../context/SidebarContext";
-import { Outlet } from "react-router";
-import AppHeader from "./AppHeader";
-import Backdrop from "./Backdrop";
-import AppSidebar from "./AppSidebar";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
+import { Outlet, useLocation } from "react-router";
+import { SidebarProvider, useSidebar } from "../context/SidebarContext";
+import AppHeader from "./AppHeader";
+import AppSidebar from "./AppSidebar";
+import Backdrop from "./Backdrop";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
-
   const { direction } = useLocaliztionStore();
+  const location = useLocation();
+
+  const isSettingsPage = location.pathname === "/settings"; 
+
+  if (isSettingsPage) {
+    return (
+      <>
+        <div
+        className={`flex-1 transition-all duration-300 ease-in-out ${ 
+          isMobileOpen ? "ml-0" : ""
+        }`} 
+      >
+        <AppHeader />
+        <Outlet />
+      </div>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] xl:flex">

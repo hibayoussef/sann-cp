@@ -77,7 +77,7 @@ export default function Settings() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen px-6 sm:px-16 md:px-24 lg:px-32 text-xs">
       {/* Header */}
-      <div className="bg-white p-4 shadow-md mb-6 flex justify-between items-center w-full fixed top-0 left-0 right-0 z-10 px-6 sm:px-16 md:px-24 lg:px-32">
+      <div className="bg-white p-4 shadow-md mb-6 flex justify-between items-center w-full fixed top-12 left-0 right-0 z-10 px-6 sm:px-16 md:px-24 lg:px-32">
         <h2 className="text-lg font-semibold">All Settings</h2>
         <div className="relative w-full max-w-md mx-auto">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
