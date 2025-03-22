@@ -10,6 +10,7 @@ import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
 import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
+import { useNavigate } from "react-router";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -17,6 +18,8 @@ const AppHeader: React.FC = () => {
   const { setLanguage } = useLocaliztionStore();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
+
+  const navigate = useNavigate(); 
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {
@@ -260,7 +263,7 @@ const AppHeader: React.FC = () => {
             {/* <!-- Notification Menu Area --> */}
           </div>
           <button
-            // onClick={() => setIsOpen(!isOpen)}
+            onClick={() => navigate("/settings")}
             className="p-2 text-gray-600 hover:text-gray-900"
           >
             <svg
