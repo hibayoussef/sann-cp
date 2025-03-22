@@ -4,16 +4,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
 import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
-import { useLocation } from "react-router";
 
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -75,7 +74,7 @@ const AppHeader: React.FC = () => {
             </span>
           </Link>
           <Separator orientation="vertical" className="mx-5 mr-0 h-13" />
-          {!isSettingsPage && (
+          {/* {!isSettingsPage && ( */}
             <>
               <button
                 className="w-8 h-8 flex items-center justify-center text-gray-500 rounded-lg hover:bg-gray-100"
@@ -85,8 +84,8 @@ const AppHeader: React.FC = () => {
                 {isMobileOpen ? "✖" : "☰"}
               </button>
             </>
-          )}
-          
+          {/* )} */}
+
           <button
             onClick={toggleApplicationMenu}
             className="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"

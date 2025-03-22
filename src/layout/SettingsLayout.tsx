@@ -1,29 +1,45 @@
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import AppHeader from "./AppHeader";
-import Backdrop from "./Backdrop";
 import SettingsSidebar from "./SettingsSidebar";
 
-const SettingsLayoutContent: React.FC = () => {
-  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+const LayoutContent: React.FC = () => {
+  const { isExpanded, isHovered } = useSidebar();
   const { direction } = useLocaliztionStore();
+  const location = useLocation();
+
+  const isSettingsPage = location.pathname.startsWith("/settings");
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] flex">
-      <SettingsSidebar />
-      <Backdrop />
+    <div className="min-h-screen flex flex-col bg-[#FFFFFF]">
+      <div className="fixed top-0 left-0 w-full z-50 bg-white shadow">
+        <AppHeader />
+      </div>
 
-      <div
-        className={`flex flex-col transition-all duration-300 ease-in-out w-full ${
-          isMobileOpen ? "ml-0" : ""
-        } `}
-      >
-        <div className="fixed top-0 left-0 w-full z-50 bg-white shadow">
-          <AppHeader />
-        </div>
+      <div className="flex flex-1 pt-[49px]">
+          <div
+            className={`fixed h-screen transition-all duration-300 z-40
+              ${isExpanded || isHovered ? "w-[184px]" : "w-[90px]"} 
+              ${direction === "rtl" ? "right-0" : "left-0"}`}
+          >
+            <SettingsSidebar />
+          </div>
 
-        <div className="pt-[64px] px-6 sm:px-8 md:px-12 lg:px-16 w-full">
+        <div
+          className={`flex-1 transition-all duration-300 ease-in-out px-4
+            ${
+              isSettingsPage
+                ? isExpanded || isHovered
+                  ? direction === "ltr"
+                    ? "ml-[184px]"
+                    : "mr-[184px]"
+                  : direction === "ltr"
+                  ? "ml-[90px]"
+                  : "mr-[90px]"
+                : "ml-0"
+            }`}
+        >
           <Outlet />
         </div>
       </div>
@@ -31,12 +47,12 @@ const SettingsLayoutContent: React.FC = () => {
   );
 };
 
-const SettingsLayout: React.FC = () => {
+const AppLayout: React.FC = () => {
   return (
     <SidebarProvider>
-      <SettingsLayoutContent />
+      <LayoutContent />
     </SidebarProvider>
   );
 };
 
-export default SettingsLayout;
+export default AppLayout;

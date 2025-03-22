@@ -1,4 +1,5 @@
 import { Search, X } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const categories = [
   {
@@ -74,6 +75,9 @@ const categories = [
 ];
 
 export default function Settings() {
+
+  const navigate = useNavigate(); 
+  
   return (
     <div className="p-6 bg-gray-50 min-h-screen px-6 sm:px-16 md:px-24 lg:px-32 text-xs">
       {/* Header */}
@@ -83,7 +87,7 @@ export default function Settings() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input type="text" placeholder="Search your settings" className="pl-10 border rounded-md w-full p-2 text-xs" />
         </div>
-        <button className="flex items-center text-gray-600 hover:text-red-500 text-xs">
+        <button onClick={()=> navigate("/home")} className="flex items-center text-gray-600 hover:text-red-500 text-xs">
           Close Settings <X className="w-4 h-4 ml-2" />
         </button>
       </div>
