@@ -16,11 +16,11 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (isAuthenticated && location.pathname === "/signin") {
-      navigate("/home", { replace: true });
-    }
-  }, [isAuthenticated, location.pathname, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated && location.pathname === "/signin") {
+  //     navigate("/home", { replace: true });
+  //   }
+  // }, [isAuthenticated, location.pathname, navigate]);
   
   return (
     <div dir={direction}>

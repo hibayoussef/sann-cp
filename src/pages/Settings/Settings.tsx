@@ -5,7 +5,16 @@ const categories = [
   {
     title: "Organization",
     icon: "🏢",
-    links: ["Profile", "Branding", "Custom Domain", "Branches", "Currencies", "Approvals", "Opening Balances", "Manage Subscription"],
+    links: [
+      "Profile",
+      "Branding",
+      "Custom Domain",
+      "Branches", // Branches هنا
+      "Currencies",
+      "Approvals",
+      "Opening Balances",
+      "Manage Subscription",
+    ],
   },
   {
     title: "Taxes & Compliance",
@@ -20,17 +29,44 @@ const categories = [
   {
     title: "Preferences",
     icon: "⚙️",
-    links: ["General", "Customers and Vendors", "Accountant", "Projects", "Timesheet", "Customer Portal", "Vendor Portal"],
+    links: [
+      "General",
+      "Customers and Vendors",
+      "Accountant",
+      "Projects",
+      "Timesheet",
+      "Customer Portal",
+      "Vendor Portal",
+    ],
   },
   {
     title: "Sales",
     icon: "🛒",
-    links: ["Quotes", "Retainer Invoices", "Sales Orders", "Delivery Challans", "Invoices", "Recurring Invoices", "Payments Received", "Credit Notes", "Delivery Notes", "Packing Slips"],
+    links: [
+      "Quotes",
+      "Retainer Invoices",
+      "Sales Orders",
+      "Delivery Challans",
+      "Invoices",
+      "Recurring Invoices",
+      "Payments Received",
+      "Credit Notes",
+      "Delivery Notes",
+      "Packing Slips",
+    ],
   },
   {
     title: "Purchases",
     icon: "🔒",
-    links: ["Expenses", "Recurring Expenses", "Bills", "Recurring Bills", "Payments Made", "Purchase Orders", "Vendor Credits"],
+    links: [
+      "Expenses",
+      "Recurring Expenses",
+      "Bills",
+      "Recurring Bills",
+      "Payments Made",
+      "Purchase Orders",
+      "Vendor Credits",
+    ],
   },
   {
     title: "Items",
@@ -45,7 +81,12 @@ const categories = [
   {
     title: "Customisation",
     icon: "🛠️",
-    links: ["Reporting Tags", "Web Tabs", "Transaction Number Series", "PDF Templates"],
+    links: [
+      "Reporting Tags",
+      "Web Tabs",
+      "Transaction Number Series",
+      "PDF Templates",
+    ],
   },
   {
     title: "Reminders & Notifications",
@@ -65,7 +106,14 @@ const categories = [
   {
     title: "Developer & Data",
     icon: "📂",
-    links: ["Incoming Webhooks", "Connections", "API Usage", "Signals", "Data Backup", "Deluge Components Usage"],
+    links: [
+      "Incoming Webhooks",
+      "Connections",
+      "API Usage",
+      "Signals",
+      "Data Backup",
+      "Deluge Components Usage",
+    ],
   },
   {
     title: "Integrations & Marketing",
@@ -75,9 +123,14 @@ const categories = [
 ];
 
 export default function Settings() {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); 
-  
+  const handleLinkClick = (link: string) => {
+    if (link === "Branches") {
+      navigate("/settings/branches"); // الانتقال إلى الرابط الخاص بـ Branches
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen px-6 sm:px-16 md:px-24 lg:px-32 text-xs">
       {/* Header */}
@@ -87,7 +140,7 @@ export default function Settings() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input type="text" placeholder="Search your settings" className="pl-10 border rounded-md w-full p-2 text-xs" />
         </div>
-        <button onClick={()=> navigate("/home")} className="flex items-center text-gray-600 hover:text-red-500 text-xs">
+        <button onClick={() => navigate("/home")} className="flex items-center text-gray-600 hover:text-red-500 text-xs">
           Close Settings <X className="w-4 h-4 ml-2" />
         </button>
       </div>
@@ -104,6 +157,7 @@ export default function Settings() {
                 <li
                   key={i}
                   className="cursor-pointer text-gray-600 hover:text-blue-600 hover:bg-blue-100 px-2 py-1 rounded-md transition text-xs"
+                  onClick={() => handleLinkClick(link)} // إضافة الحدث هنا
                 >
                   {link}
                 </li>
