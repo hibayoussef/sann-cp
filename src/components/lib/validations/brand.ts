@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 export const brandSchema = z.object({
   id: z.number().optional(), 
   brand_name_en: z

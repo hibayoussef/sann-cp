@@ -12,9 +12,7 @@ import {
 import { Settings2, FileText, Printer } from "lucide-react";
 import * as XLSX from "xlsx";
 import * as Papa from "papaparse";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import { FaFileExcel, FaFilePdf } from "react-icons/fa";
+import { jsPDF } from "jspdf";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -139,16 +137,10 @@ export function DataTableViewOptions<TData>({
           <DropdownMenuLabel>Export Options</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleExportCSV}>
-            <FileText className="mr-2 h-4 w-4" />
             Export by CSV
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleExportExcel}>
-            <FaFileExcel className="mr-2 h-4 w-4" />
             Export by Excel
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleExportPDF}>
-            <FaFilePdf className="mr-2 h-4 w-4" />
-            Export by PDF
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

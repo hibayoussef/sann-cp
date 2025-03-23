@@ -20,4 +20,6 @@ export enum QueryKeys {
   WARRANTY = "warranty",
   BRANCHES = "branches",
   BRANCHE = "branche",
+  TAXES = "taxes",
+  TAX = "tax",
 }

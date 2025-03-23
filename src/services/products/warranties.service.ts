@@ -1,19 +1,22 @@
-import { IWarranty, WarrantyForm } from "@/types/products/warranty";
 import { AxiosResponse } from "axios";
 import { _axios } from "../../interceptor/http-config";
-import type { BrandForm, IBrand } from "../../types/products/brand";
+import {
+  IWarranty,
+  WarrantyForm,
+  WarrantyUpdateForm,
+} from "@/types/products/warranty";
 
 export const _WarrantiesApi = {
   // GET WARRANTIES
   getWarranties: async () => {
-    const response = await _axios.get<AxiosResponse<{ warranties: IBrand[] }>>(
-      "/products/warranties"
-    );
+    const response = await _axios.get<
+      AxiosResponse<{ warranties: IWarranty[] }>
+    >("/products/warranties");
     return response?.data?.data;
   },
   // GET WARRANTY
   getWarranty: async (id: number) => {
-    const response = await _axios.get<AxiosResponse<{ warranty: IWarranty }>>(
+    const response = await _axios.get<AxiosResponse<IWarranty>>(
       `/products/warranties/${id}`
     );
     return response.data.data;
@@ -24,7 +27,7 @@ export const _WarrantiesApi = {
     return response.data;
   },
   // UPDATE WARRANTY
-  updateWarranty: async (id: string, data: BrandForm) => {
+  updateWarranty: async (id: string, data: WarrantyUpdateForm) => {
     const response = await _axios.put(`/products/warranties/${id}`, data);
     return response.data;
   },

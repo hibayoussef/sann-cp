@@ -8,13 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useFetchCategories } from "@/hooks/prouducts/useCategories";
-import { Edit, Home, MoreVertical, Plus } from "lucide-react";
+import { Home, MoreVertical, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import CategoryDetails from "./categoryDetails";
 import ComponentCardDetails from "@/components/common/ComponentCardDetails";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import { useParams } from "react-router";
 
 export default function CategoriesLayout() {
   const { data } = useFetchCategories();
@@ -34,8 +33,6 @@ export default function CategoriesLayout() {
     console.log("Exporting to Excel...");
     // Add Excel export logic here
   };
-
-  const { id } = useParams();
 
   return (
     <>
@@ -98,24 +95,16 @@ export default function CategoriesLayout() {
                       <div
                         onClick={() => setSelectedCategoryId(category.id)}
                         className={`px-7 py-2 cursor-pointer text-[13px] transition-colors
-                      ${
-                        selectedCategoryId === category.id
-                          ? "bg-blue-100 text-blue-600 font-medium"
-                          : "hover:bg-gray-50"
-                      } flex justify-between`}
+                        ${
+                          selectedCategoryId === category.id
+                            ? "bg-blue-100 text-blue-600 font-medium"
+                            : "hover:bg-gray-50"
+                        }`}
                       >
-                        <span className="text-sm">{category.category_name_en}</span>
-                        {/* Display the category code in green and align it to the right */}
-                        <button
-                        onClick={() => navigate(`/categories/update/${category.id}`)}
-                        className="text-green-500 hover:text-green-600 p-1"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                        {/* <span className="text-green-500 text-[11px]">{category.code}</span> */}
+                        {category.category_name_en}
                       </div>
+                      {/* <span className={`px-7 py-2 cursor-pointer text-[13px] transition-colors`} style={{color: "green"}}>{category?.code}</span> */}
                       <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-200 shadow-md" />
-                     
                     </div>
                   ))}
                 </div>
@@ -123,8 +112,8 @@ export default function CategoriesLayout() {
 
               {/* Category Details Section */}
               <div className="col-span-4 py-5 px-4 overflow-y-auto">
-                {id ? (
-                  <CategoryDetails categoryId={Number(id)} />
+                {selectedCategoryId ? (
+                  <CategoryDetails categoryId={selectedCategoryId} />
                 ) : (
                    <CategoryDetails categoryId={Number(selectedCategoryId)} />
                 )}

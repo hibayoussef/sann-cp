@@ -47,102 +47,105 @@ const UserDropdown = () => {
                       {userData?.user?.email}
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => setIsDropdownOpen(false)}
-                    className="text-gray-500 hover:text-gray-700 p-1 -mt-1"
-                  >
-                    <IoClose className="w-6 h-6" />
-                  </button>
-                </div>
-                <div className="flex gap-4 text-sm">
-                  <div className="flex items-center gap-1">
-                    <span className="font-medium text-gray-700">User ID:</span>
-                    <span className="text-gray-600">{userData?.user?.id}</span>
-                  </div>
-                  <div className="h-4 w-px bg-gray-300"></div>
-                  <div className="flex items-center gap-1">
-                    <span className="font-medium text-gray-700">
-                      Organization ID:
-                    </span>
-                    <span className="text-gray-600">
-                      {userData?.organization?.id}
-                    </span>
+                  <div className="text-sm text-gray-600 mt-1">
+                    {userData?.user?.email}
                   </div>
                 </div>
+
+                <button
+                  onClick={() => setIsDropdownOpen(false)}
+                  className="text-gray-500 hover:text-gray-700 p-1 -mt-1"
+                >
+                  <IoClose className="w-6 h-6" />
+                </button>
               </div>
-
-              <div className="pb-4 border-b border-gray-200">
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={() => navigate("/profile")}
-                    className="text-[#575db1] hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
-                  >
-                    My Account
-                  </button>
-
-                  <button
-                    onClick={async () => {
-                      try {
-                        await _AuthApi.logout();
-                        navigate("/signin");
-                      } catch (error) {
-                        console.error("Logout failed:", error);
-                      }
-                    }}
-                    className="text-red-600 hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
-                  >
-                    Sign Out
-                  </button>
+              <div className="flex gap-4 text-sm">
+                <div className="flex items-center gap-1">
+                  <span className="font-medium text-gray-700">User ID:</span>
+                  <span className="text-gray-600">{userData?.user?.id}</span>
+                </div>
+                <div className="h-4 w-px bg-gray-300"></div>
+                <div className="flex items-center gap-1">
+                  <span className="font-medium text-gray-700">
+                    Organization ID:
+                  </span>
+                  <span className="text-gray-600">
+                    {userData?.organization?.id}
+                  </span>
                 </div>
               </div>
+            </div>
 
-              {/* Trial Section */}
-              <div className="pb-4 border-b border-gray-200">
-                <div className="text-sm font-medium text-red-600">
-                  Your free trial is over
-                </div>
+            <div className="pb-4 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="text-[#575db1] hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
+                >
+                  My Account
+                </button>
+
+                <button
+                  onClick={async () => {
+                    try {
+                      await _AuthApi.logout();
+                      navigate("/signin");
+                    } catch (error) {
+                      console.error("Logout failed:", error);
+                    }
+                  }}
+                  className="text-red-600 hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
+                >
+                  Sign Out
+                </button>
               </div>
+            </div>
 
-              {/* Links Section */}
-              <div className="p-4 space-y-4">
-                <a
-                  href="#"
-                  className="block text-blue-600 hover:underline text-sm"
-                >
-                  What’s New? →
-                </a>
-                <a
-                  href="#"
-                  className="block text-blue-600 hover:underline text-sm"
-                >
-                  Essential guides for your business →
-                </a>
-                <a
-                  href="#"
-                  className="block text-blue-600 hover:underline text-sm"
-                >
-                  Navigate faster with keyboard shortcuts →
-                </a>
-                <a
-                  href="#"
-                  className="block text-blue-600 hover:underline text-sm"
-                >
-                  Download the mobile app →
-                </a>
-                <a
-                  href="#"
-                  className="block text-blue-600 hover:underline text-sm"
-                >
-                  Work simpler with Windows app →
-                </a>
+            {/* Trial Section */}
+            <div className="pb-4 border-b border-gray-200">
+              <div className="text-sm font-medium text-red-600">
+                Your free trial is over
               </div>
+            </div>
 
-              {/* Footer */}
-              <div className="p-4 bg-gray-50 border-t border-gray-200">
-                <div className="text-xs text-gray-500">
-                  Web: https://www.schmit.edu/ (cdn/School)
-                </div>
+            {/* Links Section */}
+            <div className="p-4 space-y-4">
+              <a
+                href="#"
+                className="block text-blue-600 hover:underline text-sm"
+              >
+                What’s New? →
+              </a>
+              <a
+                href="#"
+                className="block text-blue-600 hover:underline text-sm"
+              >
+                Essential guides for your business →
+              </a>
+              <a
+                href="#"
+                className="block text-blue-600 hover:underline text-sm"
+              >
+                Navigate faster with keyboard shortcuts →
+              </a>
+              <a
+                href="#"
+                className="block text-blue-600 hover:underline text-sm"
+              >
+                Download the mobile app →
+              </a>
+              <a
+                href="#"
+                className="block text-blue-600 hover:underline text-sm"
+              >
+                Work simpler with Windows app →
+              </a>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 bg-gray-50 border-t border-gray-200">
+              <div className="text-xs text-gray-500">
+                Web: https://www.schmit.edu/ (cdn/School)
               </div>
             </div>
           </div>

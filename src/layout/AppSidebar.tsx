@@ -1,12 +1,12 @@
-import { Box, LogOut, MonitorIcon, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useSidebar } from "../context/SidebarContext";
-import { ChevronDownIcon, HorizontaLDots } from "../icons";
+import { ChevronDownIcon, GridIcon, HorizontaLDots, TableIcon } from "../icons";
 import { _AuthApi } from "../services/auth.service";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useTranslation } from "react-i18next";
+import { Box, LogOut, MonitorIcon, Plus, ShoppingCart } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -21,6 +21,34 @@ type NavItem = {
     new?: boolean;
   }[];
 };
+
+const navItems: NavItem[] = [
+  {
+    icon: <GridIcon />,
+    name: "Dashboard",
+    path: "/home",
+  },
+
+  {
+    name: "Products",
+    icon: <TableIcon />,
+    subItems: [
+      { name: "Products", path: "/products", pro: false },
+      { name: "Brands", path: "/brands", pro: false },
+      { name: "Categories", path: "/categories", pro: false },
+      { name: "Sub Categories", path: "/sub-categories", pro: false },
+      { name: "Units", path: "/units", pro: false },
+      { name: "SubUnits", path: "/sub-units", pro: false },
+      { name: "Warranties", path: "/warranties", pro: false },
+      { name: "Taxes", path: "/taxes", pro: false },
+    ],
+  },
+  {
+    icon: <GridIcon />,
+    name: "Logout",
+    // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+  },
+];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered } = useSidebar();
@@ -75,7 +103,7 @@ const AppSidebar: React.FC = () => {
     },
     {
       name: "Items",
-      icon: <Box />,
+      icon: <ShoppingCart />,
       subItems: [
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
         {
@@ -84,15 +112,17 @@ const AppSidebar: React.FC = () => {
           permissionKey: "categories.view",
         },
         { name: "Units", path: "/units", permissionKey: "units.view" },
-      ].filter((item) => hasPermission(item.permissionKey)),
-    },
-    {
-      icon: <LogOut />,
-      name: t("logout"),
-    },
-  ].filter(
-    (item: any) => hasPermission(item.permissionKey) || item.subItems?.length
-  );
+        { name: "Warranties", path: "/warranties", permissionKey: "warranties.view" },
+       
+        { name: "Taxes", path: "/taxes", permissionKey: "taxes.view" },
+        
+      ].filter((item) => hasPermission(item.permissionKey)), 
+     },
+     {
+        icon: <LogOut />,
+        name: t("logout"),
+      },
+  ].filter((item: any) => hasPermission(item.permissionKey) || item.subItems?.length);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -243,9 +273,9 @@ const AppSidebar: React.FC = () => {
                     : "0px",
               }}
             >
-              <ul className="mt-2 ml-5">
+              <ul className="mt-2 ml-9">
                 {nav.subItems.map((subItem) => (
-                  <li key={subItem.name} className="relative group">
+                  <li key={subItem.name}>
                     <Link
                       to={subItem.path}
                       className={`menu-dropdown-item ${

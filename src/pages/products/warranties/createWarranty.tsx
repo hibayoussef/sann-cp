@@ -1,97 +1,178 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { useAddWarranty } from "@/hooks/prouducts/useWarranties";
+import { useAddWarranty, useFetchWarranty, useUpdateWarranty } from "@/hooks/prouducts/useWarranties";
+import { warrantySchema, type WarrantyType } from "@/components/lib/validations/warranty";
 
-export default function CreateWarranty() {
-  const [warrantyNameAr, setWarrantyNameAr] = useState("");
-  const [warrantyNameEn, setWarrantyNameEn] = useState("");
-  const [duration, setDuration] = useState("");
-  const [durationType, setDurationType] = useState("");
-
+export default function WarrantyForm() {
+  const { id } = useParams();
+  const isUpdate = Boolean(id);
   const addWarranty = useAddWarranty();
+  const updateWarranty = useUpdateWarranty();
   const organizationId = useMeStore((state) => state.organizationId);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    await addWarranty.mutateAsync({
+  // Fetch warranty data for updating
+  const { data: warrantyData = null, isLoading } = useFetchWarranty(Number(id), {
+    enabled: isUpdate,
+  });
+
+  // Hook form initialization
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<WarrantyType>({
+    resolver: zodResolver(warrantySchema),
+    defaultValues: {
+      warranty_name_ar: "",
+      warranty_name_en: "",
+      duration: 0,
+      duration_type: "Days",
+    },
+  });
+
+  // Populate form fields with warranty data
+  useEffect(() => {
+    if (warrantyData) {
+      setValue("warranty_name_ar", warrantyData?.warranty_name_ar ?? "");
+      setValue("warranty_name_en", warrantyData?.warranty_name_en ?? "");
+      setValue("duration", warrantyData?.duration ?? 0);
+      setValue("duration_type", warrantyData?.duration_type ?? "Days");
+    }
+  }, [warrantyData, setValue]);
+
+  // Submit handler
+  const onSubmit = async (formData: WarrantyType) => {
+    const payload = {
       organization_id: organizationId,
-      warranty_name_ar: warrantyNameAr,
-      warranty_name_en: warrantyNameEn,
-      duration,
-      duration_type: durationType,
-    });
+      ...formData,
+    };
+
+    if (isUpdate && id) {
+      await updateWarranty.mutateAsync({
+        id: id,
+        data: payload,
+      });
+    } else {
+      await addWarranty.mutateAsync(payload);
+    }
   };
 
+  // Render form
   return (
     <>
       <PageBreadcrumb
         baseLink="/warranties"
         baseTitle="Warranties"
-        pageTitle="Create Warranty"
+        pageTitle={isUpdate ? "Update Warranty" : "Create Warranty"}
       />
 
-      <ComponentCard title="Create Warranty">
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-6">
-            <div>
-              <Label htmlFor="warranty-name-ar">Warranty Name (Ar)</Label>
-              <Input
-                type="text"
-                id="warranty-name-ar"
-                value={warrantyNameAr}
-                onChange={(e) => setWarrantyNameAr(e.target.value)}
-              />
+      <ComponentCard title={isUpdate ? "Update Warranty" : "Create Warranty"}>
+        {isUpdate && isLoading ? (
+          <p>Loading warranty data...</p>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* English Fields (Left Side) */}
+              <div>
+                <div className="py-3">
+                  <Label htmlFor="warranty-name-en">Name (En)</Label>
+                  <Input
+                    type="text"
+                    id="warranty-name-en"
+                    placeholder="Please enter warranty name (En)"
+                    {...register("warranty_name_en")}
+                    error={!!errors.warranty_name_en}
+                    hint={errors.warranty_name_en?.message}
+                    className="w-full p-3 border rounded-md" // Add this line
+                  />
+                </div>
+                <div className="py-3">
+                  <Label htmlFor="duration">Duration</Label>
+                  <Input
+                    type="number"
+                    id="duration"
+                    placeholder="Please enter duration"
+                    {...register("duration", { valueAsNumber: true })}
+                    error={!!errors.duration}
+                    hint={errors.duration?.message}
+                    className="w-full p-3 border rounded-md" // Add this line
+                  />
+                </div>
+              </div>
+
+              {/* Arabic Fields (Right Side) */}
+              <div>
+                <div className="py-3">
+                  <Label htmlFor="warranty-name-ar">Name (Ar)</Label>
+                  <Input
+                    type="text"
+                    id="warranty-name-ar"
+                    placeholder="Please enter warranty name (Ar)"
+                    {...register("warranty_name_ar")}
+                    error={!!errors.warranty_name_ar}
+                    hint={errors.warranty_name_ar?.message}
+                    className="w-full p-3 border rounded-md" // Add this line
+                  />
+                </div>
+                <div className="py-3">
+                  <Label htmlFor="duration-type">Duration Type</Label>
+                  <select
+                    id="duration-type"
+                    className="w-full p-1 border rounded-md"
+                    {...register("duration_type")}
+                  >
+                    <option value="Days">Days</option>
+                    <option value="Months">Months</option>
+                    <option value="Years">Years</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="warranty-name-en">Warranty Name (En)</Label>
-              <Input
-                type="text"
-                id="warranty-name-en"
-                value={warrantyNameEn}
-                onChange={(e) => setWarrantyNameEn(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="duration">Duration</Label>
-              <Input
-                type="number"
-                id="duration"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="duration-type">Duration Type</Label>
-              <select
-                id="duration-type"
-                value={durationType}
-                onChange={(e) => setDurationType(e.target.value)}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="">Select Type</option>
-                <option value="days">Days</option>
-                <option value="months">Months</option>
-                <option value="years">Years</option>
-              </select>
-            </div>
-
-            <div className="flex justify-end">
+            {/* Submit Button */}
+            <div className="flex justify-end mt-12">
               <button
                 type="submit"
-                className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#575db1] hover:bg-[#474ca1]"
+                className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF] flex items-center gap-2"
+                disabled={
+                  isSubmitting || addWarranty.isPending || updateWarranty.isPending
+                }
               >
-                Submit
+                {(addWarranty.isPending || updateWarranty.isPending) && (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
+                {isUpdate ? "Update" : "Create"}
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </ComponentCard>
     </>
   );

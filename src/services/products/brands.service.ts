@@ -12,6 +12,7 @@ export const _BrandsApi = {
     const response = await _axios.get<AxiosResponse<{ brands: IBrand[] }>>(
       "/products/brands"
     );
+    
     return response?.data?.data;
   },
   // GET BRAND
@@ -29,6 +30,7 @@ export const _BrandsApi = {
   // UPDATE BRAND
   updateBrand: async (id: number | undefined, data: BrandUpdateForm) => {
     const response = await _axios.put(`/products/brands/${id}`, data);
+
     return response.data;
   },
   // DELETE BRAND

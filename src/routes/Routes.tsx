@@ -29,6 +29,10 @@ import CreateCategory from "../pages/products/Categories/createCategory";
 import CreateUnit from "../pages/products/Units/createUnit";
 import SettingsLayout from "@/layout/SettingsLayout";
 import CreateBranch from "@/pages/Settings/branches/createBranch";
+import Taxes from "@/pages/products/Taxes/taxes";
+import CreateTax from "@/pages/products/Taxes/createTax";
+import Warranties from "@/pages/products/warranties/warranties"; 
+import CreateWarranty from "@/pages/products/warranties/createWarranty"; 
 
 const RoutesComponent = () => {
   return (
@@ -48,6 +52,14 @@ const RoutesComponent = () => {
         <Route path="/brands" element={<Brands />} />
         <Route path="/brands/create" element={<CreateBrand />} />
         <Route path="/brands/update/:id" element={<CreateBrand />} />
+
+        <Route path="/warranties" element={<Warranties/>} />
+        <Route path="/warranties/create" element={<CreateWarranty />} />
+        <Route path="/warranties/update/:id" element={<CreateWarranty />} />
+
+        <Route path="/taxes" element={<Taxes />} />
+        <Route path="/taxes/create" element={<CreateTax />} />
+        <Route path="/taxes/update/:id" element={<CreateTax />} />
 
         <Route path="/categories" element={<Categories />} />
         <Route path="/categories/:id" element={<CategoriesLayout />} />

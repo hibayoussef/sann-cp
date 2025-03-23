@@ -29,7 +29,7 @@ export default function BrandForm() {
   const { data: brandData, isLoading } = useFetchBrand(Number(id), {
     enabled: isUpdate,
   });
-
+  console.log("brands"+brandData)
   const {
     register,
     handleSubmit,
