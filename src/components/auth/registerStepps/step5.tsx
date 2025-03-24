@@ -37,7 +37,7 @@ export default function Step5() {
             }}
             className={`px-6 py-2 rounded-full ${
               billingCycle === "Monthly"
-                ? "bg-[#575db1] text-white"
+                ? "bg-[#465FFF] text-white"
                 : "text-gray-600"
             }`}
           >
@@ -176,7 +176,7 @@ export default function Step5() {
                       className={`mt-8 block w-full ${
                         values.plan_id === plan.id
                           ? "bg-green-600"
-                          : "bg-[#575db1]"
+                          : "bg-[#465FFF]"
                       } rounded-md py-4 text-sm font-semibold text-white text-center`}
                     >
                       {values.plan_id === plan.id ? "Selected" : "Choose Plan"}

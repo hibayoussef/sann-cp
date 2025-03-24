@@ -19,7 +19,7 @@ import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
 
-export default function CategoryForm() {
+export default function CreateCustomer() {
   const { id } = useParams();
   const isUpdate = Boolean(id);
   const addCategory = useAddCategory();
@@ -150,6 +150,7 @@ export default function CategoryForm() {
                 />
               </div>
 
+              {/* زر الحفظ */}
               <div className="flex justify-end mt-6">
                 <button
                   type="submit"

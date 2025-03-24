@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 
-export default function Categories() {
+export default function Customers() {
   const { data } = useFetchCategories();
   const categories: any = data || [];
   const { t } = useTranslation("items");
@@ -20,13 +20,13 @@ export default function Categories() {
         title="Categories Management | Dashboard"
         description="Manage your product categories in the system."
       />
-      <div className="space-y-4 px-1 py-1">
+      <div className="space-y-4 px-1 py-6">
         <PageBreadcrumb
           baseTitle={t("dashboard")}
           pageTitle={t("categories")}
           icon={<FolderTree className="w-5 h-5" />}
         />
-        <div className="space-y-4 pt-1">
+        <div className="space-y-4 pt-10">
           <DataTable
            columns={categoryColumns({
               update: hasPermission("update", "categories"),

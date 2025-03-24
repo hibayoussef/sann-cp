@@ -1,4 +1,4 @@
-// src/routes/Routes.tsx
+// // src/routes/Routes.tsx
 
 import Settings from "@/pages/Settings/Settings";
 import Branches from "@/pages/Settings/branches/branches";
@@ -31,80 +31,93 @@ import SettingsLayout from "@/layout/SettingsLayout";
 import CreateBranch from "@/pages/Settings/branches/createBranch";
 import Taxes from "@/pages/products/Taxes/taxes";
 import CreateTax from "@/pages/products/Taxes/createTax";
-import Warranties from "@/pages/products/warranties/warranties"; 
-import CreateWarranty from "@/pages/products/warranties/createWarranty"; 
+import Warranties from "@/pages/products/warranties/warranties";
+import CreateWarranty from "@/pages/products/warranties/createWarranty";
+import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
+import ShouldBeLogged from "@/middleware/shouldBeLogged";
+import Customers from "@/pages/Sales/customers/customers";
+import CreateCustomer from "@/pages/Sales/customers/createCustomer";
+import { OrganizationForm } from "@/pages/Settings/organizations/organizationForm";
 
 const RoutesComponent = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/signup" replace />} />
+      <Route path="/" element={<Navigate to="/signin" replace />} />
 
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/password/reset/:token" element={<ResetPassword />} />
-      <Route path="/verify-email/:token" element={<VerifyEmail />} />
-
-      <Route element={<AppLayout />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Home />} />
-
-        <Route path="/brands" element={<Brands />} />
-        <Route path="/brands/create" element={<CreateBrand />} />
-        <Route path="/brands/update/:id" element={<CreateBrand />} />
-
-        <Route path="/warranties" element={<Warranties/>} />
-        <Route path="/warranties/create" element={<CreateWarranty />} />
-        <Route path="/warranties/update/:id" element={<CreateWarranty />} />
-
-        <Route path="/taxes" element={<Taxes />} />
-        <Route path="/taxes/create" element={<CreateTax />} />
-        <Route path="/taxes/update/:id" element={<CreateTax />} />
-
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/categories/:id" element={<CategoriesLayout />} />
-        <Route path="/categories/create" element={<CreateCategory />} />
-        <Route path="/categories/update/:id" element={<CreateCategory />} />
-
-        <Route path="/sub-categories" element={<SubCategories />} />
-        {/* <Route path="/sub-categories/:id" element={<CategoryDetails />} /> */}
-        <Route path="/sub-categories/create" element={<CreateCategory />} />
-        <Route path="/sub-categories/update/:id" element={<CreateCategory />} />
-
-        <Route path="/categories/sub" element={<Brands />} />
-
-        {/* <Route path="/categories/sub/create" elemOent={<CreateSubCategory />} /> */}
-
-        <Route path="/units" element={<Units />} />
-        <Route path="/units/create" element={<CreateUnit />} />
-
-        {/* <Route path="/categories" element={<Blank />} />
-        <Route path="/categories/:id" element={<Blank />} />
-        <Route path="/sub-categories" element={<Blank />} />
-        <Route path="/sub-categories/:id" element={<Blank />} />
-        <Route path="/units" element={<Blank />} />
-        <Route path="/units/:id" element={<Blank />} />
-        <Route path="/sub-units/:id" element={<Blank />} />
-        <Route path="/profile" element={<UserProfiles />} /> */}
-
-        <Route path="/alerts" element={<Alerts />} />
-        <Route path="/avatars" element={<Avatars />} />
-        <Route path="/badge" element={<Badges />} />
-        <Route path="/buttons" element={<Buttons />} />
-        <Route path="/images" element={<Images />} />
-        <Route path="/videos" element={<Videos />} />
-        <Route path="/line-chart" element={<LineChart />} />
-        <Route path="/bar-chart" element={<BarChart />} />
-        <Route path="/settings" element={<Settings />} />
+      <Route element={<ShouldNotBeLogged />}>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/password/reset/:token" element={<ResetPassword />} />
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
       </Route>
 
-      <Route path="/settings" element={<SettingsLayout />}>
-        {/* <Route index element={<Settings />} /> */}
-        <Route path="branches" element={<Branches />} />
-        <Route path="branches/create" element={<CreateBranch />} />
+      <Route element={<ShouldBeLogged />}>
+        <Route element={<AppLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
 
-        {/* <Route path="other-settings" element={<OtherSettingsPage />} /> */}
+          <Route path="/brands" element={<Brands />} />
+          <Route path="/brands/create" element={<CreateBrand />} />
+          <Route path="/brands/update/:id" element={<CreateBrand />} />
+
+          <Route path="/warranties" element={<Warranties />} />
+          <Route path="/warranties/create" element={<CreateWarranty />} />
+          <Route path="/warranties/update/:id" element={<CreateWarranty />} />
+
+          <Route path="/taxes" element={<Taxes />} />
+          <Route path="/taxes/create" element={<CreateTax />} />
+          <Route path="/taxes/update/:id" element={<CreateTax />} />
+
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/categories/:id" element={<CategoriesLayout />} />
+          <Route path="/categories/create" element={<CreateCategory />} />
+          <Route path="/categories/update/:id" element={<CreateCategory />} />
+
+          <Route path="/sub-categories" element={<SubCategories />} />
+          <Route path="/sub-categories/create" element={<CreateCategory />} />
+          <Route
+            path="/sub-categories/update/:id"
+            element={<CreateCategory />}
+          />
+
+          <Route path="/categories/sub" element={<Brands />} />
+
+          <Route path="/units" element={<Units />} />
+          <Route path="/units/create" element={<CreateUnit />} />
+
+          {/* Sales */}
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/create" element={<CreateCustomer />} />
+          <Route path="/customers/update/:id" element={<CreateCustomer />} />
+          {/* end sales */}
+          <Route path="/alerts" element={<Alerts />} />
+          <Route path="/avatars" element={<Avatars />} />
+          <Route path="/badge" element={<Badges />} />
+          <Route path="/buttons" element={<Buttons />} />
+          <Route path="/images" element={<Images />} />
+          <Route path="/videos" element={<Videos />} />
+          <Route path="/line-chart" element={<LineChart />} />
+          <Route path="/bar-chart" element={<BarChart />} />
+          <Route path="/settings" element={<Settings />} />
+
+          <Route path="/alerts" element={<Alerts />} />
+          <Route path="/avatars" element={<Avatars />} />
+          <Route path="/badge" element={<Badges />} />
+          <Route path="/buttons" element={<Buttons />} />
+          <Route path="/images" element={<Images />} />
+          <Route path="/videos" element={<Videos />} />
+          <Route path="/line-chart" element={<LineChart />} />
+          <Route path="/bar-chart" element={<BarChart />} />
+        </Route>
+
+        <Route path="/settings" element={<SettingsLayout />}>
+          <Route path="orgProfile" element={<OrganizationForm />} />
+          <Route path="branches" element={<Brands />} />
+          <Route path="branches/create" element={<CreateBrand />} />
+        </Route>
       </Route>
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

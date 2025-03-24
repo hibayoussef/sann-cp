@@ -31,15 +31,15 @@ const SettingsSidebar: React.FC = () => {
 
   const navItems: NavItem[] = [
     {
-      icon: <MonitorIcon className="w-5 h-5 text-gray-500" />,
+      icon: <MonitorIcon className="w-4 h-4 text-gray-500" />,
       name: "Dashboard",
       path: "/home",
     },
     {
       name: "Organization",
-      icon: <Building className="w-5 h-5 text-gray-600" />,
+      icon: <Building className="w-4 h-4 text-gray-600" />,
       subItems: [
-        { name: "Profile", path: "/organization/profile" },
+        { name: "Profile", path: "/settings/orgProfile" },
         { name: "Branding", path: "" },
         { name: "Custom Domain", path: "" },
         { name: "Branches", path: "/settings/branches" },
@@ -49,7 +49,7 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Users & Roles",
-      icon: <Users className="w-5 h-5 text-gray-600" />,
+      icon: <Users className="w-4 h-4 text-gray-600" />,
       subItems: [
         { name: "User Management", path: "/users/manage" },
         { name: "Role Permissions", path: "/users/permissions" },
@@ -57,7 +57,7 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Preferences",
-      icon: <SettingsIcon className="w-5 h-5 text-gray-600" />,
+      icon: <SettingsIcon className="w-4 h-4 text-gray-600" />,
       subItems: [
         { name: "General", path: "/preferences/general" },
         { name: "Notifications", path: "/preferences/notifications" },
@@ -65,7 +65,7 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Sales",
-      icon: <ShoppingCart className="w-5 h-5 text-gray-600" />,
+      icon: <ShoppingCart className="w-4 h-4 text-gray-600" />,
       subItems: [
         { name: "Orders", path: "/sales/orders" },
         { name: "Invoices", path: "/sales/invoices" },
@@ -73,14 +73,14 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Purchases",
-      icon: <Package className="w-5 h-5 text-gray-600" />,
+      icon: <Package className="w-4 h-4 text-gray-600" />,
       subItems: [
         { name: "Suppliers", path: "/purchases/suppliers" },
         { name: "Bills", path: "/purchases/bills" },
       ],
     },
     {
-      icon: <LogOut className="w-5 h-5 text-gray-500" />,
+      icon: <LogOut className="w-4 h-4 text-gray-500" />,
       name: t("logout"),
       path: "/logout",
     },
@@ -132,11 +132,11 @@ const SettingsSidebar: React.FC = () => {
               <>
                 <button
                   onClick={() => handleSubmenuToggle(index)}
-                  className="flex items-center gap-2 p-2 hover:bg-gray-300 rounded-md w-full text-sm font-medium"
+                  className="flex items-center gap-2 p-2 hover:bg-gray-300 rounded-md w-full text-[13px] font-medium"
                 >
                   {nav.icon}
                   {(isExpanded || isMobileOpen) && (
-                    <span className="text-gray-700">{nav.name}</span>
+                    <span className="text-[13px] text-gray-700">{nav.name}</span>
                   )}
                   <ChevronDownIcon
                     className={`ml-auto w-4 h-4 transition-transform ${
@@ -156,12 +156,12 @@ const SettingsSidebar: React.FC = () => {
                         : "0px",
                   }}
                 >
-                  <ul className="mt-1 ml-4 text-sm">
+                  <ul className="mt-1 ml-4 text-[13px]">
                     {nav.subItems.map((subItem) => (
                       <li key={subItem.name} className="relative group">
                         <Link
                           to={subItem.path}
-                          className={`menu-dropdown-item ${
+                          className={`menu-dropdown-item text-[13px] ${
                             isActive(subItem.path)
                               ? "menu-dropdown-item-active"
                               : "menu-dropdown-item-inactive"
@@ -190,13 +190,13 @@ const SettingsSidebar: React.FC = () => {
               >
                 {nav.icon}
                 {(isExpanded || isMobileOpen) && (
-                  <span className="text-gray-700">{nav.name}</span>
+                  <span className="text-[13px] text-gray-700">{nav.name}</span>
                 )}
               </button>
             ) : (
               <Link
                 to={nav.path || ""}
-                className={`flex items-center gap-2 p-2 hover:bg-gray-300 rounded-md text-sm ${
+                className={`flex items-center gap-2 p-2 hover:bg-gray-300 rounded-md text-[13px] ${
                   isActive(nav.path || "") ? "bg-gray-200" : ""
                 }`}
               >

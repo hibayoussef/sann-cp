@@ -6,7 +6,7 @@ import { _AuthApi } from "../services/auth.service";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useTranslation } from "react-i18next";
-import { Box, LogOut, MonitorIcon, Plus, ShoppingCart } from "lucide-react";
+import { Box, LogOut, MonitorIcon, Plus, ShoppingBag, ShoppingCart } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -103,7 +103,7 @@ const AppSidebar: React.FC = () => {
     },
     {
       name: "Items",
-      icon: <ShoppingCart />,
+      icon: <ShoppingBag />,
       subItems: [
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
         {
@@ -116,6 +116,13 @@ const AppSidebar: React.FC = () => {
        
         { name: "Taxes", path: "/taxes", permissionKey: "taxes.view" },
         
+      ].filter((item) => hasPermission(item.permissionKey)), 
+    },
+      {
+      name: "Sales",
+      icon: <ShoppingCart />,
+      subItems: [
+        { name: "Customers", path: "/customers", permissionKey: "customers.view" },
       ].filter((item) => hasPermission(item.permissionKey)), 
      },
      {
@@ -275,7 +282,7 @@ const AppSidebar: React.FC = () => {
             >
               <ul className="mt-2 ml-9">
                 {nav.subItems.map((subItem) => (
-                  <li key={subItem.name}>
+                  <li key={subItem.name} className="relative group">
                     <Link
                       to={subItem.path}
                       className={`menu-dropdown-item ${
@@ -311,9 +318,9 @@ const AppSidebar: React.FC = () => {
                       </span>
                     </Link>
                     <button
-                      onClick={() => navigate("/categories/create")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 z-10"
-                    >
+  onClick={() => navigate("/categories/create")}
+  className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 z-10"
+>
                       <div className="w-4 h-4 rounded-full bg-brand-500 flex items-center justify-center hover:bg-brand-600">
                         <Plus className="w-3 h-3 text-white" />
                       </div>

@@ -134,13 +134,87 @@ export function DataTableViewOptions<TData>({
           align="end"
           className="w-[200px] bg-white shadow-md border border-gray-200"
         >
-          <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+          <DropdownMenuLabel className="flex items-center text-[13px] gap-2 text-gray-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="text-blue-500"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Export Options
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleExportCSV}>
+          <DropdownMenuItem
+            onClick={handleExportCSV}
+            className="flex items-center gap-2 text-[13px] hover:bg-gray-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="text-green-600"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M8 13v-1h8v1" />
+              <path d="M8 17v-1h6v1" />
+            </svg>
             Export by CSV
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleExportExcel}>
+
+          <DropdownMenuItem
+            onClick={handleExportExcel}
+            className="flex items-center gap-2 text-[13px] hover:bg-gray-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="text-purple-600"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <rect x="8" y="12" width="8" height="2" />
+              <rect x="8" y="16" width="8" height="2" />
+              <path d="M10 9h4" />
+            </svg>
             Export by Excel
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 text-[13px] hover:bg-gray-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="text-red-600"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M8 11h1" />
+              <path d="M8 15h1" />
+              <path d="M12 11h3" />
+              <path d="M16 15h-3" />
+              <path d="M13 15v-3" />
+            </svg>
+            Export by PDF
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -176,7 +250,7 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                  {column.id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
               </DropdownMenuCheckboxItem>
             ))}
         </DropdownMenuContent>

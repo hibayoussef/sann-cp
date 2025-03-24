@@ -91,7 +91,7 @@ export default function SignUpForm() {
               <div
                 key={index}
                 className={`h-2 w-13 rounded-full ${
-                  step > index ? "bg-[#575db1]" : "bg-gray-300"
+                  step > index ? "bg-[#465FFF]" : "bg-gray-300"
                 }`}
               ></div>
             ))}
@@ -142,7 +142,7 @@ export default function SignUpForm() {
                         }
                       }}
                       disabled={isSubmitting}
-                      className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg  shadow-theme-xs bg-[#575db1] hover:bg-[#474ca1]"
+                      className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg  shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF]"
                     >
                       {isPending ? <Loader /> : "Next"}
                     </button>
@@ -167,7 +167,7 @@ export default function SignUpForm() {
                     navigate("/signin"), 
                     setShowPopup(false);
                   }}
-                  className="mt-4 px-4 py-2 bg-[#575db1] hover:bg-[#474ca1] text-white rounded-lg transition"
+                  className="mt-4 px-4 py-2 bg-[#465FFF] hover:bg-[#465FFF] text-white rounded-lg transition"
                 >
                   OK, Got it!
                 </button>

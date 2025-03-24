@@ -97,7 +97,7 @@ export default function SignInForm() {
                     <button
                       type="submit"
                       disabled={isSubmitting || isPending}
-                      className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg  shadow-theme-xs bg-[#575db1] hover:bg-[#474ca1]"
+                      className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg  shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF]"
                     >
                       {" "}
                       {isPending ? <Loader /> : "Sign in"}

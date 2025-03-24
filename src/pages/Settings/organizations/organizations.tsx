@@ -1,15 +1,16 @@
-import { categoryColumns } from "@/columns/products/category";
 import { DataTable } from "@/components/ui/table-data/table-data";
-import { useFetchCategories } from "@/hooks/prouducts/useCategories";
-import { usePermissions } from "@/hooks/usePermissions";
-import { FolderTree } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
-import PageMeta from "../../../components/common/PageMeta";
+import { Home } from "lucide-react";
 
-export default function Categories() {
-  const { data } = useFetchCategories();
-  const categories: any = data || [];
+import { branchColumns } from "@/columns/settings/branches";
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import PageMeta from "@/components/common/PageMeta";
+import { useFetchBranches } from "@/hooks/settings/useBranches";
+import { usePermissions } from "@/hooks/usePermissions";
+import { useTranslation } from "react-i18next";
+
+export default function Organizations() {
+  const { data } = useFetchBranches();
+  const branches: any = data || [];
   const { t } = useTranslation("items");
 
   const { hasPermission } = usePermissions();
@@ -20,20 +21,20 @@ export default function Categories() {
         title="Categories Management | Dashboard"
         description="Manage your product categories in the system."
       />
-      <div className="space-y-4 px-1 py-1">
+      <div className="space-y-4 px-1 py-6">
         <PageBreadcrumb
-          baseTitle={t("dashboard")}
-          pageTitle={t("categories")}
-          icon={<FolderTree className="w-5 h-5" />}
+          baseTitle={t("settings")}
+          pageTitle={t("branches")}
+          icon={<Home className="w-5 h-5" />}
         />
-        <div className="space-y-4 pt-1">
+        <div className="space-y-4 pt-10">
           <DataTable
-           columns={categoryColumns({
+            columns={branchColumns({
               update: hasPermission("update", "categories"),
               delete: hasPermission("delete", "categories"),
             })}
-            data={categories}
-            createPath="/categories/create"
+            data={branches}
+            createPath="/settings/branches/create"
             hasDetails={true}
             detailsLink="/categories"
             permissions={{

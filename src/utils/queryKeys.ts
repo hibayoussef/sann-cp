@@ -22,4 +22,8 @@ export enum QueryKeys {
   BRANCHE = "branche",
   TAXES = "taxes",
   TAX = "tax",
+  CONTACTS = "contacts",
+  CONTACT = "contact",
+  ORGANIZATIONS = "organizations",
+  ORGANIZATION = "organization",
 }

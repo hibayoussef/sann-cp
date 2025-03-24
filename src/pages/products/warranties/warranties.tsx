@@ -1,13 +1,12 @@
 import { DataTable } from "@/components/ui/table-data/table-data";
-import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 
-import { useTranslation } from "react-i18next";
-import { Home } from "lucide-react";
-import { useFetchWarranties } from "@/hooks/prouducts/useWarranties";
 import { warrantyColumns } from "@/columns/products/warranty";
+import { useFetchWarranties } from "@/hooks/prouducts/useWarranties";
 import { usePermissions } from "@/hooks/usePermissions";
+import { ShieldCheck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Warranties() {
   const { data } = useFetchWarranties();
@@ -22,15 +21,15 @@ export default function Warranties() {
         title="Warranties Management | Dashboard"
         description="Manage your product warranties in the system."
       />
-      
 
-      <div className="space-y-4">
+      <div className="space-y-4 px-1 py-1">
         <PageBreadcrumb
           baseTitle={t("dashboard")}
           pageTitle={t("warranties")}
-          icon={<Home className="w-5 h-5" />}
+          icon={<ShieldCheck className="w-5 h-5" />}
         />
-        <ComponentCard title={t("warranties")}>
+
+        <div className="space-y-4 pt-1">
           <DataTable
             columns={warrantyColumns({
               update: hasPermission("update", "warranties"),
@@ -44,7 +43,7 @@ export default function Warranties() {
               delete: hasPermission("delete", "warranties"),
             }}
           />
-        </ComponentCard>
+        </div>
       </div>
     </>
   );

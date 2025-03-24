@@ -1,14 +1,13 @@
 import { DataTable } from "@/components/ui/table-data/table-data";
-import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 
 import { useTranslation } from "react-i18next";
 
-import { usePermissions } from "@/hooks/usePermissions";
-import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { taxColumns } from "@/columns/products/tax";
-import { Home } from "lucide-react";
+import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
+import { usePermissions } from "@/hooks/usePermissions";
+import { ReceiptText } from "lucide-react";
 
 export default function Taxes() {
   const { data } = useFetchTaxes();
@@ -23,15 +22,15 @@ export default function Taxes() {
         title="Taxes Management | Dashboard"
         description="Manage your product taxes in the system."
       />
-      
 
-      <div className="space-y-4">
-         <PageBreadcrumb
+      <div className="space-y-4 px-1 py-1">
+        <PageBreadcrumb
           baseTitle={t("dashboard")}
           pageTitle={t("taxes")}
-          icon={<Home className="w-5 h-5" />}
+          icon={<ReceiptText className="w-5 h-5" />}
         />
-        <ComponentCard title={t("taxes")}>
+
+        <div className="space-y-4 pt-1">
           <DataTable
             columns={taxColumns({
               update: hasPermission("update", "taxes"),
@@ -45,7 +44,7 @@ export default function Taxes() {
               delete: hasPermission("delete", "taxes"),
             }}
           />
-        </ComponentCard>
+        </div>
       </div>
     </>
   );

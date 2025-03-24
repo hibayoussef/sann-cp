@@ -1,11 +1,11 @@
+import { brandColumns } from "@/columns/products/brand";
 import { DataTable } from "@/components/ui/table-data/table-data";
-import ComponentCard from "../../../components/common/ComponentCard";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Tag } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 import { useFetchBrands } from "../../../hooks/prouducts/useBrands";
-import { useTranslation } from "react-i18next";
-import { usePermissions } from "@/hooks/usePermissions";
-import { brandColumns } from "@/columns/products/brand";
 
 export default function Brands() {
   const { data } = useFetchBrands();
@@ -20,10 +20,14 @@ export default function Brands() {
         title="Brands Management | Dashboard"
         description="Manage your product brands in the system."
       />
-      <PageBreadcrumb pageTitle={t("brands")} />
+      <div className="space-y-4 px-1 py-1">
+        <PageBreadcrumb
+          baseTitle={t("dashboard")}
+          pageTitle={t("brands")}
+          icon={<Tag className="w-5 h-5" />}
+        />
 
-      <div className="space-y-4">
-        <ComponentCard title={t("brands")}>
+        <div className="space-y-4 pt-1">
           <DataTable
             columns={brandColumns({
               update: hasPermission("update", "categories"),
@@ -37,7 +41,7 @@ export default function Brands() {
               delete: hasPermission("delete", "brands"),
             }}
           />
-        </ComponentCard>
+        </div>
       </div>
     </>
   );
