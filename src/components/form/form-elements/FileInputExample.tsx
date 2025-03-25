@@ -2,6 +2,7 @@ import ComponentCard from "../../common/ComponentCard";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import { useUploadAttachment } from "@/hooks/prouducts/useAttatchement";
+import { _MorphablesApi } from "@/services/morphables/attachements.service";
 
 interface DropzoneComponentProps {
   id: number;
@@ -16,10 +17,10 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
   type,
   onUpload,
 }) => {
-  const [uploadedImage, setUploadedImage] = useState<string | null>(
-    initialImage
-  );
+  
   const [file, setFile] = useState<File | null>(null);
+ const [uploadedImage, setUploadedImage] = useState<string | null>(initialImage);
+  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     const selectedFile = acceptedFiles[0];
@@ -41,16 +42,36 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
   });
 
   const handleUpload = async () => {
-    if (file) {
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      
       const formData = new FormData();
       formData.append("file_type", type || "image/jpeg");
       formData.append("file_type_id", id.toString());
       formData.append("file", file);
       formData.append("storage_disk", "public");
 
-      const uploadAttachment = useUploadAttachment(type || "image/jpeg", id);
-      await uploadAttachment.mutateAsync({ formData });
-      onUpload({ id, image: uploadedImage || "", type: file.type });
+      // تنفيذ طلب الرفع
+      const response = await _MorphablesApi.uploadAttachment({ formData });
+      
+      // تحديث الحالة برابط الصورة من الاستجابة
+      const imageUrl = response.data.url; // تأكد من أن الاستجابة تحتوي على رابط الصورة
+      setUploadedImage(imageUrl);
+      
+      // تمرير البيانات للأب
+      onUpload({ 
+        id, 
+        image: imageUrl, 
+        type: file.type 
+      });
+
+    } catch (error) {
+      console.error("Upload failed:", error);
+      // يمكنك إضافة إشعار خطأ هنا
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -138,12 +159,12 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
       </div>
       <div className="flex gap-4 h-full items-center">
         <button
-          type="submit"
+          type="button"
           onClick={handleUpload}
-          className="ml-auto px-4 py-2 bg-blue-500 text-xs text-white rounded hover:bg-blue-600 transition-colors h-fit"
-          disabled={!file}
+          className="ml-auto px-3 py-1.5 bg-blue-500 text-xs text-white rounded hover:bg-blue-600 transition-colors h-fit disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!file || isUploading}
         >
-          Upload
+          {isUploading ? 'Uploading...' : 'Upload'}
         </button>
       </div>
     </ComponentCard>
