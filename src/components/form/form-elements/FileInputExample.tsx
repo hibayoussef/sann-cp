@@ -1,7 +1,6 @@
-import ComponentCard from "../../common/ComponentCard";
-import { useDropzone } from "react-dropzone";
 import { useState } from "react";
-import { useUploadAttachment } from "@/hooks/prouducts/useAttatchement";
+import { useDropzone } from "react-dropzone";
+import ComponentCard from "../../common/ComponentCard";
 
 interface DropzoneComponentProps {
   id: number;
@@ -44,7 +43,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
     if (!file) return;
 
     try {
-      setIsUploading(true);
+      // setIsUploading(true);
       
       const formData = new FormData();
       formData.append("file_type", type || "image/jpeg");
@@ -52,32 +51,28 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
       formData.append("file", file);
       formData.append("storage_disk", "public");
 
-      // تنفيذ طلب الرفع
-      const response = await uploadAttachment({ formData });
+      // const response = await uploadAttachment({ formData });
       
-      // تحديث الحالة برابط الصورة من الاستجابة
-      const imageUrl = response.data.url; // تأكد من أن الاستجابة تحتوي على رابط الصورة
-      setUploadedImage(imageUrl);
+      // const imageUrl = response.data.url; 
+      // setUploadedImage(imageUrl);
       
       // تمرير البيانات للأب
-      onUpload({ 
-        id, 
-        image: imageUrl, 
-        type: file.type 
-      });
+      // onUpload({ 
+      //   id, 
+      //   image: imageUrl, 
+      //   type: file.type 
+      // });
 
     } catch (error) {
       console.error("Upload failed:", error);
-      // يمكنك إضافة إشعار خطأ هنا
     } finally {
-      setIsUploading(false);
+      // setIsUploading(false);
     }
   };
 
   return (
     <ComponentCard title="Upload Image">
       <div className="flex gap-4 h-full">
-        {/* قسم Drag and Drop */}
         <div className="flex-1 transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 h-full">
           <form
             {...getRootProps()}
