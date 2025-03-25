@@ -26,4 +26,5 @@ export enum QueryKeys {
   CONTACT = "contact",
   ORGANIZATIONS = "organizations",
   ORGANIZATION = "organization",
+  ATTATCHEMENTS = "attatchements",
 }

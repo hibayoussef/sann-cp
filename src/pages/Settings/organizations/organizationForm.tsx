@@ -2,6 +2,7 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import Label from "@/components/form/Label";
+import FileInputExample from "@/components/form/form-elements/FileInputExample";
 import Input from "@/components/form/input/InputField";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader/loader";
@@ -9,6 +10,7 @@ import {
   useFetchOrganizations,
   useUpdateOrganization,
 } from "@/hooks/settings/useOrganizations";
+import { FileType } from "@/types/enums/attatchementType";
 import {
   Boxes,
   Building,
@@ -193,6 +195,15 @@ export const OrganizationForm = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="grid grid-cols-1 md:grid-cols-2 gap-3"
           >
+            <FileInputExample
+              fileType={FileType.ORGANIZATION}
+              fileTypeId={organizationData?.id}
+              imageUrl={
+                organizationData?.attachments?.file_path
+                  ? organizationData?.attachments?.file_path
+                  : ""
+              }
+            />
             <div className="space-y-1">
               <Label className="text-xs font-medium text-gray-600">
                 Organization Name
@@ -372,28 +383,30 @@ export const OrganizationForm = () => {
                 </h3>
 
                 <div className="mt-3">
-                  <p className="text-xs font-medium text-gray-600">
-                    Features:
-                  </p>
+                  <p className="text-xs font-medium text-gray-600">Features:</p>
                   {module.features.length > 0 ? (
-                    <>    <ul className="mt-2 space-y-2">
-                    {module.features.map((feature: any, fIndex: any) => (
-                      <li
-                        key={feature.id}
-                        className="flex items-center gap-2 p-2 bg-gray-100 rounded-md"
-                      >
-                        <Boxes className="w-4 h-4 text-gray-500" />
-                        <Input
-                          className="text-xs h-8 flex-1"
-                          {...register(
-                            `modules.${index}.features.${fIndex}.name_en`
-                          )}
-                        />
-                      </li>
-                    ))}
-                  </ul></>
-                  ):(  <p className="text-xs text-gray-500 mt-2">No Features</p>)}
-              
+                    <>
+                      {" "}
+                      <ul className="mt-2 space-y-2">
+                        {module.features.map((feature: any, fIndex: any) => (
+                          <li
+                            key={feature.id}
+                            className="flex items-center gap-2 p-2 bg-gray-100 rounded-md"
+                          >
+                            <Boxes className="w-4 h-4 text-gray-500" />
+                            <Input
+                              className="text-xs h-8 flex-1"
+                              {...register(
+                                `modules.${index}.features.${fIndex}.name_en`
+                              )}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <p className="text-xs text-gray-500 mt-2">No Features</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -401,45 +414,44 @@ export const OrganizationForm = () => {
         </ComponentCard>
 
         {/* Branches & Stores */}
-       <ComponentCard
-  title="Branches & Stores"
-  icon={<Store className="w-5 h-5 text-orange-500" />}
->
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {organizationData?.branches.map((branch: any, index: any) => (
-      <div
-        key={branch.id}
-        className="p-4 bg-white rounded-lg shadow-md border border-gray-200"
-      >
-        <h3 className="text-xs font-semibold text-gray-800 flex items-center gap-2 text-xs">
-          <Building className="w-5 h-5 text-orange-500" />
-          {branch.branch_name_en}
-        </h3>
-
-        <div className="mt-3">
-          <h4 className="text-xs font-medium text-gray-600">Stores:</h4>
-          <div className="grid grid-cols-1 gap-3 mt-2">
-            {branch.stores.map((store: any, sIndex: any) => (
+        <ComponentCard
+          title="Branches & Stores"
+          icon={<Store className="w-5 h-5 text-orange-500" />}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {organizationData?.branches.map((branch: any, index: any) => (
               <div
-                key={store.id}
-                className="p-3 bg-gray-100 rounded-md w-full flex items-center gap-2"
+                key={branch.id}
+                className="p-4 bg-white rounded-lg shadow-md border border-gray-200"
               >
-                <Store className="w-4 h-4 text-gray-500" />
-                <Input
-                  className="text-sm h-9 w-full"
-                  {...register(
-                    `branches.${index}.stores.${sIndex}.store_name_en`
-                  )}
-                />
+                <h3 className="text-xs font-semibold text-gray-800 flex items-center gap-2 text-xs">
+                  <Building className="w-5 h-5 text-orange-500" />
+                  {branch.branch_name_en}
+                </h3>
+
+                <div className="mt-3">
+                  <h4 className="text-xs font-medium text-gray-600">Stores:</h4>
+                  <div className="grid grid-cols-1 gap-3 mt-2">
+                    {branch.stores.map((store: any, sIndex: any) => (
+                      <div
+                        key={store.id}
+                        className="p-3 bg-gray-100 rounded-md w-full flex items-center gap-2"
+                      >
+                        <Store className="w-4 h-4 text-gray-500" />
+                        <Input
+                          className="text-sm h-9 w-full"
+                          {...register(
+                            `branches.${index}.stores.${sIndex}.store_name_en`
+                          )}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-    ))}
-  </div>
-</ComponentCard>
-
+        </ComponentCard>
       </div>
     </div>
   );

@@ -14,13 +14,13 @@ export const useFetchOrganizations = () => {
 
 // UPDATE ORGANIZATION
 export const useUpdateOrganization = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return useMutation({
     mutationFn: ({ id, data }: { id: number | undefined; data: any }) =>
       _OrganizationsApi.updateOrganization(id, data), 
-    onSuccess: () => {
-      navigate("/organizations"); 
-    },
+    // onSuccess: () => {
+    //   navigate("/organizations"); 
+    // },
   });
 };
 
