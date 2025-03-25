@@ -2,6 +2,7 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import Label from "@/components/form/Label";
+import DropzoneComponent from "@/components/form/form-elements/FileInputExample";
 import FileInputExample from "@/components/form/form-elements/FileInputExample";
 import Input from "@/components/form/input/InputField";
 import { Button } from "@/components/ui/button";
@@ -186,6 +187,19 @@ export const OrganizationForm = () => {
       />
 
       <div className="grid grid-cols-1 gap-2">
+
+         <DropzoneComponent
+              id={organizationData?.id}
+              initialImage={
+                organizationData?.attachments?.file_path
+                  ? organizationData?.attachments?.file_path
+                  : ""
+              }
+              type={FileType.ORGANIZATION}
+              onUpload={(fileData) => {
+                console.log("Uploaded file data:", fileData);
+              }}
+            />
         {/* Basic Information */}
         <ComponentCard
           title="Core Details"
@@ -195,7 +209,8 @@ export const OrganizationForm = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="grid grid-cols-1 md:grid-cols-2 gap-3"
           >
-            <FileInputExample
+           
+            {/* <FileInputExample
               fileType={FileType.ORGANIZATION}
               fileTypeId={organizationData?.id}
               imageUrl={
@@ -203,7 +218,7 @@ export const OrganizationForm = () => {
                   ? organizationData?.attachments?.file_path
                   : ""
               }
-            />
+            /> */}
             <div className="space-y-1">
               <Label className="text-xs font-medium text-gray-600">
                 Organization Name
