@@ -2,7 +2,6 @@ import ComponentCard from "../../common/ComponentCard";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import { useUploadAttachment } from "@/hooks/prouducts/useAttatchement";
-import { _MorphablesApi } from "@/services/morphables/attachements.service";
 
 interface DropzoneComponentProps {
   id: number;
@@ -17,10 +16,10 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
   type,
   onUpload,
 }) => {
-  
+  const [uploadedImage, setUploadedImage] = useState<string | null>(
+    initialImage
+  );
   const [file, setFile] = useState<File | null>(null);
- const [uploadedImage, setUploadedImage] = useState<string | null>(initialImage);
-  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     const selectedFile = acceptedFiles[0];
@@ -54,7 +53,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
       formData.append("storage_disk", "public");
 
       // تنفيذ طلب الرفع
-      const response = await _MorphablesApi.uploadAttachment({ formData });
+      const response = await uploadAttachment({ formData });
       
       // تحديث الحالة برابط الصورة من الاستجابة
       const imageUrl = response.data.url; // تأكد من أن الاستجابة تحتوي على رابط الصورة
@@ -158,13 +157,14 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
         </div>
       </div>
       <div className="flex gap-4 h-full items-center">
-        <button
+       <button
           type="button"
           onClick={handleUpload}
           className="ml-auto px-3 py-1.5 bg-blue-500 text-xs text-white rounded hover:bg-blue-600 transition-colors h-fit disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={!file || isUploading}
+          disabled={!file }
         >
-          {isUploading ? 'Uploading...' : 'Upload'}
+          Upload
+          {/* {isUploading ? 'Uploading...' : 'Upload'} */}
         </button>
       </div>
     </ComponentCard>
