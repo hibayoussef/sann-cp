@@ -9,7 +9,7 @@ import { _axios } from "../../interceptor/http-config";
 export const _UnitsApi = {
   // GET UNITS
   getUnits: async () => {
-    const response = await _axios.get<AxiosResponse<{ units: IUnit[] }>>(
+    const response = await _axios.get<AxiosResponse<IUnit[]>>(
       "/products/units"
     );
     return response?.data?.data;

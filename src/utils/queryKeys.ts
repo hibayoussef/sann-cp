@@ -27,4 +27,8 @@ export enum QueryKeys {
   ORGANIZATIONS = "organizations",
   ORGANIZATION = "organization",
   ATTATCHEMENTS = "attatchements",
+  PAYMENT_TERMS = "payment_terms",
+  PAYMENT_TERM = "payment_term",
+  PRODUCTS = "products",
+  PRODUCT = "product",
 }

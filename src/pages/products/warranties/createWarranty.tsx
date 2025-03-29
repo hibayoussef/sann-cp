@@ -7,8 +7,18 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { useAddWarranty, useFetchWarranty, useUpdateWarranty } from "@/hooks/prouducts/useWarranties";
-import { warrantySchema, type WarrantyType } from "@/components/lib/validations/warranty";
+import {
+  useAddWarranty,
+  useFetchWarranty,
+  useUpdateWarranty,
+} from "@/hooks/prouducts/useWarranties";
+import {
+  warrantySchema,
+  type WarrantyType,
+} from "@/components/lib/validations/warranty";
+import { Clock, Tag } from "lucide-react";
+import { WarrantiesType } from "@/types/enums/warrantiesType";
+import { IoAdd } from "react-icons/io5";
 
 export default function WarrantyForm() {
   const { id } = useParams();
@@ -18,9 +28,12 @@ export default function WarrantyForm() {
   const organizationId = useMeStore((state) => state.organizationId);
 
   // Fetch warranty data for updating
-  const { data: warrantyData = null, isLoading } = useFetchWarranty(Number(id), {
-    enabled: isUpdate,
-  });
+  const { data: warrantyData = null, isLoading } = useFetchWarranty(
+    Number(id),
+    {
+      enabled: isUpdate,
+    }
+  );
 
   // Hook form initialization
   const {
@@ -72,6 +85,11 @@ export default function WarrantyForm() {
         baseLink="/warranties"
         baseTitle="Warranties"
         pageTitle={isUpdate ? "Update Warranty" : "Create Warranty"}
+        icon={
+          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+            <IoAdd className="w-5 h-5" />
+          </div>
+        }
       />
 
       <ComponentCard title={isUpdate ? "Update Warranty" : "Create Warranty"}>
@@ -91,7 +109,8 @@ export default function WarrantyForm() {
                     {...register("warranty_name_en")}
                     error={!!errors.warranty_name_en}
                     hint={errors.warranty_name_en?.message}
-                    className="w-full p-3 border rounded-md" // Add this line
+                    className="w-full p-3 border rounded-md"
+                    icon={<Tag className="w-4 h-4" />}
                   />
                 </div>
                 <div className="py-3">
@@ -103,7 +122,8 @@ export default function WarrantyForm() {
                     {...register("duration", { valueAsNumber: true })}
                     error={!!errors.duration}
                     hint={errors.duration?.message}
-                    className="w-full p-3 border rounded-md" // Add this line
+                    className="w-full p-3 border rounded-md"
+                    icon={<Clock className="w-4 h-4" />}
                   />
                 </div>
               </div>
@@ -119,7 +139,8 @@ export default function WarrantyForm() {
                     {...register("warranty_name_ar")}
                     error={!!errors.warranty_name_ar}
                     hint={errors.warranty_name_ar?.message}
-                    className="w-full p-3 border rounded-md" // Add this line
+                    className="w-full p-3 border rounded-md"
+                    icon={<Tag className="w-4 h-4" />}
                   />
                 </div>
                 <div className="py-3">
@@ -129,9 +150,9 @@ export default function WarrantyForm() {
                     className="w-full p-1 border rounded-md"
                     {...register("duration_type")}
                   >
-                    <option value="Days">Days</option>
-                    <option value="Months">Months</option>
-                    <option value="Years">Years</option>
+                    <option value="Days">{WarrantiesType.Days}</option>
+                    <option value="Months">{WarrantiesType.MONTHS}</option>
+                    <option value="Years">{WarrantiesType.YEARS}</option>
                   </select>
                 </div>
               </div>
@@ -143,7 +164,9 @@ export default function WarrantyForm() {
                 type="submit"
                 className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF] flex items-center gap-2"
                 disabled={
-                  isSubmitting || addWarranty.isPending || updateWarranty.isPending
+                  isSubmitting ||
+                  addWarranty.isPending ||
+                  updateWarranty.isPending
                 }
               >
                 {(addWarranty.isPending || updateWarranty.isPending) && (

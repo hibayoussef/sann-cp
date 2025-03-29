@@ -116,7 +116,12 @@ export function CustomizeColumnsModal<T extends BaseItem>({
                     checked={col.getIsVisible()}
                     id={col.id.toString()}
                   />
-                  <label htmlFor={col.id.toString()}>{col.id}</label>
+                  <label htmlFor={col.id.toString()}>
+                    {" "}
+                    {col?.id
+                      .replace(/_/g, " ")
+                      .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  </label>
                 </div>
               </SortableItem>
             ))}

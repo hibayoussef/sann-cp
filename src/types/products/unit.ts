@@ -9,7 +9,7 @@ export interface ISubUnit {
 }
 
 export interface IUnit {
-  id?: number | null;
+  id?: string | null | number | undefined;
   organization_id: number | null;
   unit_name_ar: string | any;
   unit_name_en?: string | null;

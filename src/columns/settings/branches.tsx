@@ -62,8 +62,9 @@ export const branchColumns = (permissions: {
       <DataTableRowActions
         row={row}
         schema={branchSchema}
-        editItem={`/branches/update/${row.original.id}`}
+        editItem={`/settings/branches/update/${row.original.id}`}
         onDelete={(id) => console.log(`Deleting branch ID: ${id}`)}
+        permissions={permissions}
       />
     ),
   },

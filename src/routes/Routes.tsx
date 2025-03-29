@@ -1,11 +1,21 @@
 // // src/routes/Routes.tsx
 
+import SettingsLayout from "@/layout/SettingsLayout";
+import ShouldBeLogged from "@/middleware/shouldBeLogged";
+import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
+import CreateCustomer from "@/pages/Sales/customers/createCustomer";
+import Customers from "@/pages/Sales/customers/customers";
 import Settings from "@/pages/Settings/Settings";
 import Branches from "@/pages/Settings/branches/branches";
+import { OrganizationForm } from "@/pages/Settings/organizations/organizationForm";
 import Categories from "@/pages/products/Categories/categories";
 import CategoriesLayout from "@/pages/products/Categories/categoriesLayout";
 import SubCategories from "@/pages/products/SubCategories/subCategories";
+import CreateTax from "@/pages/products/Taxes/createTax";
+import Taxes from "@/pages/products/Taxes/taxes";
 import Units from "@/pages/products/Units/units";
+import CreateWarranty from "@/pages/products/warranties/createWarranty";
+import Warranties from "@/pages/products/warranties/warranties";
 import { Navigate, Route, Routes } from "react-router";
 import AppLayout from "../layout/AppLayout";
 import ForgotPassword from "../pages/AuthPages/ForgotPassword";
@@ -27,17 +37,9 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import CreateUnit from "../pages/products/Units/createUnit";
-import SettingsLayout from "@/layout/SettingsLayout";
 import CreateBranch from "@/pages/Settings/branches/createBranch";
-import Taxes from "@/pages/products/Taxes/taxes";
-import CreateTax from "@/pages/products/Taxes/createTax";
-import Warranties from "@/pages/products/warranties/warranties";
-import CreateWarranty from "@/pages/products/warranties/createWarranty";
-import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
-import ShouldBeLogged from "@/middleware/shouldBeLogged";
-import Customers from "@/pages/Sales/customers/customers";
-import CreateCustomer from "@/pages/Sales/customers/createCustomer";
-import { OrganizationForm } from "@/pages/Settings/organizations/organizationForm";
+import ProductForm from "@/pages/products/products/productForm";
+import Products from "@/pages/products/products/products";
 
 const RoutesComponent = () => {
   return (
@@ -56,6 +58,10 @@ const RoutesComponent = () => {
         <Route element={<AppLayout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Home />} />
+
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/create" element={<ProductForm />} />
+          <Route path="/products/update/:id" element={<ProductForm />} />
 
           <Route path="/brands" element={<Brands />} />
           <Route path="/brands/create" element={<CreateBrand />} />
@@ -88,6 +94,7 @@ const RoutesComponent = () => {
 
           {/* Sales */}
           <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/:id" element={<CategoriesLayout />} />
           <Route path="/customers/create" element={<CreateCustomer />} />
           <Route path="/customers/update/:id" element={<CreateCustomer />} />
           {/* end sales */}
@@ -113,8 +120,9 @@ const RoutesComponent = () => {
 
         <Route path="/settings" element={<SettingsLayout />}>
           <Route path="orgProfile" element={<OrganizationForm />} />
-          <Route path="branches" element={<Brands />} />
-          <Route path="branches/create" element={<CreateBrand />} />
+          <Route path="branches" element={<Branches />} />
+          <Route path="branches/create" element={<CreateBranch />} />
+          <Route path="branches/update/:id" element={<CreateBranch />} />
         </Route>
       </Route>
 

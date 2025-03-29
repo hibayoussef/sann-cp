@@ -1,15 +1,16 @@
-import { categoryColumns } from "@/columns/products/category";
+import { customerColumns } from "@/columns/contacts/customer";
 import { DataTable } from "@/components/ui/table-data/table-data";
-import { useFetchCategories } from "@/hooks/prouducts/useCategories";
+import { useFetchContacts } from "@/hooks/sales/contacts";
 import { usePermissions } from "@/hooks/usePermissions";
-import { FolderTree } from "lucide-react";
+import { ContactType } from "@/types/enums/contactType";
+import { Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 
 export default function Customers() {
-  const { data } = useFetchCategories();
-  const categories: any = data || [];
+  const { data } = useFetchContacts(ContactType.CUSTOMER);
+  const contacts: any = data || [];
   const { t } = useTranslation("items");
 
   const { hasPermission } = usePermissions();
@@ -17,29 +18,29 @@ export default function Customers() {
   return (
     <>
       <PageMeta
-        title="Categories Management | Dashboard"
+        title="Customers Management | Dashboard"
         description="Manage your product categories in the system."
       />
-      <div className="space-y-4 px-1 py-6">
+      <div className="space-y-4 px-1 py-1">
         <PageBreadcrumb
           baseTitle={t("dashboard")}
-          pageTitle={t("categories")}
-          icon={<FolderTree className="w-5 h-5" />}
+          pageTitle={t("Customers")}
+          icon={<Users className="w-4 h-4" />}
         />
-        <div className="space-y-4 pt-10">
+        <div className="space-y-4 pt-1">
           <DataTable
-           columns={categoryColumns({
-              update: hasPermission("update", "categories"),
-              delete: hasPermission("delete", "categories"),
+            columns={customerColumns({
+              update: hasPermission("update", "customers"),
+              delete: hasPermission("delete", "customers"),
             })}
-            data={categories}
-            createPath="/categories/create"
+            data={contacts}
+            createPath="/customers/create"
             hasDetails={true}
-            detailsLink="/categories"
+            detailsLink="/customers"
             permissions={{
-              create: hasPermission("create", "categories"),
-              update: hasPermission("update", "categories"),
-              delete: hasPermission("delete", "categories"),
+              create: hasPermission("create", "customers"),
+              update: hasPermission("update", "customers"),
+              delete: hasPermission("delete", "customers"),
             }}
           />
         </div>

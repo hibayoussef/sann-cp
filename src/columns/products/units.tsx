@@ -52,12 +52,12 @@ export const unitColumns: ColumnDef<IUnit>[] = [
     cell: ({ row }) => {
       const subUnits = row.getValue("sub_units") as Array<any>;
 
-      return subUnits.length > 0 ? (
+      return subUnits?.length > 0 ? (
         <ul className="list-disc ml-4">
           {subUnits.map((sub, index) => (
             <li key={index} className="text-sm">
-              {sub.unit_name_en} ({sub.short_name_en}) - Multiplier:{" "}
-              {sub.multiplier}
+              {sub?.unit_name_en} ({sub?.short_name_en}) - Multiplier:{" "}
+              {sub?.multiplier}
             </li>
           ))}
         </ul>

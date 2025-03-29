@@ -9,7 +9,7 @@ import type {
 export const _BrandsApi = {
   // GET BRANDS
   getBrands: async () => {
-    const response = await _axios.get<AxiosResponse<{ brands: IBrand[] }>>(
+    const response = await _axios.get<AxiosResponse<IBrand[]>>(
       "/products/brands"
     );
     

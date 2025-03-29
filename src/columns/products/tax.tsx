@@ -9,6 +9,7 @@ export const taxColumns = (permissions: {
   delete: boolean;
 }): ColumnDef<ITax>[] => [
   {
+    id: "id",
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
@@ -16,6 +17,7 @@ export const taxColumns = (permissions: {
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   },
   {
+    id: "tax_name_en",
     accessorKey: "tax_name_en",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Tax Name" />
@@ -25,18 +27,17 @@ export const taxColumns = (permissions: {
     ),
   },
   {
+    id: "amount",
     accessorKey: "amount",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[500px] truncate">
-        {row.getValue("amount")}
-      </div>
+      <div className="max-w-[500px] truncate">{row.getValue("amount")}</div>
     ),
   },
   {
-    id: "Actions",
+    id: "actions",
     // accessorKey: "Actions",
     cell: ({ row }) => (
       <DataTableRowActions

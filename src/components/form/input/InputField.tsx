@@ -18,7 +18,7 @@ interface InputProps {
   error?: boolean;
   hint?: string;
   readOnly?: boolean;
-  icon?: React.ReactNode; // **تمت إضافته لدعم الأيقونات**
+  icon?: React.ReactNode;
 }
 
 const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> = React.forwardRef(
@@ -40,11 +40,11 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> = React.forw
       error = false,
       hint,
       readOnly = false,
-      icon, // **تم تمرير الأيقونة هنا**
+      icon,
     },
     ref
   ) => {
-    let inputClasses = `h-8 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-none focus:ring dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
+    let inputClasses = `h-8 w-full rounded-lg border appearance-none px-4 py-2.5 text-[13px] shadow-theme-xs placeholder:text-gray-400 focus:outline-none focus:ring dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
 
     if (readOnly) {
       inputClasses += " text-gray-500 border-gray-300 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400";
@@ -61,7 +61,7 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> = React.forw
     return (
       <div className="relative">
         {icon && (
-          <div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          <div style={{ paddingBottom: hint ? "18px": ""}} className="absolute inset-y-0 left-3 flex items-center text-gray-400">
             {icon}
           </div>
         )}
@@ -78,7 +78,7 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> = React.forw
           max={max}
           step={step}
           disabled={disabled}
-          className={`${inputClasses} ${icon ? "pl-10" : ""}`} // **إضافة مسافة داخلية إذا كان هناك أيقونة**
+          className={`${inputClasses} ${icon ? "pl-10" : ""}`} 
           readOnly={readOnly}
         />
 

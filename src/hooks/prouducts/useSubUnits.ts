@@ -4,7 +4,7 @@ import { _SUB_UnitsApi } from "../../services/products/subUnits.service";
 import { QueryKeys } from "../../utils/queryKeys";
 
 // FETCH SUB_UNITs
-export const useFetchSubCategories = () => {
+export const useFetchSubUnits = () => {
   return useQuery({
     queryKey: [QueryKeys.SUB_UNITs],
     queryFn: _SUB_UnitsApi.getSubUnits,

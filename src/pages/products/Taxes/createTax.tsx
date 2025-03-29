@@ -7,10 +7,21 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { useAddTax, useFetchTax, useUpdateTax } from "@/hooks/prouducts/useTaxes";
+import {
+  useAddTax,
+  useFetchTax,
+  useUpdateTax,
+} from "@/hooks/prouducts/useTaxes";
 import { taxSchema, TaxType } from "@/components/lib/validations/tax";
+import { IoAdd } from "react-icons/io5";
 
-const Switch = ({ checked, onChange }: { checked: boolean; onChange: (checked: boolean) => void }) => {
+const Switch = ({
+  checked,
+  onChange,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) => {
   return (
     <label className="relative inline-flex items-center cursor-pointer">
       <input
@@ -89,6 +100,11 @@ export default function TaxForm() {
         baseLink="/taxes"
         baseTitle="Taxes"
         pageTitle={isUpdate ? "Update Tax" : "Create Tax"}
+        icon={
+          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+            <IoAdd className="w-5 h-5" />
+          </div>
+        }
       />
 
       <ComponentCard title={isUpdate ? "Update Tax" : "Create Tax"}>
@@ -150,7 +166,7 @@ export default function TaxForm() {
             </div>
 
             {/* Submit Button */}
-           <div className="flex justify-end mt-12">
+            <div className="flex justify-end mt-12">
               <button
                 type="submit"
                 className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF] flex items-center gap-2"

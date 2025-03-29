@@ -38,7 +38,6 @@ export const useLogin = () => {
       return res;
     },
     onSuccess: (data: any) => {
-      console.log('datatdata:', data)
       login(data?.data, data?.data?.token);
       navigate("/home");
     },

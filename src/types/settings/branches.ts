@@ -4,6 +4,7 @@ export interface IStore {
   store_name_en: string;
   email?: string | null;
   mobile?: string | null;
+  country_state_id?: number | null;
   website?: string | null;
   logo_file_name?: string | null;
   logo_file_path?: string | null;
@@ -17,6 +18,8 @@ export interface IBranch {
   email?: string | null;
   mobile?: string | null;
   website?: string | null;
+  country_state_id?: number | null;
+
   logo_file_name?: string | null;
   logo_file_path?: string | null;
   logo_mime_type?: string | null;

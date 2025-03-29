@@ -6,7 +6,14 @@ import { _AuthApi } from "../services/auth.service";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useTranslation } from "react-i18next";
-import { Box, LogOut, MonitorIcon, Plus, ShoppingBag, ShoppingCart } from "lucide-react";
+import {
+  Box,
+  LogOut,
+  MonitorIcon,
+  Plus,
+  ShoppingBag,
+  ShoppingCart,
+} from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -22,34 +29,6 @@ type NavItem = {
   }[];
 };
 
-const navItems: NavItem[] = [
-  {
-    icon: <GridIcon />,
-    name: "Dashboard",
-    path: "/home",
-  },
-
-  {
-    name: "Products",
-    icon: <TableIcon />,
-    subItems: [
-      { name: "Products", path: "/products", pro: false },
-      { name: "Brands", path: "/brands", pro: false },
-      { name: "Categories", path: "/categories", pro: false },
-      { name: "Sub Categories", path: "/sub-categories", pro: false },
-      { name: "Units", path: "/units", pro: false },
-      { name: "SubUnits", path: "/sub-units", pro: false },
-      { name: "Warranties", path: "/warranties", pro: false },
-      { name: "Taxes", path: "/taxes", pro: false },
-    ],
-  },
-  {
-    icon: <GridIcon />,
-    name: "Logout",
-    // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
-  },
-];
-
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered } = useSidebar();
 
@@ -57,44 +36,7 @@ const AppSidebar: React.FC = () => {
   const { t } = useTranslation("items");
   const { permissions } = useAuthStore();
   const hasPermission = (key?: any) => !key || permissions?.includes(key);
-
-  //  const navItems: NavItem[] = [
-  //   {
-  //     icon: <MonitorIcon />,
-  //     name: t("dashboard"),
-  //     path: "/home",
-  //   },
-  //   {
-  //     name: t("items"),
-  //     icon: <Box />,
-  //     subItems: [
-  //       {
-  //         name: t("brands"),
-  //         path: "/brands",
-  //         permissionKey: "brands.view",
-  //       },
-  //       {
-  //         name: t("categories"),
-  //         path: "/categories",
-  //         permissionKey: "categories.view",
-  //       },
-  //       {
-  //         name: t("subCategories"),
-  //         path: "/sub-categories",
-  //         permissionKey: "sub_categories.view",
-  //       },
-  //       {
-  //         name: t("units"),
-  //         path: "/units",
-  //         permissionKey: "units.view",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     icon: <LogOut />,
-  //     name: t("logout"),
-  //   },
-  // ];
+  
   const navItems: NavItem[] = [
     {
       icon: <MonitorIcon />,
@@ -105,6 +47,7 @@ const AppSidebar: React.FC = () => {
       name: "Items",
       icon: <ShoppingBag />,
       subItems: [
+        { name: "Products", path: "/products", pro: false },
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
         {
           name: "Categories",
@@ -112,24 +55,33 @@ const AppSidebar: React.FC = () => {
           permissionKey: "categories.view",
         },
         { name: "Units", path: "/units", permissionKey: "units.view" },
-        { name: "Warranties", path: "/warranties", permissionKey: "warranties.view" },
-       
+        {
+          name: "Warranties",
+          path: "/warranties",
+          permissionKey: "warranties.view",
+        },
+
         { name: "Taxes", path: "/taxes", permissionKey: "taxes.view" },
-        
-      ].filter((item) => hasPermission(item.permissionKey)), 
+      ].filter((item) => hasPermission(item.permissionKey)),
     },
-      {
+    {
       name: "Sales",
       icon: <ShoppingCart />,
       subItems: [
-        { name: "Customers", path: "/customers", permissionKey: "customers.view" },
-      ].filter((item) => hasPermission(item.permissionKey)), 
-     },
-     {
-        icon: <LogOut />,
-        name: t("logout"),
-      },
-  ].filter((item: any) => hasPermission(item.permissionKey) || item.subItems?.length);
+        {
+          name: "Customers",
+          path: "/customers",
+          permissionKey: "customers.view",
+        },
+      ].filter((item) => hasPermission(item.permissionKey)),
+    },
+    {
+      icon: <LogOut />,
+      name: t("logout"),
+    },
+  ].filter(
+    (item: any) => hasPermission(item.permissionKey) || item.subItems?.length
+  );
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -318,9 +270,9 @@ const AppSidebar: React.FC = () => {
                       </span>
                     </Link>
                     <button
-  onClick={() => navigate("/categories/create")}
-  className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 z-10"
->
+                      onClick={() => navigate("/categories/create")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 z-10"
+                    >
                       <div className="w-4 h-4 rounded-full bg-brand-500 flex items-center justify-center hover:bg-brand-600">
                         <Plus className="w-3 h-3 text-white" />
                       </div>

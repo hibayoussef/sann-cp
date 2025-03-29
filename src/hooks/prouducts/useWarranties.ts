@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { QueryKeys } from "../../utils/queryKeys";
 import { _WarrantiesApi } from "@/services/products/warranties.service";
 
-// FETCH UNITS
+// FETCH WARRANTIES
 export const useFetchWarranties = () => {
   return useQuery({
     queryKey: [QueryKeys.WARRANTIES],
@@ -11,7 +11,7 @@ export const useFetchWarranties = () => {
   });
 };
 
-// FETCH UNIT
+// FETCH WARRANTIE
 export const useFetchWarranty = (id: number, options = {}) => {
   return useQuery({
     queryKey: [QueryKeys.WARRANTY, id],
@@ -21,7 +21,7 @@ export const useFetchWarranty = (id: number, options = {}) => {
   });
 };
 
-// ADD UNIT
+// ADD WARRANTIE
 export const useAddWarranty = () => {
   const navigate = useNavigate();
   return useMutation({
@@ -32,7 +32,7 @@ export const useAddWarranty = () => {
   });
 };
 
-// UPDATE UNIT
+// UPDATE WARRANTIE
 export const useUpdateWarranty = () => {
   const navigate = useNavigate();
   return useMutation({
@@ -44,7 +44,7 @@ export const useUpdateWarranty = () => {
   });
 };
 
-// DELETE UNIT
+// DELETE WARRANTIE
 export const useDeleteSubCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -8,7 +8,7 @@ export const brandColumns = (permissions: {
   update: boolean;
   delete: boolean;
 }): ColumnDef<IBrand>[] => [
-  {
+{
     id: "id",
     accessorKey: "id",
     header: ({ column }) => (

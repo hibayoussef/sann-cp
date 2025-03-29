@@ -7,7 +7,7 @@ export const _SubCategoriesApi = {
   // GET SUBCATEGORY
   getSubCategories: async () => {
     const response = await _axios.get<
-      AxiosResponse<{ subCategories: IBrand[] }>
+      AxiosResponse<ISubCategory[]>
     >("/products/sub-categories");
     return response?.data?.data;
   },

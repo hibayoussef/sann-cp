@@ -13,6 +13,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
+import { IoAdd } from "react-icons/io5";
 
 export default function UnitForm() {
   const { id } = useParams();
@@ -85,13 +86,17 @@ export default function UnitForm() {
     }
   };
 
-
   return (
     <>
       <PageBreadcrumb
         baseLink="/units"
         baseTitle="Unit"
         pageTitle={isUpdate ? "Update Unit" : "Create Unit"}
+        icon={
+          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+            <IoAdd className="w-5 h-5" />
+          </div>
+        }
       />
 
       <ComponentCard title={isUpdate ? "Update Unit" : "Create Unit"}>

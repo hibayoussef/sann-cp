@@ -5,7 +5,7 @@ import { ITax, TaxForm, TaxUpdateForm } from "@/types/products/tax";
 export const _TaxesApi = {
   // GET TAXES
   getTaxes: async () => {
-    const response = await _axios.get<AxiosResponse<{ taxes: ITax[] }>>(
+    const response = await _axios.get<AxiosResponse<ITax[]>>(
       "/products/taxes"
     );
     return response?.data?.data;

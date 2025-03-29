@@ -10,7 +10,7 @@ export const _WarrantiesApi = {
   // GET WARRANTIES
   getWarranties: async () => {
     const response = await _axios.get<
-      AxiosResponse<{ warranties: IWarranty[] }>
+      AxiosResponse<IWarranty[]>
     >("/products/warranties");
     return response?.data?.data;
   },

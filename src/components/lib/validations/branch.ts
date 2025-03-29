@@ -2,9 +2,6 @@ import { z } from "zod";
 
 export const branchSchema = z.object({
   id: z.number().optional(),
-  organization_id: z
-    .number()
-    .nonnegative("Organization ID must be a positive number"),
   branch_name_en: z
     .string()
     .min(2, "Branch name (EN) must be at least 2 characters"),
@@ -16,7 +13,9 @@ export const branchSchema = z.object({
   website: z.string().url("Invalid URL format").optional(),
   country_state_id: z
     .number()
-    .nonnegative("Country/State ID must be a positive number"),
+    .nonnegative("Organization ID must be a positive number")
+    .optional(),
+    // .nonnegative("Country/State ID must be a positive number"),
   street1: z.string().min(5, "Street 1 address must be at least 5 characters"),
   street2: z.string().optional(),
   city: z.string().min(2, "City must be at least 2 characters"),

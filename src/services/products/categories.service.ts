@@ -10,7 +10,7 @@ export const _CategoriesApi = {
   // GET CATEGORIES
   getCategories: async () => {
     const response = await _axios.get<
-      AxiosResponse<{ categories: ICategory[] }>
+      AxiosResponse< ICategory[]>
     >("/products/categories");
     return response?.data?.data;
   },

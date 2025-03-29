@@ -18,6 +18,7 @@ import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
 import { ShoppingBag } from "lucide-react";
+import { IoAdd } from "react-icons/io5";
 
 export default function BrandForm() {
   const { id } = useParams();
@@ -29,7 +30,6 @@ export default function BrandForm() {
   const { data: brandData, isLoading } = useFetchBrand(Number(id), {
     enabled: isUpdate,
   });
-  console.log("brands"+brandData)
   const {
     register,
     handleSubmit,
@@ -76,6 +76,11 @@ export default function BrandForm() {
         baseLink="/brands"
         baseTitle="Brand"
         pageTitle={isUpdate ? "Update Brand" : "Create Brand"}
+        icon={
+          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+            <IoAdd className="w-5 h-5" />
+          </div>
+        }
       />
 
       <ComponentCard title={isUpdate ? "Update Brand" : "Create Brand"}>

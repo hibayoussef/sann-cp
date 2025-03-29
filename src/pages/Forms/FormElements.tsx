@@ -28,7 +28,7 @@ export default function FormElements() {
         </div>
         <div className="space-y-6">
           <InputGroup />
-          <FileInputExample />
+          {/* <FileInputExample /> */}
           <CheckboxComponents />
           <RadioButtons />
           <ToggleSwitch />
