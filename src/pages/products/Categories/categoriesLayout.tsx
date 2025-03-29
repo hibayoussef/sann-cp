@@ -14,13 +14,15 @@ import { useNavigate } from "react-router";
 import CategoryDetails from "./categoryDetails";
 import ComponentCardDetails from "@/components/common/ComponentCardDetails";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import { useParams } from "react-router";
 
 export default function CategoriesLayout() {
   const { data } = useFetchCategories();
   const categories: any = data || [];
   const navigate = useNavigate();
+  const { id } = useParams();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
+    +id! || null
   );
 
   // Export handlers
@@ -115,7 +117,7 @@ export default function CategoriesLayout() {
                 {selectedCategoryId ? (
                   <CategoryDetails categoryId={selectedCategoryId} />
                 ) : (
-                   <CategoryDetails categoryId={Number(selectedCategoryId)} />
+                  <CategoryDetails categoryId={Number(selectedCategoryId)} />
                 )}
               </div>
             </div>
