@@ -11,7 +11,10 @@ import {
   useUpdateProduct,
 } from "@/hooks/prouducts/useProducts";
 import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
-import { useFetchSubUnits, useFetchSubUnitsById } from "@/hooks/prouducts/useSubUnits";
+import {
+  useFetchSubUnits,
+  useFetchSubUnitsById,
+} from "@/hooks/prouducts/useSubUnits";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { useFetchWarranties } from "@/hooks/prouducts/useWarranties";
@@ -100,29 +103,42 @@ export default function ProductForm() {
     },
   });
 
-  
-  const selectedUnitId = watch('unit_id');
-  const { data: subunits } = useFetchSubUnitsById(selectedUnitId);
-  const selectedUnit = units?.find(unit => unit.id === selectedUnitId);
-  
+  const selectedUnitId = watch("unit_id");
+  const selectedUnit = units?.find((unit) => unit.id === selectedUnitId);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "branches",
   });
-  // useEffect(() => {
-  //   if (selectedUnitId) {
-  //     setValue('default_sale_unit', selectedUnitId);
-  //     setValue('default_purchase_unit', selectedUnitId);
-  //     setValue('sub_units', []);
-  //   }
-  // }, [selectedUnitId, setValue]);
+  const {
+    data: subunits,
+    isLoading: subunitsLoading,
+    error: subunitsError,
+  } = useFetchSubUnitsById(selectedUnitId);
 
   useEffect(() => {
-  if (selectedUnitId) {
-    setValue('default_sale_unit', selectedUnitId);
-    setValue('default_purchase_unit', selectedUnitId);
+  if (productData) {
+    setValue(
+      "sub_units",
+      productData.sub_units?.map(su => ({ id: su.id })) || []
+    );
   }
-}, [selectedUnitId, setValue]);
+  }, [productData, setValue]);
+  
+  useEffect(() => {
+    if (selectedUnitId) {
+      const defaultSubUnit = subunits?.data?.[0]?.id || selectedUnitId;
+      setValue("default_sale_unit", defaultSubUnit);
+      setValue("default_purchase_unit", defaultSubUnit);
+    }
+  }, [selectedUnitId, subunits, setValue]);
+
+  // إدارة حالة الحقول المرتبطة
+  const watchUnits = watch([
+    "unit_id",
+    "default_sale_unit",
+    "default_purchase_unit",
+  ]);
 
   useEffect(() => {
     if (productData) {
@@ -137,9 +153,23 @@ export default function ProductForm() {
       setValue("tax_id", productData.tax_id ?? 0);
       setValue("warranty_id", productData.warranty_id ?? 0);
       setValue("sub_category_id", productData.sub_category_id ?? 0);
+        setValue(
+      "sub_units",
+      productData.sub_units?.map(su => ({ id: su.id })) || []
+    );
     }
   }, [productData, setValue]);
 
+  useEffect(() => {
+  if (selectedUnitId && subunits?.data) {
+    // تحديد كل الوحدات الفرعية تلقائيًا إذا كانت موجودة
+    setValue(
+      "sub_units",
+      subunits.data.map(subunit => ({ id: subunit.id }))
+    )
+  }
+  }, [subunits?.data, setValue]);
+  
   console.log("error r:", errors);
   const onSubmit = async (formData: any) => {
     const payload = {
@@ -149,10 +179,13 @@ export default function ProductForm() {
         branch_id: Number(b.branch_id),
         is_active: b.is_active ? 1 : 0,
       })),
-      sub_units:
-        formData?.sub_units.map((su: any) => ({
-          id: su.id ? Number(su.id) : null,
-        })) || [],
+      // sub_units:
+      //   formData?.sub_units.map((su: any) => ({
+      //     id: su.id ? Number(su.id) : null,
+      //   })) || [],
+      sub_unit: formData.sub_units.map((suId: number) => ({
+        id: Number(suId),
+      })),
       is_active: formData.is_active ? 1 : 0,
       sale_account: formData.sale_account ? Number(formData.sale_account) : 0,
       purchase_account: formData.purchase_account
@@ -479,110 +512,175 @@ export default function ProductForm() {
           </div>
 
           {/* Two Columns Layout for Units and Branch Sections */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <ComponentCard
-        title="Units"
-        icon={<Layers className="text-blue-500 w-5 h-5" />}
-      >
-        <div className="space-y-4">
-          {/* اختيار الوحدة الرئيسية */}
-          <div>
-            <Label htmlFor="unit_id">Unit</Label>
-            <select
-              id="unit_id"
-              {...register('unit_id', { valueAsNumber: true })}
-              className={selectStyles}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ComponentCard
+              title="Units Management"
+              icon={<Layers className="text-blue-500 w-5 h-5" />}
             >
-              <option value="" disabled className="text-gray-400">
-                Select Unit
-              </option>
-              {units?.map((unit) => (
-                <option key={unit.id} value={unit.id? unit.id : ""}>
-                  {unit.unit_name_en}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="space-y-4">
+                {/* حقل الوحدة الرئيسية */}
+                <div>
+                  <Label htmlFor="unit_id">Main Unit*</Label>
+                  <select
+                    id="unit_id"
+                    {...register("unit_id", {
+                      valueAsNumber: true,
+                      required: "Main unit is required",
+                    })}
+                    className={`${selectStyles} ${
+                      errors.unit_id ? "border-red-500" : ""
+                    }`}
+                  >
+                    <option value="" disabled className="text-gray-400">
+                      Select Main Unit
+                    </option>
+                    {units?.map((unit) => (
+                      <option
+                        key={unit.id}
+                        value={unit.id? unit.id:""}
+                        className="text-gray-950"
+                      >
+                        {unit.unit_name_en}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.unit_id && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.unit_id.message}
+                    </p>
+                  )}
+                </div>
 
-          {subunits && subunits?.data?.length > 0 && (
-            <div>
-              <Label htmlFor="sub_units">Sub Units</Label>
-              <select
-                id="sub_units"
-                multiple
-                {...register('sub_units')}
-                className={selectStyles}
-              >
-                {subunits.data.map((subunit) => (
-                  <option key={subunit.id} value={subunit.id}>
-                    {subunit.name_en}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+                {/* شرط إظهار الوحدات الفرعية */}
+                {selectedUnitId && (
+                  <>
+                    {subunitsLoading ? (
+                      <div className="text-gray-500 text-sm">
+                        Loading subunits...
+                      </div>
+                    ) : subunitsError ? (
+                      <div className="text-red-500 text-sm">
+                        Error loading subunits
+                      </div>
+                    ) : (
+                     subunits &&  subunits?.data?.length > 0 && (
+                        <div>
+                          <Label htmlFor="sub_units">Available Sub Units</Label>
+                          <select
+                            id="sub_units"
+                            multiple
+                            {...register("sub_units", {
+                              validate: (value: any) => {
+                                if (
+                                  value.length === 0 &&
+                                  subunits?.data?.length > 0
+                                ) {
+                                  return "At least one sub unit must be selected";
+                                }
+                                return true;
+                              },
+                            })}
+                            className={`${selectStyles} ${
+                              errors.sub_units ? "border-red-500" : ""
+                            } h-32`}
+                          >
+                            {subunits?.data?.map((subunit) => (
+                              <option
+                                key={subunit.id}
+                                value={subunit.id}
+                                className="text-gray-950"
+                              >
+                                {subunit.unit_name_en} ({subunit.conversion_factor}{" "}
+                                per main unit)
+                              </option>
+                            ))}
+                          </select>
+                          {errors.sub_units && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.sub_units.message}
+                            </p>
+                          )}
+                        </div>
+                      )
+                    )}
 
-          {/* الوحدة الافتراضية للبيع */}
-          <div>
-            <Label htmlFor="default_sale_unit">Default Sale Unit</Label>
-            <select
-              id="default_sale_unit"
-              {...register('default_sale_unit', { valueAsNumber: true })}
-              className={selectStyles}
-            >
-              {selectedUnit && (
-                <option value={selectedUnit.id? selectedUnit?.id :""}>{selectedUnit.unit_name_en}</option>
-              )}
-              {subunits?.data?.map((subunit) => (
-                <option key={subunit.id} value={subunit.id}>
-                  {subunit.name_en}
-                </option>
-              ))}
-            </select>
-          </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="default_sale_unit">
+                          Default Sale Unit*
+                        </Label>
+                        <select
+                          id="default_sale_unit"
+                          {...register("default_sale_unit", {
+                            valueAsNumber: true,
+                            required: "Sale unit is required",
+                          })}
+                          className={`${selectStyles} ${
+                            errors.default_sale_unit ? "border-red-500" : ""
+                          }`}
+                        >
+                          {selectedUnit && (
+                            <option value={selectedUnit.id? selectedUnit.id: ""}>
+                              {selectedUnit.unit_name_en} (Main)
+                            </option>
+                          )}
+                          {subunits?.data?.map((subunit) => (
+                            <option
+                              key={subunit.id}
+                              value={subunit.id}
+                              className="text-gray-950"
+                            >
+                              {subunit.unit_name_en} (Sub)
+                            </option>
+                          ))}
+                        </select>
+                        {errors.default_sale_unit && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.default_sale_unit.message}
+                          </p>
+                        )}
+                      </div>
 
-          {/* الوحدة الافتراضية للشراء */}
-          <div>
-            <Label htmlFor="default_purchase_unit">Default Purchase Unit</Label>
-            <select
-              id="default_purchase_unit"
-              {...register('default_purchase_unit', { valueAsNumber: true })}
-              className={selectStyles}
-            >
-              {selectedUnit && (
-                <option value={selectedUnit.id?selectedUnit.id:""}>{selectedUnit.unit_name_en}</option>
-              )}
-              {subunits?.data?.map((subunit) => (
-                <option key={subunit.id} value={subunit.id}>
-                  {subunit.name_en}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-  <Label htmlFor="default_sale_unit">Default Sale Unit</Label>
-  <select
-    id="default_sale_unit"
-    {...register('default_sale_unit', { valueAsNumber: true })}
-    className={selectStyles}
-  >
-    {selectedUnit && (
-      <option value={selectedUnit.id?selectedUnit.id: ""}>{selectedUnit.unit_name_en}</option>
-    )}
-    {subunits?.data?.map((subunit) => (
-      <option key={subunit.id} value={subunit.id}>
-        {subunit.name_en}
-      </option>
-    ))}
-  </select>
-</div>
-        </div>
-      </ComponentCard>
-
-
-
-            {/* Branch & Status Section */}
+                      <div>
+                        <Label htmlFor="default_purchase_unit">
+                          Default Purchase Unit*
+                        </Label>
+                        <select
+                          id="default_purchase_unit"
+                          {...register("default_purchase_unit", {
+                            valueAsNumber: true,
+                            required: "Purchase unit is required",
+                          })}
+                          className={`${selectStyles} ${
+                            errors.default_purchase_unit ? "border-red-500" : ""
+                          }`}
+                        >
+                          {selectedUnit && (
+                            <option value={selectedUnit.id? selectedUnit.id: ""}>
+                              {selectedUnit.unit_name_en} (Main)
+                            </option>
+                          )}
+                          {subunits?.data?.map((subunit) => (
+                            <option
+                              key={subunit.id}
+                              value={subunit.id}
+                              className="text-gray-950"
+                            >
+                              {subunit.unit_name_en} (Sub)
+                            </option>
+                          ))}
+                        </select>
+                        {errors.default_purchase_unit && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.default_purchase_unit.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </ComponentCard>
             {/* Branch & Status Section */}
             <ComponentCard title="Branch Management" icon={<GitBranch />}>
               <div className="space-y-4">
@@ -603,9 +701,11 @@ export default function ProductForm() {
                           Select Branch
                         </option>
                         {branches?.map((branch) => (
-                          <option key={branch.id} 
-                          className="text-gray-950"
-                           value={branch.id}>
+                          <option
+                            key={branch.id}
+                            className="text-gray-950"
+                            value={branch.id}
+                          >
                             {branch.branch_name_en}
                           </option>
                         ))}
