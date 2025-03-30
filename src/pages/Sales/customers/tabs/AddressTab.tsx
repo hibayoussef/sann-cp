@@ -1,7 +1,15 @@
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { CountriesData } from "@/types/common";
-import { FileText, Landmark, MapPin, Package, Phone } from "lucide-react";
+import {
+  FileText,
+  Landmark,
+  MapPin,
+  Package,
+  Phone,
+  Truck,
+  Wallet,
+} from "lucide-react";
 import { FaXRay } from "react-icons/fa";
 
 const selectStyles = `
@@ -25,9 +33,13 @@ const AddressTab = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800">Billing Address</h3>
+        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+          <Wallet className="w-4 h-4 text-gray-600" />
+          Billing Address
+        </h3>
         <div className="space-y-2">
           <Label>Billing Address Attention</Label>
+
           <Input
             {...register("contact_details.billing_address_attention")}
             error={!!errors.contact_details?.billing_address_attention}
@@ -143,7 +155,8 @@ const AddressTab = ({
         </div>
       </div>
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800">
+        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+          <Truck className="w-4 h-4 text-gray-600" />
           Shipping Address
         </h3>
         <div className="space-y-2">

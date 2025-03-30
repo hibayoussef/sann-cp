@@ -420,7 +420,7 @@ export const OrganizationForm = () => {
         {/* Branches & Stores */}
         <ComponentCard
           title="Branches & Stores"
-          icon={<Store className="w-4 h-4 text-orange-500" />}
+          icon={<Store className="w-5 h-5 text-orange-500" />}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {organizationData?.branches.map((branch: any, index: any) => (
@@ -428,8 +428,8 @@ export const OrganizationForm = () => {
                 key={branch.id}
                 className="p-4 bg-white rounded-lg shadow-md border border-gray-200"
               >
-                <h3 className="text-xs font-semibold text-gray-800 flex items-center gap-2">
-                  <Building className="w-4 h-4 text-orange-500" />
+                <h3 className="text-xs font-semibold text-gray-800 flex items-center gap-2 text-xs">
+                  <Building className="w-5 h-5 text-orange-500" />
                   {branch.branch_name_en}
                 </h3>
 
