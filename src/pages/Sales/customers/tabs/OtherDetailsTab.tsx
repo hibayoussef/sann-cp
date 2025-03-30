@@ -61,6 +61,9 @@ export const OtherDetailsTab = ({
               </option>
             ))}
           </select>
+          {errors.branch_id && (
+            <p className="text-sm text-red-500">{errors.branch_id?.message}</p>
+          )}
         </div>
 
         <div className="space-y-2">

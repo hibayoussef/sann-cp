@@ -72,7 +72,7 @@ const contactPersonSchema = z.object({
 });
 
 export const customerSchema = z.object({
-  branch_id: z.string().optional(),
+  branch_id: z.string().min(1, "Branch is required"),
   portal_access: z.enum(["0", "1"]).optional(),
   portal_language: z.enum(["en", "ar"]).default("en").optional(),
   type: z.enum(["customer", "employee", "vendor"]).optional(),
@@ -94,10 +94,10 @@ export const customerSchema = z.object({
 
   payment_term_id: z.string().min(1, "Payment Term is required"),
   currency_id: z.string().min(1, "Currency is required"),
-  exchange_rate: z.string().optional(),
-  balance: z.string().optional(),
+  exchange_rate: z.string().min(1, "Exchange rate is required"),
+  balance: z.string().min(1, "Balance is required"),
 
-  nationality_id: z.string().optional(),
+  nationality_id: z.string().min(1, "Nationality is required"),
   contact_details: contactDetailsSchema.optional(),
   contact_persons: z.array(contactPersonSchema).optional(),
 });
