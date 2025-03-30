@@ -117,7 +117,7 @@ export default function CreateBranch() {
   console.log("eror: ", errors);
 
   return (
-    <div className="py-4 px-1">
+    <div className="px-1">
       <PageBreadcrumb
         baseLink="/branches"
         baseTitle="Branches"
