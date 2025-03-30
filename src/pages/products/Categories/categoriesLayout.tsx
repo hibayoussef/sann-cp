@@ -95,7 +95,10 @@ export default function CategoriesLayout() {
                   {categories?.map((category: any) => (
                     <div key={category.id} className="relative">
                       <div
-                        onClick={() => setSelectedCategoryId(category.id)}
+                        onClick={() => {
+                          setSelectedCategoryId(category.id);
+                          navigate(`/categories/${category.id}`);
+                        }}
                         className={`px-7 py-2 cursor-pointer text-[13px] transition-colors
                         ${
                           selectedCategoryId === category.id
