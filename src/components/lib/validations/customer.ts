@@ -80,15 +80,17 @@ export const customerSchema = z.object({
 
   full_name_ar: z
     .string()
-    .min(2, "يجب أن يحتوي الاسم العربي على الأقل على حرفين"),
+    .min(2, "The Arabic name must contain at least two letters."),
   full_name_en: z.string().min(2, "Name must contain at least 2 characters"),
   first_name_ar: z.string().optional(),
   first_name_en: z.string().optional(),
   last_name_ar: z.string().optional(),
   last_name_en: z.string().optional(),
 
-  email: z.string().email("صيغة البريد الإلكتروني غير صحيحة"),
-  mobile: z.string().min(10, "يجب أن يحتوي رقم الجوال على الأقل على 8 أرقام"),
+  email: z.string().email("Invalid email format"),
+  mobile: z
+    .string()
+    .min(10, "The mobile number must contain at least 8 digits."),
 
   payment_term_id: z.string().min(1, "Payment Term is required"),
   currency_id: z.string().min(1, "Currency is required"),
