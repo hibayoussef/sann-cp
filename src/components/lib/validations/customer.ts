@@ -90,7 +90,7 @@ export const customerSchema = z.object({
   email: z.string().email("صيغة البريد الإلكتروني غير صحيحة"),
   mobile: z.string().min(10, "يجب أن يحتوي رقم الجوال على الأقل على 8 أرقام"),
 
-  payment_term_id: z.string().optional(),
+  payment_term_id: z.string().min(1, "Payment Term is required"),
   currency_id: z.string().min(1, "Currency is required"),
   exchange_rate: z.string().optional(),
   balance: z.string().optional(),
