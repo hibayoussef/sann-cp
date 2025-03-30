@@ -127,7 +127,10 @@ export default function Settings() {
 
   const handleLinkClick = (link: string) => {
     if (link === "Branches") {
-      navigate("/settings/branches"); // الانتقال إلى الرابط الخاص بـ Branches
+      navigate("/settings/branches"); 
+    }
+    if (link === "profile") {
+      navigate("/settings/orgProfile");  
     }
   };
 

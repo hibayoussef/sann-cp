@@ -18,6 +18,13 @@ export const _SUB_UnitsApi = {
     );
     return response.data.data;
   },
+
+  getSubUnitsById: async (unit_id: number) => {
+    const response = await _axios.get<{ data: any[] }>(
+      `/products/sub-units?unit_id=${unit_id}`
+    );
+    return response?.data;
+  },
   // ADD SUBUNIT
   addSubUnit: async (data: IUnit) => {
     const response = await _axios.post("/products/sub-units", data);

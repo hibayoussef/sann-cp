@@ -11,7 +11,7 @@ import {
   useUpdateProduct,
 } from "@/hooks/prouducts/useProducts";
 import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
-import { useFetchSubUnits } from "@/hooks/prouducts/useSubUnits";
+import { useFetchSubUnits, useFetchSubUnitsById } from "@/hooks/prouducts/useSubUnits";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { useFetchWarranties } from "@/hooks/prouducts/useWarranties";
@@ -57,7 +57,7 @@ export default function ProductForm() {
   const { data: warranties } = useFetchWarranties();
   const { data: brands } = useFetchBrands();
   const { data: units } = useFetchUnits();
-  const { data: subUnits } = useFetchSubUnits();
+  // const { data: subUnits } = useFetchSubUnits();
   const { data: branches } = useFetchBranches();
 
   const {
@@ -99,10 +99,30 @@ export default function ProductForm() {
       sub_units: productData?.sub_units ?? [],
     },
   });
+
+  
+  const selectedUnitId = watch('unit_id');
+  const { data: subunits } = useFetchSubUnitsById(selectedUnitId);
+  const selectedUnit = units?.find(unit => unit.id === selectedUnitId);
+  
   const { fields, append, remove } = useFieldArray({
     control,
     name: "branches",
   });
+  // useEffect(() => {
+  //   if (selectedUnitId) {
+  //     setValue('default_sale_unit', selectedUnitId);
+  //     setValue('default_purchase_unit', selectedUnitId);
+  //     setValue('sub_units', []);
+  //   }
+  // }, [selectedUnitId, setValue]);
+
+  useEffect(() => {
+  if (selectedUnitId) {
+    setValue('default_sale_unit', selectedUnitId);
+    setValue('default_purchase_unit', selectedUnitId);
+  }
+}, [selectedUnitId, setValue]);
 
   useEffect(() => {
     if (productData) {
@@ -459,107 +479,108 @@ export default function ProductForm() {
           </div>
 
           {/* Two Columns Layout for Units and Branch Sections */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Units Section */}
-            <ComponentCard
-              title="Units"
-              icon={<Layers className="text-yellow-500 w-5 h-5" />}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <ComponentCard
+        title="Units"
+        icon={<Layers className="text-blue-500 w-5 h-5" />}
+      >
+        <div className="space-y-4">
+          {/* اختيار الوحدة الرئيسية */}
+          <div>
+            <Label htmlFor="unit_id">Unit</Label>
+            <select
+              id="unit_id"
+              {...register('unit_id', { valueAsNumber: true })}
+              className={selectStyles}
             >
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="unit_id">Primary Unit</Label>
-                  <select
-                    {...register("unit_id", { valueAsNumber: true })}
-                    className={selectStyles}
-                  >
-                    <option
-                      value=""
-                      disabled
-                      selected
-                      className="text-gray-400"
-                    >
-                      Select Unit
-                    </option>
-                    {units?.map((unit) => (
-                      <option
-                        key={unit.id}
-                        className="text-gray-950"
-                        value={unit?.id ?? 0}
-                      >
-                        {unit.unit_name_en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.unit_id && (
-                    <p className="text-red-500 text-sm">
-                      {errors?.unit_id.message}
-                    </p>
-                  )}
-                </div>
+              <option value="" disabled className="text-gray-400">
+                Select Unit
+              </option>
+              {units?.map((unit) => (
+                <option key={unit.id} value={unit.id? unit.id : ""}>
+                  {unit.unit_name_en}
+                </option>
+              ))}
+            </select>
+          </div>
 
-                <div>
-                  <Label htmlFor="sub_units.0.id">Sub Unit</Label>
-                  <select
-                    {...register("sub_units.0.id", {
-                      valueAsNumber: true,
-                      setValueAs: (v) => (v === "" ? undefined : Number(v)),
-                    })}
-                    className={selectStyles}
-                  >
-                    <option
-                      value=""
-                      disabled
-                      selected
-                      className="text-gray-400"
-                    >
-                      Select Sub Unit
-                    </option>
-                    {subUnits?.map((unit) => (
-                      <option
-                        key={unit.id}
-                        className="text-gray-950"
-                        value={unit.id ? unit.id : ""}
-                      >
-                        {unit.unit_name_en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.sub_units?.[0]?.id && (
-                    <p className="text-red-500 text-sm">
-                      {errors.sub_units[0].id.message}
-                    </p>
-                  )}
-                </div>
+          {subunits && subunits?.data?.length > 0 && (
+            <div>
+              <Label htmlFor="sub_units">Sub Units</Label>
+              <select
+                id="sub_units"
+                multiple
+                {...register('sub_units')}
+                className={selectStyles}
+              >
+                {subunits.data.map((subunit) => (
+                  <option key={subunit.id} value={subunit.id}>
+                    {subunit.name_en}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-                <div>
-                  <Label htmlFor="default_purchase_unit">
-                    Default Purchase Unit
-                  </Label>
-                  <Input
-                    type="text"
-                    id="default_purchase_unit"
-                    placeholder="Enter default purchase unit"
-                    {...register("default_purchase_unit")}
-                    error={!!errors.default_purchase_unit}
-                    hint={errors.default_purchase_unit?.message}
-                    icon={<Layers className="w-4 h-4" />}
-                  />
-                </div>
+          {/* الوحدة الافتراضية للبيع */}
+          <div>
+            <Label htmlFor="default_sale_unit">Default Sale Unit</Label>
+            <select
+              id="default_sale_unit"
+              {...register('default_sale_unit', { valueAsNumber: true })}
+              className={selectStyles}
+            >
+              {selectedUnit && (
+                <option value={selectedUnit.id? selectedUnit?.id :""}>{selectedUnit.unit_name_en}</option>
+              )}
+              {subunits?.data?.map((subunit) => (
+                <option key={subunit.id} value={subunit.id}>
+                  {subunit.name_en}
+                </option>
+              ))}
+            </select>
+          </div>
 
-                <div>
-                  <Label htmlFor="default_sale_unit">Default Sale Unit</Label>
-                  <Input
-                    type="text"
-                    id="default_sale_unit"
-                    placeholder="Enter default sale unit"
-                    {...register("default_sale_unit")}
-                    error={!!errors.default_sale_unit}
-                    hint={errors.default_sale_unit?.message}
-                    icon={<Layers className="w-4 h-4" />}
-                  />
-                </div>
-              </div>
-            </ComponentCard>
+          {/* الوحدة الافتراضية للشراء */}
+          <div>
+            <Label htmlFor="default_purchase_unit">Default Purchase Unit</Label>
+            <select
+              id="default_purchase_unit"
+              {...register('default_purchase_unit', { valueAsNumber: true })}
+              className={selectStyles}
+            >
+              {selectedUnit && (
+                <option value={selectedUnit.id?selectedUnit.id:""}>{selectedUnit.unit_name_en}</option>
+              )}
+              {subunits?.data?.map((subunit) => (
+                <option key={subunit.id} value={subunit.id}>
+                  {subunit.name_en}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+  <Label htmlFor="default_sale_unit">Default Sale Unit</Label>
+  <select
+    id="default_sale_unit"
+    {...register('default_sale_unit', { valueAsNumber: true })}
+    className={selectStyles}
+  >
+    {selectedUnit && (
+      <option value={selectedUnit.id?selectedUnit.id: ""}>{selectedUnit.unit_name_en}</option>
+    )}
+    {subunits?.data?.map((subunit) => (
+      <option key={subunit.id} value={subunit.id}>
+        {subunit.name_en}
+      </option>
+    ))}
+  </select>
+</div>
+        </div>
+      </ComponentCard>
+
+
 
             {/* Branch & Status Section */}
             {/* Branch & Status Section */}

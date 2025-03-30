@@ -58,8 +58,8 @@ export const customerColumns = (permissions?: {
       <DataTableRowActions
         row={row}
         schema={customerSchema}
-        // viewDetails={`/contacts/${row.original.id}`}
-        // editItem={`/contacts/update/${row.original.id}`}
+        viewDetails={`/contacts/${row.original.id}`}
+        editItem={`/contacts/update/${row.original.id}`}
         onDelete={(id) => console.log(`Deleting contact ID: ${id}`)}
         permissions={permissions}
       />
