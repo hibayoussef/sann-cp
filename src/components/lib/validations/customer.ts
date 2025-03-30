@@ -13,7 +13,7 @@ const contactDetailsSchema = z.object({
   unified_number: z.string().optional(),
   date_of_birth: z.string().optional(),
   place_of_birth: z.string().optional(),
-  visit_visa_number: z.string().optional(),
+  visit_visa_number: z.number().optional(),
   driving_license_number: z.string().optional(),
   driving_license_issued_by: z.string().optional(),
   driving_license_issued_date: z.string().optional(),

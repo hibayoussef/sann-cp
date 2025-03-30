@@ -44,6 +44,8 @@ import SubCategoryForm from "@/pages/products/SubCategories/SubCategoryForm";
 import SubUnitForm from "@/pages/products/SubUnits/subUnitForm";
 import SubUnits from "@/pages/products/SubUnits/subUnits";
 import UnitForm from "../pages/products/Units/unitForm";
+import Vendors from "@/pages/Sales/vendors/vendors";
+import VendorForm from "@/pages/Sales/vendors/vendorForm";
 
 const RoutesComponent = () => {
   return (
@@ -97,17 +99,18 @@ const RoutesComponent = () => {
           <Route path="/units/create" element={<UnitForm />} />
           <Route path="/units/update/:id" element={<UnitForm />} />
 
-
           <Route path="/sub-units" element={<SubUnits />} />
           <Route path="/sub-units/create" element={<SubUnitForm />} />
           <Route path="/sub-units/update/:id" element={<SubUnitForm />} />
-
 
           {/* Sales */}
           <Route path="/customers" element={<Customers />} />
           <Route path="/customers/:id" element={<CategoriesLayout />} />
           <Route path="/customers/create" element={<CreateCustomer />} />
           <Route path="/customers/update/:id" element={<CreateCustomer />} />
+          {/* Purchases */}
+          <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendors/create" element={<VendorForm />} />
           {/* end sales */}
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/avatars" element={<Avatars />} />

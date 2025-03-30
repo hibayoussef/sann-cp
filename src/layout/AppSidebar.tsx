@@ -86,6 +86,17 @@ const AppSidebar: React.FC = () => {
       ].filter((item) => hasPermission(item.permissionKey)),
     },
     {
+      name: "Purchases",
+      icon: <ShoppingCart />,
+      subItems: [
+        {
+          name: "Vendors",
+          path: "/vendors",
+          permissionKey: "vendors.view",
+        },
+      ].filter((item) => hasPermission(item.permissionKey)),
+    },
+    {
       icon: <LogOut />,
       name: t("logout"),
     },
