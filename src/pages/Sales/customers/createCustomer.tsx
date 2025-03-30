@@ -231,31 +231,31 @@
 //                 />
 //               </div>
 
-//               <div>
-//                 <Label>Nationality</Label>
-//                 <select
-//                   {...register("nationality_id")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.nationality_id}
-//                 >
-//                   <option value="">Select Nationality</option>
-//                   {countriesLoading ? (
-//                     <option>Loading nationalities...</option>
-//                   ) : (
-//                     countriesData?.data?.map((country) => (
-//                       <option key={country.id} value={country.id}>
-//                         {country.nationality_en}{" "}
-//                         {/* استخدم `nationality_ar` إذا كان التطبيق عربيًا */}
-//                       </option>
-//                     ))
-//                   )}
-//                 </select>
-//                 {errors.nationality_id && (
-//                   <p className="text-red-500 text-sm">
-//                     {errors.nationality_id.message}
-//                   </p>
-//                 )}
-//               </div>
+// <div>
+//   <Label>Nationality</Label>
+//   <select
+//     {...register("nationality_id")}
+//     className="w-full p-2 border rounded"
+//     // error={!!errors.nationality_id}
+//   >
+//     <option value="">Select Nationality</option>
+//     {countriesLoading ? (
+//       <option>Loading nationalities...</option>
+//     ) : (
+//       countriesData?.data?.map((country) => (
+//         <option key={country.id} value={country.id}>
+//           {country.nationality_en}{" "}
+//           {/* استخدم `nationality_ar` إذا كان التطبيق عربيًا */}
+//         </option>
+//       ))
+//     )}
+//   </select>
+//   {errors.nationality_id && (
+//     <p className="text-red-500 text-sm">
+//       {errors.nationality_id.message}
+//     </p>
+//   )}
+// </div>
 
 //               <div>
 //                 <Label>Passport Number</Label>
@@ -1148,11 +1148,10 @@ import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import type { Currency } from "@/types/common";
-import { ContactType } from "@/types/enums/contactType";
 import type { IBranch } from "@/types/settings/branches";
 import type { IPaymentTerm } from "@/types/settings/payment_term";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
@@ -1162,13 +1161,30 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
 import Radio from "@/components/form/input/Radio";
+import { IContact } from "@/types/sales/contact";
 
 const TABS = [
   { id: 1, name: "Other Details" },
-  { id: 2, name: "Address" },
+  { id: 2, name: "Contact Details" },
   { id: 3, name: "Contact Person" },
 ];
 
+const getErrorMessages = (errors: any, parentKey = ""): string[] => {
+  return Object.entries(errors).flatMap(([key, value]: [string, any]) => {
+    if (value?.message) {
+      return [`${parentKey ? `${parentKey} > ` : ""}${key}: ${value.message}`];
+    }
+    if (Array.isArray(value)) {
+      return value.flatMap((item, index) =>
+        getErrorMessages(item, `Person Details[${index}]`)
+      );
+    }
+    if (typeof value === "object") {
+      return getErrorMessages(value, key);
+    }
+    return [];
+  });
+};
 export default function CustomerForm() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
@@ -1193,29 +1209,31 @@ export default function CustomerForm() {
     formState: { errors, isSubmitting },
   } = useForm<CustomerType>({
     resolver: zodResolver(customerSchema),
-    defaultValues: customerData ?? {},
+    // defaultValues: customerData ?? {},
   });
 
   const contactType = watch("contact_type");
 
-  useEffect(() => {
-    if (customerData) {
-      Object.keys(customerData).forEach((key) => {
-        setValue(key, customerData[key]);
-      });
-    }
-  }, [customerData, setValue]);
-
-  const onSubmit = async (formData: CustomerType) => {
-    const payload = {
-      organization_id: organizationId,
+  // useEffect(() => {
+  //   if (customerData) {
+  //     Object.keys(customerData).forEach((key) => {
+  //       setValue(key, customerData[key]);
+  //     });
+  //   }
+  // }, [customerData, setValue]);
+  console.log(errors);
+  const onSubmit = (formData: CustomerType) => {
+    const payload: IContact = {
       ...formData,
+      organization_id: organizationId?.toString()!,
+      type: "customer",
     };
 
+    console.log(payload);
     if (isUpdate && id) {
-      await updateCustomer.mutateAsync({ id: Number(id), data: payload });
+      updateCustomer.mutateAsync({ id: Number(id), data: payload });
     } else {
-      await addCustomer.mutateAsync(payload);
+      addCustomer.mutateAsync(payload);
     }
   };
 
@@ -1245,14 +1263,19 @@ export default function CustomerForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Contact Type */}
                 <div className="space-y-2">
-                  <Label required>Customer Type</Label>
+                  <Label>Customer Type</Label>
                   <div className="flex items-center gap-6">
                     <Radio
                       id="individual"
                       name="contact_type"
                       value="individual"
                       checked={contactType === "individual"}
-                      onChange={(e) => setValue("contact_type", e.target.value)}
+                      onChange={(value) =>
+                        setValue(
+                          "contact_type",
+                          value as "business" | "individual"
+                        )
+                      }
                       label="Individual"
                       className="flex items-center gap-2"
                     />
@@ -1261,7 +1284,12 @@ export default function CustomerForm() {
                       name="contact_type"
                       value="business"
                       checked={contactType === "business"}
-                      onChange={(e) => setValue("contact_type", e.target.value)}
+                      onChange={(value) =>
+                        setValue(
+                          "contact_type",
+                          value as "business" | "individual"
+                        )
+                      }
                       label="Business"
                       className="flex items-center gap-2"
                     />
@@ -1272,39 +1300,64 @@ export default function CustomerForm() {
                     </p>
                   )}
                 </div>
-
-                {/* Company Name (Conditional) */}
-                {contactType === "business" && (
-                  <div className="space-y-2">
-                    <Label required>Company Name</Label>
-                    <Input
-                      {...register("company_name")}
-                      error={!!errors.company_name}
-                      hint={errors.company_name?.message}
-                      placeholder="ABC Corporation"
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {/* Primary Contact */}
                 <div className="space-y-2">
                   <div className="space-y-2">
-                    <Label required>Full Name (En)</Label>
+                    <Label>Full Name (En)</Label>
                     <Input
-                      {...register("contact_persons.0.full_name_en")}
-                      error={!!errors.contact_persons?.[0]?.full_name_en}
-                      hint={errors.contact_persons?.[0]?.full_name_en?.message}
+                      {...register("full_name_en")}
+                      error={!!errors.full_name_en}
+                      hint={errors.full_name_en?.message}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label required>Full Name (Ar)</Label>
+                    <Label>Full Name (Ar)</Label>
                     <Input
-                      {...register("contact_persons.0.full_name_ar")}
-                      error={!!errors.contact_persons?.[0]?.full_name_ar}
-                      hint={errors.contact_persons?.[0]?.full_name_ar?.message}
+                      {...register("full_name_ar")}
+                      error={!!errors.full_name_ar}
+                      hint={errors.full_name_ar?.message}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label>First Name (En)</Label>
+                    <Input
+                      {...register("first_name_en")}
+                      error={!!errors.first_name_en}
+                      hint={errors.first_name_en?.message}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>First Name (Ar)</Label>
+                    <Input
+                      {...register("first_name_ar")}
+                      error={!!errors.first_name_ar}
+                      hint={errors.first_name_ar?.message}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label>Last Name (En)</Label>
+                    <Input
+                      {...register("last_name_en")}
+                      error={!!errors.last_name_en}
+                      hint={errors.last_name_en?.message}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Last Name (Ar)</Label>
+                    <Input
+                      {...register("last_name_ar")}
+                      error={!!errors.last_name_ar}
+                      hint={errors.last_name_ar?.message}
                     />
                   </div>
                 </div>
@@ -1312,7 +1365,7 @@ export default function CustomerForm() {
                 {/* Contact Info */}
 
                 <div className="space-y-2">
-                  <Label required>Email Address</Label>
+                  <Label>Email Address</Label>
                   <Input
                     type="email"
                     {...register("email")}
@@ -1323,12 +1376,12 @@ export default function CustomerForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label required>Phone Number</Label>
+                  <Label>Phone Number</Label>
                   <Input
                     type="tel"
-                    {...register("phone")}
-                    error={!!errors.phone}
-                    hint={errors.phone?.message}
+                    {...register("mobile")}
+                    error={!!errors.mobile}
+                    hint={errors.mobile?.message}
                     placeholder="+966 123 456 789"
                   />
                 </div>
@@ -1342,6 +1395,7 @@ export default function CustomerForm() {
                   {TABS.map((tab) => (
                     <button
                       key={tab.id}
+                      type="button"
                       onClick={() => setActiveTab(tab.id)}
                       className={`px-4 py-2 text-sm font-medium transition-colors ${
                         activeTab === tab.id
@@ -1360,12 +1414,36 @@ export default function CustomerForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
+                      <Label>Nationality</Label>
+                      <select
+                        {...register("nationality_id")}
+                        className="w-full p-2 border rounded"
+                      >
+                        <option value="" disabled>
+                          Select Nationality
+                        </option>
+                        {countriesData?.data?.map((country) => (
+                          <option key={country.id} value={country.id}>
+                            {country.nationality_en}{" "}
+                            {/* استخدم `nationality_ar` إذا كان التطبيق عربيًا */}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.nationality_id && (
+                        <p className="text-red-500 text-sm">
+                          {errors.nationality_id.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
                       <Label>Branch</Label>
                       <select
                         {...register("branch_id")}
                         className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
                       >
-                        <option value="">Select Branch</option>
+                        <option value="" disabled>
+                          Select Branch
+                        </option>
                         {branches?.map((branch: IBranch) => (
                           <option key={branch.id} value={branch.id}>
                             {branch.branch_name_en}
@@ -1380,7 +1458,9 @@ export default function CustomerForm() {
                         {...register("payment_term_id")}
                         className="w-full p-2.5 border rounded-md"
                       >
-                        <option value="">Select Payment Term</option>
+                        <option value="" disabled>
+                          Select Payment Term
+                        </option>
                         {paymentsTerm?.map((term: IPaymentTerm) => (
                           <option key={term.id} value={term.id}>
                             {term.term_name_en}
@@ -1395,7 +1475,9 @@ export default function CustomerForm() {
                         {...register("currency_id")}
                         className="w-full p-2.5 border rounded-md"
                       >
-                        <option value="">Select Currency</option>
+                        <option value="" disabled>
+                          Select Currency
+                        </option>
                         {currencies?.data.map((currency: Currency) => (
                           <option key={currency.id} value={currency.id}>
                             {currency.currency_name} ({currency.currency_symbol}
@@ -1410,7 +1492,6 @@ export default function CustomerForm() {
                         <Label>Exchange Rate</Label>
                         <Input
                           type="number"
-                          // step="0.01"
                           {...register("exchange_rate")}
                           error={!!errors.exchange_rate}
                           hint={errors.exchange_rate?.message}
@@ -1427,7 +1508,9 @@ export default function CustomerForm() {
                         {...register("portal_access")}
                         className="w-full p-2.5 border rounded-md"
                       >
-                        <option value="">Select Access</option>
+                        <option value="" disabled>
+                          Select Access
+                        </option>
                         <option value="1">Enabled</option>
                         <option value="0">Disabled</option>
                       </select>
@@ -1439,7 +1522,9 @@ export default function CustomerForm() {
                         {...register("portal_language")}
                         className="w-full p-2.5 border rounded-md"
                       >
-                        <option value="">Select Language</option>
+                        <option value="" disabled>
+                          Select Language
+                        </option>
                         <option value="en">English</option>
                         <option value="ar">Arabic</option>
                       </select>
@@ -1449,7 +1534,7 @@ export default function CustomerForm() {
                       <Label>Balance</Label>
                       <Input
                         type="number"
-                        step="0.01"
+                        step={0.01}
                         {...register("balance")}
                         error={!!errors.balance}
                         hint={errors.balance?.message}
@@ -1461,133 +1546,514 @@ export default function CustomerForm() {
 
               {/* Address Tab */}
               {activeTab === 2 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      Billing Address
-                    </h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
-                      <Label>Street Address 1</Label>
+                      <Label>Passport Number</Label>
+                      <Input
+                        {...register("contact_details.passport_number")}
+                        error={!!errors.contact_details?.passport_number}
+                        hint={errors.contact_details?.passport_number?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Work Phone</Label>
+                      <Input
+                        {...register("contact_details.work_phone")}
+                        error={!!errors.contact_details?.work_phone}
+                        hint={errors.contact_details?.work_phone?.message}
+                        type="tel"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Website Url</Label>
+                      <Input
+                        {...register("contact_details.website_url")}
+                        error={!!errors.contact_details?.website_url}
+                        hint={errors.contact_details?.website_url?.message}
+                        type="url"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Department</Label>
+                      <Input
+                        {...register("contact_details.department")}
+                        error={!!errors.contact_details?.department}
+                        hint={errors.contact_details?.department?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Profession</Label>
+                      <Input
+                        {...register("contact_details.profession")}
+                        error={!!errors.contact_details?.profession}
+                        hint={errors.contact_details?.profession?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Designation</Label>
+                      <Input
+                        {...register("contact_details.designation")}
+                        error={!!errors.contact_details?.designation}
+                        hint={errors.contact_details?.designation?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Social Media</Label>
+                      <Input
+                        {...register("contact_details.social_media")}
+                        error={!!errors.contact_details?.social_media}
+                        hint={errors.contact_details?.social_media?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Issued Date</Label>
+                      <Input
+                        {...register("contact_details.id_issued_date")}
+                        error={!!errors.contact_details?.id_issued_date}
+                        hint={errors.contact_details?.id_issued_date?.message}
+                        type="date"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Expiry Date</Label>
+                      <Input
+                        {...register("contact_details.id_expiry_date")}
+                        error={!!errors.contact_details?.id_expiry_date}
+                        hint={errors.contact_details?.id_expiry_date?.message}
+                        type="date"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Unified Number</Label>
+                      <Input
+                        {...register("contact_details.unified_number")}
+                        error={!!errors.contact_details?.unified_number}
+                        hint={errors.contact_details?.unified_number?.message}
+                        type="number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Date of birth</Label>
+                      <Input
+                        {...register("contact_details.date_of_birth")}
+                        error={!!errors.contact_details?.date_of_birth}
+                        hint={errors.contact_details?.date_of_birth?.message}
+                        type="date"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Place of birth</Label>
+                      <Input
+                        {...register("contact_details.place_of_birth")}
+                        error={!!errors.contact_details?.place_of_birth}
+                        hint={errors.contact_details?.place_of_birth?.message}
+                        type="date"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Visit Visa Number</Label>
+                      <Input
+                        {...register("contact_details.visit_visa_number")}
+                        error={!!errors.contact_details?.visit_visa_number}
+                        hint={
+                          errors.contact_details?.visit_visa_number?.message
+                        }
+                        type="number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Driving License number</Label>
+                      <Input
+                        {...register("contact_details.driving_license_number")}
+                        error={!!errors.contact_details?.driving_license_number}
+                        hint={
+                          errors.contact_details?.driving_license_number
+                            ?.message
+                        }
+                        type="number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Driving license issued by</Label>
                       <Input
                         {...register(
-                          "contact_details.billing_address_street_1"
+                          "contact_details.driving_license_issued_by"
                         )}
                         error={
-                          !!errors.contact_details?.billing_address_street_1
+                          !!errors.contact_details?.driving_license_issued_by
                         }
                         hint={
-                          errors.contact_details?.billing_address_street_1
+                          errors.contact_details?.driving_license_issued_by
                             ?.message
                         }
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Street Address 2</Label>
+                      <Label>Driving license issued date</Label>
                       <Input
                         {...register(
-                          "contact_details.billing_address_street_2"
+                          "contact_details.driving_license_issued_date"
                         )}
                         error={
-                          !!errors.contact_details?.billing_address_street_2
+                          !!errors.contact_details?.driving_license_issued_date
                         }
                         hint={
-                          errors.contact_details?.billing_address_street_2
+                          errors.contact_details?.driving_license_issued_date
                             ?.message
                         }
+                        type="date"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>City</Label>
-                        <Input
-                          {...register("contact_details.billing_address_city")}
-                          error={!!errors.contact_details?.billing_address_city}
-                          hint={
-                            errors.contact_details?.billing_address_city
-                              ?.message
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Postal Code</Label>
-                        <Input
-                          {...register(
-                            "contact_details.billing_address_zip_code"
-                          )}
-                          error={
-                            !!errors.contact_details?.billing_address_zip_code
-                          }
-                          hint={
-                            errors.contact_details?.billing_address_zip_code
-                              ?.message
-                          }
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label>Driving license expiry date</Label>
+                      <Input
+                        {...register(
+                          "contact_details.driving_license_expiry_date"
+                        )}
+                        error={
+                          !!errors.contact_details?.driving_license_expiry_date
+                        }
+                        hint={
+                          errors.contact_details?.driving_license_expiry_date
+                            ?.message
+                        }
+                        type="date"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Home Address</Label>
+                      <Input
+                        {...register("contact_details.home_address")}
+                        error={!!errors.contact_details?.home_address}
+                        hint={errors.contact_details?.home_address?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Work Address</Label>
+                      <Input
+                        {...register("contact_details.work_address")}
+                        error={!!errors.contact_details?.work_address}
+                        hint={errors.contact_details?.work_address?.message}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>P O box</Label>
+                      <Input
+                        {...register("contact_details.p_o_box")}
+                        error={!!errors.contact_details?.p_o_box}
+                        hint={errors.contact_details?.p_o_box?.message}
+                      />
                     </div>
                   </div>
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      Shipping Address
-                    </h3>
-                    <div className="space-y-2">
-                      <Label>Street Address 1</Label>
-                      <Input
-                        {...register(
-                          "contact_details.shipping_address_street_1"
-                        )}
-                        error={
-                          !!errors.contact_details?.shipping_address_street_1
-                        }
-                        hint={
-                          errors.contact_details?.shipping_address_street_1
-                            ?.message
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Street Address 2</Label>
-                      <Input
-                        {...register(
-                          "contact_details.shipping_address_street_2"
-                        )}
-                        error={
-                          !!errors.contact_details?.shipping_address_street_2
-                        }
-                        hint={
-                          errors.contact_details?.shipping_address_street_2
-                            ?.message
-                        }
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        Billing Address
+                      </h3>
                       <div className="space-y-2">
-                        <Label>City</Label>
+                        <Label>Billing Address Attention</Label>
                         <Input
-                          {...register("contact_details.shipping_address_city")}
+                          {...register(
+                            "contact_details.billing_address_attention"
+                          )}
                           error={
-                            !!errors.contact_details?.shipping_address_city
+                            !!errors.contact_details?.billing_address_attention
                           }
                           hint={
-                            errors.contact_details?.shipping_address_city
+                            errors.contact_details?.billing_address_attention
                               ?.message
                           }
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Postal Code</Label>
+                        <Label>Billing Address Country</Label>
+                        <select
+                          {...register(
+                            "contact_details.billing_address_country_id"
+                          )}
+                          className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                          // disabled={countriesLoading}
+                        >
+                          <option value="" disabled>
+                            Select Country
+                          </option>
+
+                          {countriesData?.data?.map((country) => (
+                            <option key={country.id} value={country.id}>
+                              {country.name_en}{" "}
+                              {/* أو nationality_ar حسب اللغة */}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Street Address 1</Label>
                         <Input
                           {...register(
-                            "contact_details.shipping_address_zip_code"
+                            "contact_details.billing_address_street_1"
                           )}
                           error={
-                            !!errors.contact_details?.shipping_address_zip_code
+                            !!errors.contact_details?.billing_address_street_1
                           }
                           hint={
-                            errors.contact_details?.shipping_address_zip_code
+                            errors.contact_details?.billing_address_street_1
                               ?.message
                           }
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Street Address 2</Label>
+                        <Input
+                          {...register(
+                            "contact_details.billing_address_street_2"
+                          )}
+                          error={
+                            !!errors.contact_details?.billing_address_street_2
+                          }
+                          hint={
+                            errors.contact_details?.billing_address_street_2
+                              ?.message
+                          }
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>City</Label>
+                          <Input
+                            {...register(
+                              "contact_details.billing_address_city"
+                            )}
+                            error={
+                              !!errors.contact_details?.billing_address_city
+                            }
+                            hint={
+                              errors.contact_details?.billing_address_city
+                                ?.message
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>State</Label>
+                          <select
+                            {...register(
+                              "contact_details.shipping_address_country_state_id"
+                            )}
+                            className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                            // disabled={countriesLoading}
+                          >
+                            <option value="" disabled>
+                              Select State
+                            </option>
+                            {countriesData?.data
+                              .find(
+                                (country) =>
+                                  country.id.toString() ==
+                                  watch(
+                                    "contact_details.billing_address_country_id"
+                                  )
+                              )
+                              ?.country_states.map((state) => (
+                                <option key={state.id} value={state.id}>
+                                  {state.name_en}{" "}
+                                  {/* أو nationality_ar حسب اللغة */}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Postal Code</Label>
+                          <Input
+                            {...register(
+                              "contact_details.billing_address_zip_code"
+                            )}
+                            error={
+                              !!errors.contact_details?.billing_address_zip_code
+                            }
+                            hint={
+                              errors.contact_details?.billing_address_zip_code
+                                ?.message
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Address Phone</Label>
+                          <Input
+                            {...register(
+                              "contact_details.billing_address_phone"
+                            )}
+                            error={
+                              !!errors.contact_details?.billing_address_phone
+                            }
+                            hint={
+                              errors.contact_details?.billing_address_phone
+                                ?.message
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Fax Number</Label>
+                          <Input
+                            {...register(
+                              "contact_details.billing_address_fax_number"
+                            )}
+                            error={
+                              !!errors.contact_details
+                                ?.billing_address_fax_number
+                            }
+                            hint={
+                              errors.contact_details?.billing_address_fax_number
+                                ?.message
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        Shipping Address
+                      </h3>
+                      <div className="space-y-2">
+                        <Label>Shipping Address Attention</Label>
+                        <Input
+                          {...register(
+                            "contact_details.shipping_address_attention"
+                          )}
+                          error={
+                            !!errors.contact_details?.shipping_address_attention
+                          }
+                          hint={
+                            errors.contact_details?.shipping_address_attention
+                              ?.message
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>shipping Address Country</Label>
+                        <select
+                          {...register(
+                            "contact_details.shipping_address_country_id"
+                          )}
+                          className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                          // disabled={countriesLoading}
+                        >
+                          <option value="" disabled>
+                            Select Country
+                          </option>
+
+                          {countriesData?.data?.map((country) => (
+                            <option key={country.id} value={country.id}>
+                              {country.name_en}{" "}
+                              {/* أو nationality_ar حسب اللغة */}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Street Address 1</Label>
+                        <Input
+                          {...register(
+                            "contact_details.shipping_address_street_1"
+                          )}
+                          error={
+                            !!errors.contact_details?.shipping_address_street_1
+                          }
+                          hint={
+                            errors.contact_details?.shipping_address_street_1
+                              ?.message
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Street Address 2</Label>
+                        <Input
+                          {...register(
+                            "contact_details.shipping_address_street_2"
+                          )}
+                          error={
+                            !!errors.contact_details?.shipping_address_street_2
+                          }
+                          hint={
+                            errors.contact_details?.shipping_address_street_2
+                              ?.message
+                          }
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>City</Label>
+                          <Input
+                            {...register(
+                              "contact_details.shipping_address_city"
+                            )}
+                            error={
+                              !!errors.contact_details?.shipping_address_city
+                            }
+                            hint={
+                              errors.contact_details?.shipping_address_city
+                                ?.message
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2 ">
+                          <Label>State</Label>
+                          <select
+                            {...register(
+                              "contact_details.billing_address_country_state_id"
+                            )}
+                            className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                            // disabled={countriesLoading}
+                          >
+                            <option value="" disabled>
+                              Select State
+                            </option>
+                            {countriesData?.data
+                              .find(
+                                (country) =>
+                                  country.id.toString() ==
+                                  watch(
+                                    "contact_details.shipping_address_country_id"
+                                  )
+                              )
+                              ?.country_states.map((state) => (
+                                <option key={state.id} value={state.id}>
+                                  {state.name_en}{" "}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Postal Code</Label>
+                          <Input
+                            {...register(
+                              "contact_details.shipping_address_zip_code"
+                            )}
+                            error={
+                              !!errors.contact_details
+                                ?.shipping_address_zip_code
+                            }
+                            hint={
+                              errors.contact_details?.shipping_address_zip_code
+                                ?.message
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Fax Number</Label>
+                          <Input
+                            {...register(
+                              "contact_details.shipping_address_fax_number"
+                            )}
+                            error={
+                              !!errors.contact_details
+                                ?.shipping_address_fax_number
+                            }
+                            hint={
+                              errors.contact_details
+                                ?.shipping_address_fax_number?.message
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1599,29 +2065,90 @@ export default function CustomerForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label required>Nationality</Label>
-                      <select
-                        {...register("nationality_id")}
-                        className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
-                        // disabled={countriesLoading}
-                      >
-                        <option value="">Select Nationality</option>
-
-                        {countriesData?.data?.map((country) => (
-                          <option key={country.id} value={country.id}>
-                            {country.nationality_en}{" "}
-                            {/* أو nationality_ar حسب اللغة */}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.nationality_id && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.nationality_id.message}
-                        </p>
-                      )}
+                      <Label>Salutation (Ar)</Label>
+                      <Input
+                        {...register("contact_persons.0.salutation_ar")}
+                        error={!!errors.contact_persons?.["0"]?.salutation_ar}
+                        hint={
+                          errors.contact_persons?.["0"]?.salutation_ar?.message
+                        }
+                      />
                     </div>
                     <div className="space-y-2">
-                      <Label required>Email</Label>
+                      <Label>Salutation (En)</Label>
+                      <Input
+                        {...register("contact_persons.0.salutation_en")}
+                        error={!!errors.contact_persons?.["0"]?.salutation_en}
+                        hint={
+                          errors.contact_persons?.["0"]?.salutation_en?.message
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Full Name (Ar)</Label>
+                      <Input
+                        {...register("contact_persons.0.full_name_ar")}
+                        error={!!errors.contact_persons?.["0"]?.full_name_ar}
+                        hint={
+                          errors.contact_persons?.["0"]?.full_name_ar?.message
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Full Name (En)</Label>
+                      <Input
+                        {...register("contact_persons.0.full_name_en")}
+                        error={!!errors.contact_persons?.["0"]?.full_name_en}
+                        hint={
+                          errors.contact_persons?.["0"]?.full_name_en?.message
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>First Name (Ar)</Label>
+                      <Input
+                        {...register("contact_persons.0.first_name_ar")}
+                        error={!!errors.contact_persons?.["0"]?.first_name_ar}
+                        hint={
+                          errors.contact_persons?.["0"]?.first_name_ar?.message
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>First Name (En)</Label>
+                      <Input
+                        {...register("contact_persons.0.first_name_en")}
+                        error={!!errors.contact_persons?.["0"]?.first_name_en}
+                        hint={
+                          errors.contact_persons?.["0"]?.first_name_en?.message
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Last Name (Ar)</Label>
+                      <Input
+                        {...register("contact_persons.0.last_name_ar")}
+                        error={!!errors.contact_persons?.["0"]?.last_name_ar}
+                        hint={
+                          errors.contact_persons?.["0"]?.last_name_ar?.message
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Last Name (En)</Label>
+                      <Input
+                        {...register("contact_persons.0.last_name_en")}
+                        error={!!errors.contact_persons?.["0"]?.last_name_en}
+                        hint={
+                          errors.contact_persons?.["0"]?.last_name_en?.message
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Email</Label>
                       <Input
                         type="email"
                         {...register("contact_persons.0.email")}
@@ -1630,7 +2157,7 @@ export default function CustomerForm() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label required>Phone</Label>
+                      <Label>Phone</Label>
                       <Input
                         type="tel"
                         {...register("contact_persons.0.mobile")}
@@ -1638,11 +2165,8 @@ export default function CustomerForm() {
                         hint={errors.contact_persons?.[0]?.mobile?.message}
                       />
                     </div>
-                  </div>
-
-                  <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Position</Label>
+                      <Label>Designation</Label>
                       <Input
                         {...register("contact_persons.0.designation")}
                         error={!!errors.contact_persons?.[0]?.designation}
@@ -1671,6 +2195,21 @@ export default function CustomerForm() {
                 </div>
               )}
             </div>
+
+            {Object.keys(errors).length > 0 && (
+              <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                <p className="font-semibold">
+                  Please fix the following errors:
+                </p>
+                <ul className="list-disc list-inside">
+                  {getErrorMessages(errors).map((errorMessage, index) => (
+                    <li key={index} className="text-sm">
+                      {errorMessage}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Submit Button */}
             <div className="flex justify-end">

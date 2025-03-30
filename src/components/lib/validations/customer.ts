@@ -1,27 +1,18 @@
 import { z } from "zod";
 
 const contactDetailsSchema = z.object({
-  passport_number: z
-    .string()
-    .min(6, "Passport number must be at least 6 characters")
-    .optional(),
-  work_phone: z
-    .string()
-    .regex(/^[0-9+\-()\s]+$/, "Invalid phone number format")
-    .optional(),
-  website_url: z.string().url("Invalid website URL").optional(),
+  passport_number: z.string().optional(),
+  work_phone: z.string().optional(),
+  website_url: z.string().optional(),
   department: z.string().optional(),
   profession: z.string().optional(),
   designation: z.string().optional(),
   social_media: z.string().optional(),
   id_issued_date: z.string().optional(),
   id_expiry_date: z.string().optional(),
-  unified_number: z
-    .string()
-    .min(3, "Unified Number must be at least 3 characters")
-    .optional(),
+  unified_number: z.string().optional(),
   date_of_birth: z.string().optional(),
-  place_of_birth: z.string().min(2, "Place of Birth must be valid").optional(),
+  place_of_birth: z.string().optional(),
   visit_visa_number: z.string().optional(),
   driving_license_number: z.string().optional(),
   driving_license_issued_by: z.string().optional(),
@@ -31,23 +22,20 @@ const contactDetailsSchema = z.object({
   work_address: z.string().optional(),
   p_o_box: z.string().optional(),
   billing_address_attention: z.string().optional(),
-  billing_address_country_id: z.number().optional(),
+  billing_address_country_id: z.string().optional(),
   billing_address_street_1: z.string().optional(),
   billing_address_street_2: z.string().optional(),
   billing_address_city: z.string().optional(),
-  billing_address_country_state_id: z.number().optional(),
+  billing_address_country_state_id: z.string().optional(),
   billing_address_zip_code: z.string().optional(),
-  billing_address_phone: z
-    .string()
-    .min(6, "Billing address phone number must be at least 6 characters")
-    .optional(),
+  billing_address_phone: z.string().optional(),
   billing_address_fax_number: z.string().optional(),
   shipping_address_attention: z.string().optional(),
-  shipping_address_country_id: z.number().optional(),
+  shipping_address_country_id: z.string().optional(),
   shipping_address_street_1: z.string().optional(),
   shipping_address_street_2: z.string().optional(),
   shipping_address_city: z.string().optional(),
-  shipping_address_country_state_id: z.number().optional(),
+  shipping_address_country_state_id: z.string().optional(),
   shipping_address_zip_code: z.string().optional(),
   shipping_address_fax_number: z.string().optional(),
 });
@@ -84,12 +72,11 @@ const contactPersonSchema = z.object({
 });
 
 export const customerSchema = z.object({
-  organization_id: z.number(),
-  branch_id: z.number().optional(),
-  portal_access: z.enum(["0", "1"]).transform(val => val === "1"),
-  portal_language: z.enum(["en", "ar"]).default("en"),
-  type: z.enum(["customer", "employee", "vendor"]),
-  contact_type: z.enum(["business", "individual"]),
+  branch_id: z.string().optional(),
+  portal_access: z.enum(["0", "1"]).optional(),
+  portal_language: z.enum(["en", "ar"]).default("en").optional(),
+  type: z.enum(["customer", "employee", "vendor"]).optional(),
+  contact_type: z.enum(["business", "individual"]).optional(),
 
   full_name_ar: z
     .string()
@@ -103,12 +90,12 @@ export const customerSchema = z.object({
   email: z.string().email("صيغة البريد الإلكتروني غير صحيحة"),
   mobile: z.string().min(10, "يجب أن يحتوي رقم الجوال على الأقل على 8 أرقام"),
 
-  payment_term_id: z.number().optional(),
-  currency_id: z.number().optional(),
+  payment_term_id: z.string().optional(),
+  currency_id: z.string().min(1, "Currency is required"),
   exchange_rate: z.string().optional(),
   balance: z.string().optional(),
 
-  nationality_id: z.number().optional(),
+  nationality_id: z.string().optional(),
   contact_details: contactDetailsSchema.optional(),
   contact_persons: z.array(contactPersonSchema).optional(),
 });
