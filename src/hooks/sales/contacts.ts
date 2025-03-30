@@ -28,7 +28,7 @@ export const useAddContact = () => {
   return useMutation({
     mutationFn: _ContactsApi.addContact,
     onSuccess: () => {
-      navigate("/contacts");
+      navigate("/customers");
     },
   });
 };
@@ -45,7 +45,7 @@ export const useUpdateContact = () => {
       data: Partial<IContact>;
     }) => _ContactsApi.updateContact(id, data),
     onSuccess: () => {
-      navigate("/contacts");
+      navigate("/customers");
     },
   });
 };

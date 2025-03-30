@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { _ProductsApi } from "../../services/products/products.service";
 import { QueryKeys } from "../../utils/queryKeys";
-import type { ProductForm } from "@/types/products/product";
+import type { ProductForm, ProductUpdateForm } from "@/types/products/product";
 
 // FETCH PRODUCTS
 export const useFetchProducts = () => {
@@ -37,7 +37,7 @@ export const useAddProduct = () => {
 export const useUpdateProduct = () => {
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: ProductForm }) =>
+    mutationFn: ({ id, data }: { id: number; data: ProductUpdateForm }) =>
       _ProductsApi.updateProduct(id, data),
     onSuccess: () => {
       navigate("/products");

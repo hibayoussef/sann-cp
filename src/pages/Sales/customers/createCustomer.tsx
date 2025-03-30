@@ -1,1140 +1,3 @@
-// import {
-//   customerSchema,
-//   type CustomerType,
-// } from "@/components/lib/validations/customer";
-// import {
-//   useAddContact,
-//   useFetchContact,
-//   useUpdateContact,
-// } from "@/hooks/sales/contacts";
-// import { useFetchBranches } from "@/hooks/settings/useBranches";
-// import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
-// import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
-// import type { Currency } from "@/types/common";
-// import { ContactType } from "@/types/enums/contactType";
-// import type { IBranch } from "@/types/settings/branches";
-// import type { IPaymentTerm } from "@/types/settings/payment_term";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { useEffect } from "react";
-// import { useForm } from "react-hook-form";
-// import { IoAdd } from "react-icons/io5";
-// import { useParams } from "react-router-dom";
-// import ComponentCard from "../../../components/common/ComponentCard";
-// import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
-// import Input from "../../../components/form/input/InputField";
-// import Label from "../../../components/form/Label";
-// import { useMeStore } from "../../../store/useMeStore";
-
-// export default function CustomerForm() {
-//   const { id } = useParams();
-//   const isUpdate = Boolean(id);
-//   const addCustomer = useAddContact();
-//   const updateCustomer = useUpdateContact();
-//   const organizationId = useMeStore((state) => state.organizationId);
-
-//   const { data: customerData, isLoading } = useFetchContact(Number(id), {
-//     enabled: isUpdate,
-//   });
-//   const { data: branches, isLoading: branchesLoading } = useFetchBranches();
-//   const { data: paymentsTerm, isLoading: paymentsTermLoading } =
-//     useFetchPaymentTerms();
-//   const { data: currencies, isLoading: currenciesLoading } =
-//     useFetchCurrencies();
-//   const { data: countriesData, isLoading: countriesLoading } =
-//     useFetchCountries();
-
-//   const {
-//     register,
-//     handleSubmit,
-//     setValue,
-//     formState: { errors, isSubmitting },
-//   } = useForm<CustomerType>({
-//     resolver: zodResolver(customerSchema),
-//     defaultValues: customerData ?? {},
-//   });
-
-//   useEffect(() => {
-//     if (customerData) {
-//       Object.keys(customerData).forEach((key) => {
-//         setValue(key, customerData[key]);
-//       });
-//     }
-//   }, [customerData, setValue]);
-
-//   const onSubmit = async (formData: CustomerType) => {
-//     const payload = {
-//       organization_id: organizationId,
-//       ...formData,
-//     };
-
-//     if (isUpdate && id) {
-//       await updateCustomer.mutateAsync({ id: Number(id), data: payload });
-//     } else {
-//       await addCustomer.mutateAsync(payload);
-//     }
-//   };
-
-//   return (
-//     <>
-//       <PageBreadcrumb
-//         baseLink="/customers"
-//         baseTitle="Customers"
-//         pageTitle={isUpdate ? "Update Customer" : "Create Customer"}
-//         icon={
-//           <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
-//             <IoAdd className="w-5 h-5" />
-//           </div>
-//         }
-//       />
-//       <ComponentCard title={isUpdate ? "Update Customer" : "Create Customer"}>
-//         {isUpdate && isLoading ? (
-//           <p>Loading customer data...</p>
-//         ) : (
-//           <form onSubmit={handleSubmit(onSubmit)}>
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//               {/* Left Side */}
-//               <div>
-//                 <Label>Branch</Label>
-//                 <select
-//                   {...register("branch_id")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.branch_id}
-//                 >
-//                   <option value="">Select a Branch</option>
-//                   {branches?.map((branch: IBranch) => (
-//                     <option key={branch.id} value={branch.id}>
-//                       {branch.branch_name_en}
-//                     </option>
-//                   ))}
-//                 </select>
-//                 {errors.branch_id && (
-//                   <p className="text-red-500 text-sm">
-//                     {errors.branch_id.message}
-//                   </p>
-//                 )}
-//               </div>
-//               <div>
-//                 <Label>Portal Access</Label>
-//                 <select
-//                   {...register("portal_access")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.portal_access}
-//                 >
-//                   <option value="">Select Portal Access</option>
-//                   <option value="1">Enabled</option>
-//                   <option value="0">Disabled</option>
-//                 </select>
-//                 {errors.portal_access && (
-//                   <p className="text-red-500 text-sm">
-//                     {errors.portal_access.message}
-//                   </p>
-//                 )}
-//               </div>
-
-//               <div>
-//                 <Label>Portal Language</Label>
-//                 <select
-//                   {...register("portal_language")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.portal_language}
-//                 >
-//                   <option value="">Select Portal Language</option>
-//                   <option value="en">English</option>
-//                   <option value="ar">Arabic</option>
-//                 </select>
-//                 {errors.portal_language && (
-//                   <p className="text-red-500 text-sm">
-//                     {errors.portal_language.message}
-//                   </p>
-//                 )}
-//               </div>
-
-//               <div>
-//                 <Label>Type</Label>
-//                 <select
-//                   {...register("type")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.type}
-//                 >
-//                   <option value="">Select Type</option>
-//                   <option value={ContactType.CUSTOMER}>Customer</option>
-//                   <option value={ContactType.EMPLOYEE}>Employee</option>
-//                   <option value={ContactType.VENDOR}>Vendor</option>
-//                 </select>
-//                 {errors.type && (
-//                   <p className="text-red-500 text-sm">{errors.type.message}</p>
-//                 )}
-//               </div>
-//               <div>
-//                 <Label>Payment Term</Label>
-//                 <select
-//                   {...register("payment_term_id")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.payment_term_id}
-//                 >
-//                   <option value="">Select Payment Term</option>
-//                   {paymentsTerm?.map((term: IPaymentTerm) => (
-//                     <option key={term.id} value={term.id}>
-//                       {term.term_name_en}
-//                     </option>
-//                   ))}
-//                 </select>
-//                 {errors.payment_term_id && (
-//                   <p className="text-red-500 text-sm">
-//                     {errors.payment_term_id.message}
-//                   </p>
-//                 )}
-//               </div>
-//               <div>
-//                 <Label>Currency</Label>
-//                 <select
-//                   {...register("currency_id")}
-//                   className="w-full p-2 border rounded"
-//                   // error={!!errors.currency_id}
-//                 >
-//                   <option value="">Select Currency</option>
-//                   {currenciesLoading ? (
-//                     <option disabled>Loading currencies...</option>
-//                   ) : (
-//                     currencies?.data.map((currency: Currency) => (
-//                       <option key={currency.id} value={currency.id}>
-//                         {currency.currency_name} ({currency.currency_symbol})
-//                       </option>
-//                     ))
-//                   )}
-//                 </select>
-//                 {errors.currency_id && (
-//                   <p className="text-red-500 text-sm">
-//                     {errors.currency_id.message}
-//                   </p>
-//                 )}
-//               </div>
-
-//               <div>
-//                 <Label>Exchange Rate</Label>
-//                 <Input
-//                   type="number"
-//                   // step="0.01"
-//                   {...register("exchange_rate")}
-//                   error={!!errors.exchange_rate}
-//                   hint={errors.exchange_rate?.message}
-//                 />
-//               </div>
-//               <div>
-//                 <Label>Balance</Label>
-//                 <Input
-//                   type="number"
-//                   // step="0.01" // للسماح بالأرقام العشرية
-//                   {...register("balance")}
-//                   error={!!errors.balance}
-//                   hint={errors.balance?.message}
-//                 />
-//               </div>
-
-// <div>
-//   <Label>Nationality</Label>
-//   <select
-//     {...register("nationality_id")}
-//     className="w-full p-2 border rounded"
-//     // error={!!errors.nationality_id}
-//   >
-//     <option value="">Select Nationality</option>
-//     {countriesLoading ? (
-//       <option>Loading nationalities...</option>
-//     ) : (
-//       countriesData?.data?.map((country) => (
-//         <option key={country.id} value={country.id}>
-//           {country.nationality_en}{" "}
-//           {/* استخدم `nationality_ar` إذا كان التطبيق عربيًا */}
-//         </option>
-//       ))
-//     )}
-//   </select>
-//   {errors.nationality_id && (
-//     <p className="text-red-500 text-sm">
-//       {errors.nationality_id.message}
-//     </p>
-//   )}
-// </div>
-
-//               <div>
-//                 <Label>Passport Number</Label>
-//                 <Input
-//                   type="text"
-//                   {...register("contact_details.passport_number")}
-//                   error={!!errors.contact_details?.passport_number}
-//                   hint={errors.contact_details?.passport_number?.message}
-//                 />
-//               </div>
-//               <div>
-//                 {/* Department */}
-//                 <Label>Department</Label>
-//                 <Input
-//                   type="text"
-//                   {...register("contact_details.department")}
-//                   error={!!errors.contact_details?.department}
-//                   hint={errors.contact_details?.department?.message}
-//                 />
-
-//                 {/* Work Phone */}
-//                 <Label>Work Phone</Label>
-//                 <Input
-//                   type="tel"
-//                   {...register("contact_details.work_phone")}
-//                   error={!!errors.contact_details?.work_phone}
-//                   hint={errors.contact_details?.work_phone?.message}
-//                 />
-
-//                 {/* Website URL */}
-//                 <Label>Website URL</Label>
-//                 <Input
-//                   type="url"
-//                   {...register("contact_details.website_url")}
-//                   error={!!errors.contact_details?.website_url}
-//                   hint={errors.contact_details?.website_url?.message}
-//                 />
-
-//                 {/* Profession */}
-//                 <Label>Profession</Label>
-//                 <Input
-//                   type="text"
-//                   {...register("contact_details.profession")}
-//                   error={!!errors.contact_details?.profession}
-//                   hint={errors.contact_details?.profession?.message}
-//                 />
-
-//                 {/* Designation */}
-//                 <Label>Designation</Label>
-//                 <Input
-//                   type="text"
-//                   {...register("contact_details.designation")}
-//                   error={!!errors.contact_details?.designation}
-//                   hint={errors.contact_details?.designation?.message}
-//                 />
-
-//                 {/* Social Media */}
-//                 <Label>Social Media</Label>
-//                 <Input
-//                   type="text"
-//                   {...register("contact_details.social_media")}
-//                   error={!!errors.contact_details?.social_media}
-//                   hint={errors.contact_details?.social_media?.message}
-//                 />
-//               </div>
-//               {/* ID Issued Date */}
-//               <Label>ID Issued Date</Label>
-//               <Input
-//                 type="date"
-//                 {...register("contact_details.id_issued_date")}
-//                 error={!!errors.contact_details?.id_issued_date}
-//                 hint={errors.contact_details?.id_issued_date?.message}
-//               />
-
-//               {/* ID Expiry Date */}
-//               <Label>ID Expiry Date</Label>
-//               <Input
-//                 type="date"
-//                 {...register("contact_details.id_expiry_date")}
-//                 error={!!errors.contact_details?.id_expiry_date}
-//                 hint={errors.contact_details?.id_expiry_date?.message}
-//               />
-
-//               {/* Unified Number */}
-//               <Label>Unified Number</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.unified_number")}
-//                 error={!!errors.contact_details?.unified_number}
-//                 hint={errors.contact_details?.unified_number?.message}
-//               />
-
-//               {/* Place of Birth */}
-//               <Label>Place of Birth</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.place_of_birth")}
-//                 error={!!errors.contact_details?.place_of_birth}
-//                 hint={errors.contact_details?.place_of_birth?.message}
-//               />
-
-//               {/* Date of Birth */}
-//               <Label>Date of Birth</Label>
-//               <Input
-//                 type="date"
-//                 {...register("contact_details.date_of_birth")}
-//                 error={!!errors.contact_details?.date_of_birth}
-//                 hint={errors.contact_details?.date_of_birth?.message}
-//               />
-
-//               {/* Visit Visa Number */}
-//               <Label>Visit Visa Number</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.visit_visa_number")}
-//                 error={!!errors.contact_details?.visit_visa_number}
-//                 hint={errors.contact_details?.visit_visa_number?.message}
-//               />
-
-//               {/* Driving License Number */}
-//               <Label>Driving License Number</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.driving_license_number")}
-//                 error={!!errors.contact_details?.driving_license_number}
-//                 hint={errors.contact_details?.driving_license_number?.message}
-//               />
-
-//               {/* Driving License Issued By */}
-//               <Label>Driving License Issued By</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.driving_license_issued_by")}
-//                 error={!!errors.contact_details?.driving_license_issued_by}
-//                 hint={
-//                   errors.contact_details?.driving_license_issued_by?.message
-//                 }
-//               />
-
-//               {/* Driving License Issued Date */}
-//               <Label>Driving License Issued Date</Label>
-//               <Input
-//                 type="date"
-//                 {...register("contact_details.driving_license_issued_date")}
-//                 error={!!errors.contact_details?.driving_license_issued_date}
-//                 hint={
-//                   errors.contact_details?.driving_license_issued_date?.message
-//                 }
-//               />
-//               {/* Home Address */}
-//               <Label>Home Address</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.home_address")}
-//                 error={!!errors.contact_details?.home_address}
-//                 hint={errors.contact_details?.home_address?.message}
-//               />
-
-//               {/* Work Address */}
-//               <Label>Work Address</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.work_address")}
-//                 error={!!errors.contact_details?.work_address}
-//                 hint={errors.contact_details?.work_address?.message}
-//               />
-
-//               {/* P.O. Box */}
-//               <Label>P.O. Box</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.p_o_box")}
-//                 error={!!errors.contact_details?.p_o_box}
-//                 hint={errors.contact_details?.p_o_box?.message}
-//               />
-
-//               {/* Billing Address Attention */}
-//               <Label>Billing Address Attention</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.billing_address_attention")}
-//                 error={!!errors.contact_details?.billing_address_attention}
-//                 hint={
-//                   errors.contact_details?.billing_address_attention?.message
-//                 }
-//               />
-
-//               {/* Billing Address Country */}
-//               <Label>Billing Address Country</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.billing_address_country_id")}
-//                 error={!!errors.contact_details?.billing_address_country_id}
-//                 hint={
-//                   errors.contact_details?.billing_address_country_id?.message
-//                 }
-//               />
-
-//               {/* Billing Address Street 1 */}
-//               <Label>Billing Address Street 1</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.billing_address_street_1")}
-//                 error={!!errors.contact_details?.billing_address_street_1}
-//                 hint={errors.contact_details?.billing_address_street_1?.message}
-//               />
-
-//               {/* Billing Address Street 2 */}
-//               <Label>Billing Address Street 2</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.billing_address_street_2")}
-//                 error={!!errors.contact_details?.billing_address_street_2}
-//                 hint={errors.contact_details?.billing_address_street_2?.message}
-//               />
-
-//               {/* Billing Address Country/State */}
-//               <Label>Billing Address Country/State</Label>
-//               <Input
-//                 type="text"
-//                 {...register(
-//                   "contact_details.billing_address_country_state_id"
-//                 )}
-//                 error={
-//                   !!errors.contact_details?.billing_address_country_state_id
-//                 }
-//                 hint={
-//                   errors.contact_details?.billing_address_country_state_id
-//                     ?.message
-//                 }
-//               />
-
-//               {/* Billing Address Zip Code */}
-//               <Label>Billing Address Zip Code</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.billing_address_zip_code")}
-//                 error={!!errors.contact_details?.billing_address_zip_code}
-//                 hint={errors.contact_details?.billing_address_zip_code?.message}
-//               />
-
-//               {/* Billing Address Phone */}
-//               <Label>Billing Address Phone</Label>
-//               <Input
-//                 type="tel"
-//                 {...register("contact_details.billing_address_phone")}
-//                 error={!!errors.contact_details?.billing_address_phone}
-//                 hint={errors.contact_details?.billing_address_phone?.message}
-//               />
-
-//               {/* Billing Address Fax Number */}
-//               <Label>Billing Address Fax Number</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.billing_address_fax_number")}
-//                 error={!!errors.contact_details?.billing_address_fax_number}
-//                 hint={
-//                   errors.contact_details?.billing_address_fax_number?.message
-//                 }
-//               />
-
-//               {/* Shipping Address Attention */}
-//               <Label>Shipping Address Attention</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_attention")}
-//                 error={!!errors.contact_details?.shipping_address_attention}
-//                 hint={
-//                   errors.contact_details?.shipping_address_attention?.message
-//                 }
-//               />
-
-//               {/* Shipping Address Country */}
-//               <Label>Shipping Address Country</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_country_id")}
-//                 error={!!errors.contact_details?.shipping_address_country_id}
-//                 hint={
-//                   errors.contact_details?.shipping_address_country_id?.message
-//                 }
-//               />
-//               {/* Shipping Address Street 1 */}
-//               <Label>Shipping Address Street 1</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_street_1")}
-//                 error={!!errors.contact_details?.shipping_address_street_1}
-//                 hint={
-//                   errors.contact_details?.shipping_address_street_1?.message
-//                 }
-//               />
-
-//               {/* Shipping Address Street 2 */}
-//               <Label>Shipping Address Street 2</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_street_2")}
-//                 error={!!errors.contact_details?.shipping_address_street_2}
-//                 hint={
-//                   errors.contact_details?.shipping_address_street_2?.message
-//                 }
-//               />
-
-//               {/* Shipping Address City */}
-//               <Label>Shipping Address City</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_city")}
-//                 error={!!errors.contact_details?.shipping_address_city}
-//                 hint={errors.contact_details?.shipping_address_city?.message}
-//               />
-
-//               {/* Shipping Address Country/State */}
-//               <Label>Shipping Address Country/State</Label>
-//               <Input
-//                 type="text"
-//                 {...register(
-//                   "contact_details.shipping_address_country_state_id"
-//                 )}
-//                 error={
-//                   !!errors.contact_details?.shipping_address_country_state_id
-//                 }
-//                 hint={
-//                   errors.contact_details?.shipping_address_country_state_id
-//                     ?.message
-//                 }
-//               />
-
-//               {/* Shipping Address Zip Code */}
-//               <Label>Shipping Address Zip Code</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_zip_code")}
-//                 error={!!errors.contact_details?.shipping_address_zip_code}
-//                 hint={
-//                   errors.contact_details?.shipping_address_zip_code?.message
-//                 }
-//               />
-
-//               {/* Shipping Address Fax Number */}
-//               <Label>Shipping Address Fax Number</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_details.shipping_address_fax_number")}
-//                 error={!!errors.contact_details?.shipping_address_fax_number}
-//                 hint={
-//                   errors.contact_details?.shipping_address_fax_number?.message
-//                 }
-//               />
-
-//               {/* Salutation (Arabic) */}
-//               <Label>Salutation (Arabic)</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.salutation_ar")}
-//                 error={!!errors.contact_persons?.[0]?.salutation_ar}
-//                 hint={errors.contact_persons?.[0]?.salutation_ar?.message}
-//               />
-
-//               {/* Salutation (English) */}
-//               <Label>Salutation (English)</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.salutation_en")}
-//                 error={!!errors.contact_persons?.[0]?.salutation_en}
-//                 hint={errors.contact_persons?.[0]?.salutation_en?.message}
-//               />
-
-//               {/* Full Name (Arabic) */}
-//               <Label>Full Name (Arabic)</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.full_name_ar")}
-//                 error={!!errors.contact_persons?.[0]?.full_name_ar}
-//                 hint={errors.contact_persons?.[0]?.full_name_ar?.message}
-//               />
-
-//               {/* Full Name (English) */}
-//               <Label>Full Name (English)</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.full_name_en")}
-//                 error={!!errors.contact_persons?.[0]?.full_name_en}
-//                 hint={errors.contact_persons?.[0]?.full_name_en?.message}
-//               />
-
-//               {/* First Name (Arabic) */}
-//               <Label>First Name (Arabic)</Label>
-//               <Input
-//                 type="text"
-//                   {...register("contact_persons.0.first_name_ar")}
-//                 error={!!errors.contact_persons?.[0]?.first_name_ar}
-//                 hint={errors.contact_persons?.[0]?.first_name_ar?.message}
-//               />
-
-//               {/* First Name (English) */}
-//               <Label>First Name (English)</Label>
-//               <Input
-//                 type="text"
-//                   {...register("contact_persons.0.first_name_en")}
-
-//                 error={!!errors.contact_persons?.[0]?.first_name_en}
-//                 hint={errors.contact_persons?.[0]?.first_name_en?.message}
-//               />
-
-//               {/* Last Name (Arabic) */}
-//               <Label>Last Name (Arabic)</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.last_name_ar")}
-//                 error={!!errors.contact_persons?.[0]?.last_name_ar}
-//                 hint={errors.contact_persons?.[0]?.last_name_ar?.message}
-//               />
-
-//               {/* Last Name (English) */}
-//               <Label>Last Name (English)</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.last_name_en")}
-//                 error={!!errors.contact_persons?.[0]?.last_name_en}
-//                 hint={errors.contact_persons?.[0]?.last_name_en?.message}
-//               />
-
-//               {/* Email */}
-//               <Label>Email</Label>
-//               <Input
-//                 type="email"
-//                 {...register("contact_persons.0.email")}
-//                 error={!!errors.contact_persons?.[0]?.email}
-//                 hint={errors.contact_persons?.[0]?.email?.message}
-//               />
-
-//               {/* Mobile */}
-//               <Label>Mobile</Label>
-//               <Input
-//                 type="tel"
-//                 {...register("contact_persons.0.mobile")}
-//                 error={!!errors.contact_persons?.[0]?.mobile}
-//                 hint={errors.contact_persons?.[0]?.mobile?.message}
-//               />
-
-//               {/* Department */}
-//               <Label>Department</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.department")}
-//                 error={!!errors.contact_persons?.[0]?.department}
-//                 hint={errors.contact_persons?.[0]?.department?.message}
-//               />
-
-//               {/* Designation */}
-//               <Label>Designation</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.designation")}
-//                 error={!!errors.contact_persons?.[0]?.designation}
-//                 hint={errors.contact_persons?.[0]?.designation?.message}
-//               />
-
-//               {/* Social Media */}
-//               <Label>Social Media</Label>
-//               <Input
-//                 type="text"
-//                 {...register("contact_persons.0.social_media")}
-//                 error={!!errors.contact_persons?.[0]?.social_media}
-//                 hint={errors.contact_persons?.[0]?.social_media?.message}
-//               />
-
-//               {/* ************************* */}
-//               <div>
-//                 <Label>Full Name (En)</Label>
-//                 <Input
-//                   {...register("full_name_en")}
-//                   error={!!errors.full_name_en}
-//                   hint={errors.full_name_en?.message}
-//                 />
-
-//                 <Label>Full Name (En)</Label>
-//                 <Input
-//                   {...register("full_name_ar")}
-//                   error={!!errors.full_name_ar}
-//                   hint={errors.full_name_ar?.message}
-//                 />
-
-//                 <Label>Last Name (Ar)</Label>
-//                 <Input
-//                   {...register("last_name_ar")}
-//                   error={!!errors.last_name_ar}
-//                   hint={errors.last_name_ar?.message}
-//                 />
-//                 <Label>Last Name (En)</Label>
-//                 <Input
-//                   {...register("last_name_en")}
-//                   error={!!errors.last_name_en}
-//                   hint={errors.last_name_en?.message}
-//                 />
-
-//                 <Label>Email</Label>
-//                 <Input
-//                   type="email"
-//                   {...register("email")}
-//                   error={!!errors.email}
-//                   hint={errors.email?.message}
-//                 />
-
-//                 <Label>Mobile</Label>
-//                 <Input
-//                   type="text"
-//                   {...register("mobile")}
-//                   error={!!errors.mobile}
-//                   hint={errors.mobile?.message}
-//                 />
-
-//                 <Label>Balance</Label>
-//                 <Input
-//                   type="number"
-//                   {...register("balance")}
-//                   error={!!errors.balance}
-//                   hint={errors.balance?.message}
-//                 />
-
-//                 <Label>Payment Term</Label>
-//                 <Input
-//                   {...register("payment_term_id")}
-//                   error={!!errors.payment_term_id}
-//                   hint={errors.payment_term_id?.message}
-//                 />
-
-//                 <Label>Currency</Label>
-//                 <Input
-//                   {...register("currency_id")}
-//                   error={!!errors.currency_id}
-//                   hint={errors.currency_id?.message}
-//                 />
-
-//                 <Label>Exchange Rate</Label>
-//                 <Input
-//                   type="number"
-//                   {...register("exchange_rate")}
-//                   error={!!errors.exchange_rate}
-//                   hint={errors.exchange_rate?.message}
-//                 />
-//               </div>
-
-//               {/* Right Side */}
-//               <div>
-//                 <Label>Full Name (Ar)</Label>
-//                 <Input
-//                   {...register("full_name_ar")}
-//                   error={!!errors.full_name_ar}
-//                   hint={errors.full_name_ar?.message}
-//                 />
-
-//                 <Label>Nationality</Label>
-//                 <Input
-//                   {...register("nationality_id")}
-//                   error={!!errors.nationality_id}
-//                   hint={errors.nationality_id?.message}
-//                 />
-
-//                 <Label>Contact Type</Label>
-//                 <Input
-//                   {...register("contact_type")}
-//                   error={!!errors.contact_type}
-//                   hint={errors.contact_type?.message}
-//                 />
-
-//                 <Label>Type</Label>
-//                 <Input
-//                   {...register("type")}
-//                   error={!!errors.type}
-//                   hint={errors.type?.message}
-//                 />
-
-//                 <Label>Portal Access</Label>
-//                 <Input
-//                   {...register("portal_access")}
-//                   error={!!errors.portal_access}
-//                   hint={errors.portal_access?.message}
-//                 />
-
-//                 <Label>Portal Language</Label>
-//                 <Input
-//                   {...register("portal_language")}
-//                   error={!!errors.portal_language}
-//                   hint={errors.portal_language?.message}
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Contact Details */}
-//             <div className="mt-4">
-//               <Label>Contact Details</Label>
-//               <div>
-//                 <Label>Passport Number</Label>
-//                 <Input
-//                   {...register("contact_details.passport_number")}
-//                   error={!!errors.contact_details?.passport_number}
-//                   hint={errors.contact_details?.passport_number?.message}
-//                 />
-
-//                 <Label>Work Phone</Label>
-//                 <Input
-//                   {...register("contact_details.work_phone")}
-//                   error={!!errors.contact_details?.work_phone}
-//                   hint={errors.contact_details?.work_phone?.message}
-//                 />
-
-//                 <Label>Website URL</Label>
-//                 <Input
-//                   {...register("contact_details.website_url")}
-//                   error={!!errors.contact_details?.website_url}
-//                   hint={errors.contact_details?.website_url?.message}
-//                 />
-
-//                 <Label>Department</Label>
-//                 <Input
-//                   {...register("contact_details.department")}
-//                   error={!!errors.contact_details?.department}
-//                   hint={errors.contact_details?.department?.message}
-//                 />
-
-//                 <Label>Profession</Label>
-//                 <Input
-//                   {...register("contact_details.profession")}
-//                   error={!!errors.contact_details?.profession}
-//                   hint={errors.contact_details?.profession?.message}
-//                 />
-
-//                 <Label>Designation</Label>
-//                 <Input
-//                   {...register("contact_details.designation")}
-//                   error={!!errors.contact_details?.designation}
-//                   hint={errors.contact_details?.designation?.message}
-//                 />
-
-//                 <Label>Social Media</Label>
-//                 <Input
-//                   {...register("contact_details.social_media")}
-//                   error={!!errors.contact_details?.social_media}
-//                   hint={errors.contact_details?.social_media?.message}
-//                 />
-
-//                 <Label>ID Issued Date</Label>
-//                 <Input
-//                   type="date"
-//                   {...register("contact_details.id_issued_date")}
-//                   error={!!errors.contact_details?.id_issued_date}
-//                   hint={errors.contact_details?.id_issued_date?.message}
-//                 />
-
-//                 <Label>ID Expiry Date</Label>
-//                 <Input
-//                   type="date"
-//                   {...register("contact_details.id_expiry_date")}
-//                   error={!!errors.contact_details?.id_expiry_date}
-//                   hint={errors.contact_details?.id_expiry_date?.message}
-//                 />
-
-//                 <Label>Unified Number</Label>
-//                 <Input
-//                   {...register("contact_details.unified_number")}
-//                   error={!!errors.contact_details?.unified_number}
-//                   hint={errors.contact_details?.unified_number?.message}
-//                 />
-
-//                 <Label>Date of Birth</Label>
-//                 <Input
-//                   type="date"
-//                   {...register("contact_details.date_of_birth")}
-//                   error={!!errors.contact_details?.date_of_birth}
-//                   hint={errors.contact_details?.date_of_birth?.message}
-//                 />
-
-//                 <Label>Place of Birth</Label>
-//                 <Input
-//                   {...register("contact_details.place_of_birth")}
-//                   error={!!errors.contact_details?.place_of_birth}
-//                   hint={errors.contact_details?.place_of_birth?.message}
-//                 />
-
-//                 <Label>Visit Visa Number</Label>
-//                 <Input
-//                   {...register("contact_details.visit_visa_number")}
-//                   error={!!errors.contact_details?.visit_visa_number}
-//                   hint={errors.contact_details?.visit_visa_number?.message}
-//                 />
-
-//                 <Label>Driving License Number</Label>
-//                 <Input
-//                   {...register("contact_details.driving_license_number")}
-//                   error={!!errors.contact_details?.driving_license_number}
-//                   hint={errors.contact_details?.driving_license_number?.message}
-//                 />
-
-//                 <Label>Driving License Issued By</Label>
-//                 <Input
-//                   {...register("contact_details.driving_license_issued_by")}
-//                   error={!!errors.contact_details?.driving_license_issued_by}
-//                   hint={
-//                     errors.contact_details?.driving_license_issued_by?.message
-//                   }
-//                 />
-
-//                 <Label>Driving License Issued Date</Label>
-//                 <Input
-//                   type="date"
-//                   {...register("contact_details.driving_license_issued_date")}
-//                   error={!!errors.contact_details?.driving_license_issued_date}
-//                   hint={
-//                     errors.contact_details?.driving_license_issued_date?.message
-//                   }
-//                 />
-
-//                 <Label>Driving License Expiry Date</Label>
-//                 <Input
-//                   type="date"
-//                   {...register("contact_details.driving_license_expiry_date")}
-//                   error={!!errors.contact_details?.driving_license_expiry_date}
-//                   hint={
-//                     errors.contact_details?.driving_license_expiry_date?.message
-//                   }
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Shipping and Billing Addresses */}
-//             <div className="mt-4">
-//               <Label>Billing Address</Label>
-//               <div>
-//                 <Label>Attention</Label>
-//                 <Input
-//                   {...register("contact_details.billing_address_attention")}
-//                   error={!!errors.contact_details?.billing_address_attention}
-//                   hint={
-//                     errors.contact_details?.billing_address_attention?.message
-//                   }
-//                 />
-
-//                 <Label>Street 1</Label>
-//                 <Input
-//                   {...register("contact_details.billing_address_street_1")}
-//                   error={!!errors.contact_details?.billing_address_street_1}
-//                   hint={
-//                     errors.contact_details?.billing_address_street_1?.message
-//                   }
-//                 />
-
-//                 <Label>Street 2</Label>
-//                 <Input
-//                   {...register("contact_details.billing_address_street_2")}
-//                   error={!!errors.contact_details?.billing_address_street_2}
-//                   hint={
-//                     errors.contact_details?.billing_address_street_2?.message
-//                   }
-//                 />
-
-//                 <Label>City</Label>
-//                 <Input
-//                   {...register("contact_details.billing_address_city")}
-//                   error={!!errors.contact_details?.billing_address_city}
-//                   hint={errors.contact_details?.billing_address_city?.message}
-//                 />
-
-//                 <Label>Country State</Label>
-//                 <Input
-//                   {...register(
-//                     "contact_details.billing_address_country_state_id"
-//                   )}
-//                   error={
-//                     !!errors.contact_details?.billing_address_country_state_id
-//                   }
-//                   hint={
-//                     errors.contact_details?.billing_address_country_state_id
-//                       ?.message
-//                   }
-//                 />
-
-//                 <Label>Zip Code</Label>
-//                 <Input
-//                   {...register("contact_details.billing_address_zip_code")}
-//                   error={!!errors.contact_details?.billing_address_zip_code}
-//                   hint={
-//                     errors.contact_details?.billing_address_zip_code?.message
-//                   }
-//                 />
-
-//                 <Label>Phone</Label>
-//                 <Input
-//                   {...register("contact_details.billing_address_phone")}
-//                   error={!!errors.contact_details?.billing_address_phone}
-//                   hint={errors.contact_details?.billing_address_phone?.message}
-//                 />
-//               </div>
-//             </div>
-
-//             <div className="mt-4">
-//               <Label>Shipping Address</Label>
-//               <div>
-//                 <Label>Attention</Label>
-//                 <Input
-//                   {...register("contact_details.shipping_address_attention")}
-//                   error={!!errors.contact_details?.shipping_address_attention}
-//                   hint={
-//                     errors.contact_details?.shipping_address_attention?.message
-//                   }
-//                 />
-
-//                 <Label>Street 1</Label>
-//                 <Input
-//                   {...register("contact_details.shipping_address_street_1")}
-//                   error={!!errors.contact_details?.shipping_address_street_1}
-//                   hint={
-//                     errors.contact_details?.shipping_address_street_1?.message
-//                   }
-//                 />
-
-//                 <Label>Street 2</Label>
-//                 <Input
-//                   {...register("contact_details.shipping_address_street_2")}
-//                   error={!!errors.contact_details?.shipping_address_street_2}
-//                   hint={
-//                     errors.contact_details?.shipping_address_street_2?.message
-//                   }
-//                 />
-
-//                 <Label>City</Label>
-//                 <Input
-//                   {...register("contact_details.shipping_address_city")}
-//                   error={!!errors.contact_details?.shipping_address_city}
-//                   hint={errors.contact_details?.shipping_address_city?.message}
-//                 />
-
-//                 <Label>Country State</Label>
-//                 <Input
-//                   {...register(
-//                     "contact_details.shipping_address_country_state_id"
-//                   )}
-//                   error={
-//                     !!errors.contact_details?.shipping_address_country_state_id
-//                   }
-//                   hint={
-//                     errors.contact_details?.shipping_address_country_state_id
-//                       ?.message
-//                   }
-//                 />
-
-//                 <Label>Zip Code</Label>
-//                 <Input
-//                   {...register("contact_details.shipping_address_zip_code")}
-//                   error={!!errors.contact_details?.shipping_address_zip_code}
-//                   hint={
-//                     errors.contact_details?.shipping_address_zip_code?.message
-//                   }
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Submit Button */}
-//             <div className="flex justify-end mt-6">
-//               <button
-//                 type="submit"
-//                 className="px-6 py-3 text-sm font-medium text-white transition rounded-lg shadow bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
-//                 disabled={
-//                   isSubmitting ||
-//                   addCustomer.isPending ||
-//                   updateCustomer.isPending
-//                 }
-//               >
-//                 {isUpdate ? "Update" : "Create"}
-//               </button>
-//             </div>
-//           </form>
-//         )}
-//       </ComponentCard>
-//     </>
-//   );
-// }
 import {
   customerSchema,
   type CustomerType,
@@ -1153,7 +16,7 @@ import type { IPaymentTerm } from "@/types/settings/payment_term";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { IoAdd } from "react-icons/io5";
+import { IoAdd, IoSwapHorizontal } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
@@ -1162,6 +25,32 @@ import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
 import Radio from "@/components/form/input/Radio";
 import { IContact } from "@/types/sales/contact";
+import {
+  Badge,
+  Briefcase,
+  Building,
+  Building2,
+  Calendar,
+  CreditCard,
+  Facebook,
+  FileText,
+  Globe,
+  IdCard,
+  Inbox,
+  Info,
+  Landmark,
+  Mail,
+  MapPin,
+  MessageSquareText,
+  Package,
+  Phone,
+  RatIcon,
+  User,
+  UserCheck,
+  UserCircle,
+  Wallet,
+} from "lucide-react";
+import { FaXRay } from "react-icons/fa";
 
 const TABS = [
   { id: 1, name: "Other Details" },
@@ -1185,6 +74,12 @@ const getErrorMessages = (errors: any, parentKey = ""): string[] => {
     return [];
   });
 };
+const selectStyles = `
+  w-full text-sm rounded-lg border border-gray-300 shadow-sm 
+  focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
+  transition-colors duration-200 ease-in-out p-1.5
+  text-gray-500
+`;
 export default function CustomerForm() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
@@ -1256,7 +151,7 @@ export default function CustomerForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Basic Information Section */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">
+              <h2 className="text-[15px] font-semibold text-gray-800 mb-6">
                 Basic Information
               </h2>
 
@@ -1311,6 +206,8 @@ export default function CustomerForm() {
                       {...register("full_name_en")}
                       error={!!errors.full_name_en}
                       hint={errors.full_name_en?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Full Name (En)"
                     />
                   </div>
 
@@ -1320,6 +217,8 @@ export default function CustomerForm() {
                       {...register("full_name_ar")}
                       error={!!errors.full_name_ar}
                       hint={errors.full_name_ar?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Full Name (Ar)"
                     />
                   </div>
                 </div>
@@ -1330,6 +229,8 @@ export default function CustomerForm() {
                       {...register("first_name_en")}
                       error={!!errors.first_name_en}
                       hint={errors.first_name_en?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your First Name (En)"
                     />
                   </div>
 
@@ -1339,6 +240,8 @@ export default function CustomerForm() {
                       {...register("first_name_ar")}
                       error={!!errors.first_name_ar}
                       hint={errors.first_name_ar?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your First Name (Ar)"
                     />
                   </div>
                 </div>
@@ -1349,6 +252,8 @@ export default function CustomerForm() {
                       {...register("last_name_en")}
                       error={!!errors.last_name_en}
                       hint={errors.last_name_en?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Last Name (En)"
                     />
                   </div>
 
@@ -1358,6 +263,8 @@ export default function CustomerForm() {
                       {...register("last_name_ar")}
                       error={!!errors.last_name_ar}
                       hint={errors.last_name_ar?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Last Name (Ar)"
                     />
                   </div>
                 </div>
@@ -1372,6 +279,7 @@ export default function CustomerForm() {
                     error={!!errors.email}
                     hint={errors.email?.message}
                     placeholder="contact@example.com"
+                    icon={<Mail className="w-4 h-4" />}
                   />
                 </div>
 
@@ -1383,6 +291,7 @@ export default function CustomerForm() {
                     error={!!errors.mobile}
                     hint={errors.mobile?.message}
                     placeholder="+966 123 456 789"
+                    icon={<Phone className="w-4 h-4" />}
                   />
                 </div>
               </div>
@@ -1417,7 +326,7 @@ export default function CustomerForm() {
                       <Label>Nationality</Label>
                       <select
                         {...register("nationality_id")}
-                        className="w-full p-2 border rounded"
+                        className={selectStyles}
                       >
                         <option value="" disabled>
                           Select Nationality
@@ -1425,7 +334,6 @@ export default function CustomerForm() {
                         {countriesData?.data?.map((country) => (
                           <option key={country.id} value={country.id}>
                             {country.nationality_en}{" "}
-                            {/* استخدم `nationality_ar` إذا كان التطبيق عربيًا */}
                           </option>
                         ))}
                       </select>
@@ -1439,7 +347,7 @@ export default function CustomerForm() {
                       <Label>Branch</Label>
                       <select
                         {...register("branch_id")}
-                        className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                        className={selectStyles}
                       >
                         <option value="" disabled>
                           Select Branch
@@ -1456,7 +364,7 @@ export default function CustomerForm() {
                       <Label>Payment Terms</Label>
                       <select
                         {...register("payment_term_id")}
-                        className="w-full p-2.5 border rounded-md"
+                        className={selectStyles}
                       >
                         <option value="" disabled>
                           Select Payment Term
@@ -1473,7 +381,7 @@ export default function CustomerForm() {
                       <Label>Currency</Label>
                       <select
                         {...register("currency_id")}
-                        className="w-full p-2.5 border rounded-md"
+                        className={selectStyles}
                       >
                         <option value="" disabled>
                           Select Currency
@@ -1496,6 +404,7 @@ export default function CustomerForm() {
                           error={!!errors.exchange_rate}
                           hint={errors.exchange_rate?.message}
                           placeholder="1.00"
+                          icon={<IoSwapHorizontal className="w-4 h-4" />}
                         />
                       </div>
                     </div>
@@ -1506,7 +415,7 @@ export default function CustomerForm() {
                       <Label>Portal Access</Label>
                       <select
                         {...register("portal_access")}
-                        className="w-full p-2.5 border rounded-md"
+                        className={selectStyles}
                       >
                         <option value="" disabled>
                           Select Access
@@ -1520,7 +429,7 @@ export default function CustomerForm() {
                       <Label>Portal Language</Label>
                       <select
                         {...register("portal_language")}
-                        className="w-full p-2.5 border rounded-md"
+                        className={selectStyles}
                       >
                         <option value="" disabled>
                           Select Language
@@ -1538,6 +447,8 @@ export default function CustomerForm() {
                         {...register("balance")}
                         error={!!errors.balance}
                         hint={errors.balance?.message}
+                        placeholder="Enter balance amount"
+                        icon={<Wallet className="w-4 h-4" />}
                       />
                     </div>
                   </div>
@@ -1554,8 +465,11 @@ export default function CustomerForm() {
                         {...register("contact_details.passport_number")}
                         error={!!errors.contact_details?.passport_number}
                         hint={errors.contact_details?.passport_number?.message}
+                        placeholder="Enter passport number"
+                        icon={<FileText className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Work Phone</Label>
                       <Input
@@ -1563,31 +477,42 @@ export default function CustomerForm() {
                         error={!!errors.contact_details?.work_phone}
                         hint={errors.contact_details?.work_phone?.message}
                         type="tel"
+                        placeholder="Enter work phone"
+                        icon={<Phone className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <Label>Website Url</Label>
+                      <Label>Website URL</Label>
                       <Input
                         {...register("contact_details.website_url")}
                         error={!!errors.contact_details?.website_url}
                         hint={errors.contact_details?.website_url?.message}
                         type="url"
+                        placeholder="Enter website URL"
+                        icon={<Globe className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Department</Label>
                       <Input
                         {...register("contact_details.department")}
                         error={!!errors.contact_details?.department}
                         hint={errors.contact_details?.department?.message}
+                        placeholder="Enter department name"
+                        icon={<Building className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Profession</Label>
                       <Input
                         {...register("contact_details.profession")}
                         error={!!errors.contact_details?.profession}
                         hint={errors.contact_details?.profession?.message}
+                        placeholder="Enter profession"
+                        icon={<Briefcase className="w-4 h-4" />}
                       />
                     </div>
                     <div className="space-y-2">
@@ -1596,16 +521,22 @@ export default function CustomerForm() {
                         {...register("contact_details.designation")}
                         error={!!errors.contact_details?.designation}
                         hint={errors.contact_details?.designation?.message}
+                        placeholder="Enter designation"
+                        icon={<Badge className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Social Media</Label>
                       <Input
                         {...register("contact_details.social_media")}
                         error={!!errors.contact_details?.social_media}
                         hint={errors.contact_details?.social_media?.message}
+                        placeholder="Enter social media profile/link"
+                        icon={<Globe className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Issued Date</Label>
                       <Input
@@ -1631,6 +562,8 @@ export default function CustomerForm() {
                         error={!!errors.contact_details?.unified_number}
                         hint={errors.contact_details?.unified_number?.message}
                         type="number"
+                        placeholder="Enter unified number"
+                        icon={<IdCard className="w-4 h-4" />}
                       />
                     </div>
                     <div className="space-y-2">
@@ -1652,18 +585,50 @@ export default function CustomerForm() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Visit Visa Number</Label>
-                      <Input
-                        {...register("contact_details.visit_visa_number")}
-                        error={!!errors.contact_details?.visit_visa_number}
-                        hint={
-                          errors.contact_details?.visit_visa_number?.message
-                        }
-                        type="number"
-                      />
+                      <Label> Visa Number</Label>
+                      <div className="relative group">
+                        <Input
+                          {...register("contact_details.visit_visa_number", {
+                            valueAsNumber: true,
+                          })}
+                          error={!!errors.contact_details?.visit_visa_number}
+                          hint={
+                            errors.contact_details?.visit_visa_number?.message
+                          }
+                          type="number"
+                          className="pl-12"
+                          placeholder="Enter visit visa number"
+                        />
+                        <div className="absolute inset-y-0 left-0 flex items-center px-3 pointer-events-none bg-gray-50 border-r border-gray-300 rounded-l-md group-focus-within:border-blue-500 dark:bg-gray-800 dark:border-gray-700">
+                          <svg
+                            className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <circle
+                              cx="6.25"
+                              cy="10"
+                              r="5.625"
+                              fill="#E80B26"
+                            />
+                            <circle
+                              cx="13.75"
+                              cy="10"
+                              r="5.625"
+                              fill="#F59D31"
+                            />
+                            <path
+                              d="M10 14.1924C11.1508 13.1625 11.875 11.6657 11.875 9.99979C11.875 8.33383 11.1508 6.8371 10 5.80713C8.84918 6.8371 8.125 8.33383 8.125 9.99979C8.125 11.6657 8.84918 13.1625 10 14.1924Z"
+                              fill="#FC6020"
+                            />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
+
                     <div className="space-y-2">
-                      <Label>Driving License number</Label>
+                      <Label>Driving License Number</Label>
                       <Input
                         {...register("contact_details.driving_license_number")}
                         error={!!errors.contact_details?.driving_license_number}
@@ -1672,10 +637,13 @@ export default function CustomerForm() {
                             ?.message
                         }
                         type="number"
+                        placeholder="Enter driving license number"
+                        icon={<CreditCard className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <Label>Driving license issued by</Label>
+                      <Label>Driving License Issued By</Label>
                       <Input
                         {...register(
                           "contact_details.driving_license_issued_by"
@@ -1687,10 +655,13 @@ export default function CustomerForm() {
                           errors.contact_details?.driving_license_issued_by
                             ?.message
                         }
+                        placeholder="Enter issuing authority"
+                        icon={<Building className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <Label>Driving license issued date</Label>
+                      <Label>Driving License Issued Date</Label>
                       <Input
                         {...register(
                           "contact_details.driving_license_issued_date"
@@ -1703,10 +674,12 @@ export default function CustomerForm() {
                             ?.message
                         }
                         type="date"
+                        icon={<Calendar className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <Label>Driving license expiry date</Label>
+                      <Label>Driving License Expiry Date</Label>
                       <Input
                         {...register(
                           "contact_details.driving_license_expiry_date"
@@ -1719,30 +692,40 @@ export default function CustomerForm() {
                             ?.message
                         }
                         type="date"
+                        icon={<Calendar className="w-4 h-4 text-red-500" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Home Address</Label>
                       <Input
                         {...register("contact_details.home_address")}
                         error={!!errors.contact_details?.home_address}
                         hint={errors.contact_details?.home_address?.message}
+                        placeholder="Enter home address"
+                        icon={<MapPin className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Work Address</Label>
                       <Input
                         {...register("contact_details.work_address")}
                         error={!!errors.contact_details?.work_address}
                         hint={errors.contact_details?.work_address?.message}
+                        placeholder="Enter work address"
+                        icon={<Building2 className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <Label>P O box</Label>
+                      <Label>P.O. Box</Label>
                       <Input
                         {...register("contact_details.p_o_box")}
                         error={!!errors.contact_details?.p_o_box}
                         hint={errors.contact_details?.p_o_box?.message}
+                        placeholder="Enter P.O. Box number"
+                        icon={<Inbox className="w-4 h-4" />}
                       />
                     </div>
                   </div>
@@ -1764,6 +747,8 @@ export default function CustomerForm() {
                             errors.contact_details?.billing_address_attention
                               ?.message
                           }
+                          icon={<FileText className="w-4 h-4" />}
+                          placeholder="Please enter your shipping address attention"
                         />
                       </div>
                       <div className="space-y-2">
@@ -1772,7 +757,8 @@ export default function CustomerForm() {
                           {...register(
                             "contact_details.billing_address_country_id"
                           )}
-                          className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                          className={selectStyles}
+
                           // disabled={countriesLoading}
                         >
                           <option value="" disabled>
@@ -1782,7 +768,6 @@ export default function CustomerForm() {
                           {countriesData?.data?.map((country) => (
                             <option key={country.id} value={country.id}>
                               {country.name_en}{" "}
-                              {/* أو nationality_ar حسب اللغة */}
                             </option>
                           ))}
                         </select>
@@ -1800,6 +785,8 @@ export default function CustomerForm() {
                             errors.contact_details?.billing_address_street_1
                               ?.message
                           }
+                          icon={<MapPin className="w-4 h-4" />}
+                          placeholder="Please Enter Your street address 1"
                         />
                       </div>
                       <div className="space-y-2">
@@ -1815,6 +802,8 @@ export default function CustomerForm() {
                             errors.contact_details?.billing_address_street_2
                               ?.message
                           }
+                          icon={<MapPin className="w-4 h-4" />}
+                          placeholder="Please Enter Your street address 1"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -1831,15 +820,18 @@ export default function CustomerForm() {
                               errors.contact_details?.billing_address_city
                                 ?.message
                             }
+                            icon={<MapPin className="w-4 h-4" />}
+                            placeholder="Please Enter Your City"
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div>
                           <Label>State</Label>
                           <select
                             {...register(
                               "contact_details.shipping_address_country_state_id"
                             )}
-                            className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                            className={selectStyles}
+
                             // disabled={countriesLoading}
                           >
                             <option value="" disabled>
@@ -1874,6 +866,8 @@ export default function CustomerForm() {
                               errors.contact_details?.billing_address_zip_code
                                 ?.message
                             }
+                            icon={<Landmark className="w-4 h-4" />}
+                            placeholder="Please Enter Postal Code"
                           />
                         </div>
                         <div className="space-y-2">
@@ -1889,6 +883,8 @@ export default function CustomerForm() {
                               errors.contact_details?.billing_address_phone
                                 ?.message
                             }
+                            icon={<Phone className="w-4 h-4" />}
+                            placeholder="Please Enter Address Phone"
                           />
                         </div>
                         <div className="space-y-2">
@@ -1905,6 +901,8 @@ export default function CustomerForm() {
                               errors.contact_details?.billing_address_fax_number
                                 ?.message
                             }
+                            icon={<FaXRay className="w-4 h-4" />}
+                            placeholder="Please Enter Fax Number"
                           />
                         </div>
                       </div>
@@ -1926,6 +924,8 @@ export default function CustomerForm() {
                             errors.contact_details?.shipping_address_attention
                               ?.message
                           }
+                          icon={<Package className="w-4 h-4" />}
+                          placeholder="Please enter your shipping address attention"
                         />
                       </div>
                       <div className="space-y-2">
@@ -1934,7 +934,8 @@ export default function CustomerForm() {
                           {...register(
                             "contact_details.shipping_address_country_id"
                           )}
-                          className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                          className={selectStyles}
+
                           // disabled={countriesLoading}
                         >
                           <option value="" disabled>
@@ -1944,7 +945,6 @@ export default function CustomerForm() {
                           {countriesData?.data?.map((country) => (
                             <option key={country.id} value={country.id}>
                               {country.name_en}{" "}
-                              {/* أو nationality_ar حسب اللغة */}
                             </option>
                           ))}
                         </select>
@@ -1962,6 +962,8 @@ export default function CustomerForm() {
                             errors.contact_details?.shipping_address_street_1
                               ?.message
                           }
+                          icon={<MapPin className="w-4 h-4" />}
+                          placeholder="Please Enter Your street address 1"
                         />
                       </div>
                       <div className="space-y-2">
@@ -1977,6 +979,8 @@ export default function CustomerForm() {
                             errors.contact_details?.shipping_address_street_2
                               ?.message
                           }
+                          icon={<MapPin className="w-4 h-4" />}
+                          placeholder="Please Enter Your street address 2"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -1993,15 +997,18 @@ export default function CustomerForm() {
                               errors.contact_details?.shipping_address_city
                                 ?.message
                             }
+                            icon={<MapPin className="w-4 h-4" />}
+                            placeholder="Please Enter Your City"
                           />
                         </div>
-                        <div className="space-y-2 ">
+                        <div>
                           <Label>State</Label>
                           <select
                             {...register(
                               "contact_details.billing_address_country_state_id"
                             )}
-                            className="w-full p-2.5 border rounded-md focus:ring-2 focus:ring-blue-500"
+                            className={selectStyles}
+
                             // disabled={countriesLoading}
                           >
                             <option value="" disabled>
@@ -2036,6 +1043,8 @@ export default function CustomerForm() {
                               errors.contact_details?.shipping_address_zip_code
                                 ?.message
                             }
+                            icon={<Landmark className="w-4 h-4" />}
+                            placeholder="Please Enter Postal Code"
                           />
                         </div>
                         <div className="space-y-2">
@@ -2052,6 +1061,8 @@ export default function CustomerForm() {
                               errors.contact_details
                                 ?.shipping_address_fax_number?.message
                             }
+                            icon={<FaXRay className="w-4 h-4" />}
+                            placeholder="Please Enter Fax Number"
                           />
                         </div>
                       </div>
@@ -2072,8 +1083,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.salutation_ar?.message
                         }
+                        placeholder="Enter salutation in Arabic"
+                        icon={<MessageSquareText className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Salutation (En)</Label>
                       <Input
@@ -2082,8 +1096,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.salutation_en?.message
                         }
+                        placeholder="Enter salutation in English"
+                        icon={<MessageSquareText className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Full Name (Ar)</Label>
                       <Input
@@ -2092,8 +1109,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.full_name_ar?.message
                         }
+                        placeholder="Enter full name in Arabic"
+                        icon={<User className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Full Name (En)</Label>
                       <Input
@@ -2102,8 +1122,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.full_name_en?.message
                         }
+                        placeholder="Enter full name in English"
+                        icon={<User className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>First Name (Ar)</Label>
                       <Input
@@ -2112,8 +1135,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.first_name_ar?.message
                         }
+                        placeholder="Enter full name in Arabic"
+                        icon={<UserCircle className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>First Name (En)</Label>
                       <Input
@@ -2122,8 +1148,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.first_name_en?.message
                         }
+                        placeholder="Enter first name in English"
+                        icon={<UserCircle className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Last Name (Ar)</Label>
                       <Input
@@ -2132,6 +1161,8 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.last_name_ar?.message
                         }
+                        placeholder="Enter full name in Arabic"
+                        icon={<UserCheck className="w-4 h-4" />}
                       />
                     </div>
                   </div>
@@ -2145,8 +1176,11 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.["0"]?.last_name_en?.message
                         }
+                        placeholder="Enter last name in English"
+                        icon={<User className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Email</Label>
                       <Input
@@ -2154,8 +1188,11 @@ export default function CustomerForm() {
                         {...register("contact_persons.0.email")}
                         error={!!errors.contact_persons?.[0]?.email}
                         hint={errors.contact_persons?.[0]?.email?.message}
+                        placeholder="Enter your email"
+                        icon={<Mail className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Phone</Label>
                       <Input
@@ -2163,24 +1200,33 @@ export default function CustomerForm() {
                         {...register("contact_persons.0.mobile")}
                         error={!!errors.contact_persons?.[0]?.mobile}
                         hint={errors.contact_persons?.[0]?.mobile?.message}
+                        placeholder="Enter phone number"
+                        icon={<Phone className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Designation</Label>
                       <Input
                         {...register("contact_persons.0.designation")}
                         error={!!errors.contact_persons?.[0]?.designation}
                         hint={errors.contact_persons?.[0]?.designation?.message}
+                        placeholder="Enter designation"
+                        icon={<Briefcase className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Department</Label>
                       <Input
                         {...register("contact_persons.0.department")}
                         error={!!errors.contact_persons?.[0]?.department}
                         hint={errors.contact_persons?.[0]?.department?.message}
+                        placeholder="Enter department"
+                        icon={<Building className="w-4 h-4" />}
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label>Social Media</Label>
                       <Input
@@ -2189,6 +1235,8 @@ export default function CustomerForm() {
                         hint={
                           errors.contact_persons?.[0]?.social_media?.message
                         }
+                        placeholder="Enter social media handle"
+                        icon={<Facebook className="w-4 h-4" />}
                       />
                     </div>
                   </div>

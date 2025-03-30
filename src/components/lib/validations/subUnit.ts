@@ -16,7 +16,7 @@ export const subUnitSchema = z.object({
     .min(1, "Short name (AR) must be at least 1 character"),
   allow_decimal: z.number(),
   multiplier: z.number().min(1, "Multiplier must be provided"),
-  related_to: z.number().nullable().optional(),
+  related_to: z.coerce.number().min(1, "Related to is required").nullable(),
 });
 
 export type SubUnitType = z.infer<typeof subUnitSchema>;

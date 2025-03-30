@@ -38,7 +38,7 @@ export default function SubUnitForm() {
   } = useForm<SubUnitType>({
     resolver: zodResolver(subUnitSchema),
     defaultValues: {
-      related_to: subUnitData?.related_to ?? null,
+      related_to: subUnitData?.related_to ?? 0,
       unit_name_en: subUnitData?.unit_name_en ?? "",
       unit_name_ar: subUnitData?.unit_name_ar ?? "",
       short_name_en: subUnitData?.short_name_en ?? "",
@@ -50,7 +50,7 @@ export default function SubUnitForm() {
 
   useEffect(() => {
     if (subUnitData) {
-      setValue("related_to", subUnitData.related_to ?? null);
+      setValue("related_to", subUnitData.related_to ?? 0);
       setValue("unit_name_en", subUnitData.unit_name_en ?? "");
       setValue("unit_name_ar", subUnitData.unit_name_ar ?? "");
       setValue("short_name_en", subUnitData.short_name_en ?? "");
@@ -96,11 +96,16 @@ export default function SubUnitForm() {
                 >
                   <option value="">Select Unit</option>
                   {units?.map((unit) => (
-                    <option key={unit.id} value={unit.id ?? ""}>
+                    <option key={unit.id} value={unit.id? unit.id :""}>
                       {unit.unit_name_en}
                     </option>
                   ))}
                 </select>
+                {errors.related_to && (
+                  <p className="text-red-500 text-sm">
+                    {errors?.related_to.message}
+                  </p>
+                )}
                 <Folder className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
               </div>
 

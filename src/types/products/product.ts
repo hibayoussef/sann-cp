@@ -1,6 +1,7 @@
 export interface IProduct {
   id: number;
-  for_selling: number | null;
+  organization_id: number;
+  for_selling: number;
   type: "Goods" | "Service" | "Landing Cost";
   product_name_ar: string;
   product_name_en: string;
@@ -11,13 +12,10 @@ export interface IProduct {
   category_id?: number;
   sub_category_id?: number;
   unit_id: number;
-  sub_unit?: number[];
-  sub_units: {
-    id: number | undefined
-  }[];
+  sub_units: Array<{ id: number }>;
   warranty_id?: number;
-  alert_quantity?: number | null;
-  sale_account?: number | null;
+  alert_quantity?: number;
+  sale_account?: number;
   purchase_account?: number;
   sale_return_account?: number;
   purchase_return_account?: number;
@@ -25,20 +23,20 @@ export interface IProduct {
   sale_price: number;
   expiry_date?: string;
   is_active: boolean;
-  branches: {
+  branches: Array<{
     branch_id: number;
-  }[];
-  default_sale_unit?: string;
-  default_purchase_unit?: string;
+    is_active: boolean;
+  }>;
+  default_sale_unit: number;
+  default_purchase_unit: number;
 }
 
 export interface ProductForm {
-  id?: number | null;
-  organization_id: number | null;
-  for_selling: boolean;
+  organization_id: number;
+  for_selling: number;
   type: "Goods" | "Service" | "Landing Cost";
-  product_name_en: string;
   product_name_ar: string;
+  product_name_en: string;
   sku: string;
   color?: string;
   tax_id?: number;
@@ -46,10 +44,10 @@ export interface ProductForm {
   category_id?: number;
   sub_category_id?: number;
   unit_id: number;
-  sub_unit?: string;
+  sub_units: Array<{ id: number }>;
   warranty_id?: number;
-  alert_quantity?: number | null;
-  sale_account?: number | null;
+  alert_quantity?: number;
+  sale_account?: number;
   purchase_account?: number;
   sale_return_account?: number;
   purchase_return_account?: number;
@@ -57,11 +55,12 @@ export interface ProductForm {
   sale_price: number;
   expiry_date?: string;
   is_active: boolean;
-  branches: {
+  branches: Array<{
     branch_id: number;
-  }[];
-  default_sale_unit?: string;
-  default_purchase_unit?: string;
+    is_active: boolean;
+  }>;
+  default_sale_unit: number;
+  default_purchase_unit: number;
 }
 
 export interface ProductUpdateForm {
