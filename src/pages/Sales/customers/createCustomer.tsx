@@ -150,10 +150,10 @@ export default function CustomerForm() {
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Basic Information Section */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-              <h2 className="text-[15px] font-semibold text-gray-800 mb-6">
+            {/* <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100"> */}
+              {/* <h2 className="text-[15px] font-semibold text-gray-800 mb-6">
                 Basic Information
-              </h2>
+              </h2> */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Contact Type */}
@@ -295,7 +295,7 @@ export default function CustomerForm() {
                   />
                 </div>
               </div>
-            </div>
+            {/* </div> */}
 
             {/* Tabs Section */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
