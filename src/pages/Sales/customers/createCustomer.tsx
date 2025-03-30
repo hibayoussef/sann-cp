@@ -151,14 +151,16 @@ export default function CustomerForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Basic Information Section */}
             {/* <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100"> */}
-              {/* <h2 className="text-[15px] font-semibold text-gray-800 mb-6">
+            {/* <h2 className="text-[15px] font-semibold text-gray-800 mb-6">
                 Basic Information
               </h2> */}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Contact Type */}
-                <div className="space-y-2">
-                  <Label>Customer Type</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Contact Type */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-4">
+                  <Label className="mb-0">Customer Type</Label>{" "}
+                  {/* إزالة الهوامش السفلية */}
                   <div className="flex items-center gap-6">
                     <Radio
                       id="individual"
@@ -189,112 +191,113 @@ export default function CustomerForm() {
                       className="flex items-center gap-2"
                     />
                   </div>
-                  {errors.contact_type && (
-                    <p className="text-red-500 text-sm">
-                      {errors.contact_type.message}
-                    </p>
-                  )}
                 </div>
+                {errors.contact_type && (
+                  <p className="text-red-500 text-sm">
+                    {errors.contact_type.message}
+                  </p>
+                )}
               </div>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {/* Primary Contact */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              {/* Primary Contact */}
+              <div className="space-y-2">
                 <div className="space-y-2">
-                  <div className="space-y-2">
-                    <Label>Full Name (En)</Label>
-                    <Input
-                      {...register("full_name_en")}
-                      error={!!errors.full_name_en}
-                      hint={errors.full_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Full Name (En)"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Full Name (Ar)</Label>
-                    <Input
-                      {...register("full_name_ar")}
-                      error={!!errors.full_name_ar}
-                      hint={errors.full_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Full Name (Ar)"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="space-y-2">
-                    <Label>First Name (En)</Label>
-                    <Input
-                      {...register("first_name_en")}
-                      error={!!errors.first_name_en}
-                      hint={errors.first_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your First Name (En)"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>First Name (Ar)</Label>
-                    <Input
-                      {...register("first_name_ar")}
-                      error={!!errors.first_name_ar}
-                      hint={errors.first_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your First Name (Ar)"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="space-y-2">
-                    <Label>Last Name (En)</Label>
-                    <Input
-                      {...register("last_name_en")}
-                      error={!!errors.last_name_en}
-                      hint={errors.last_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Last Name (En)"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Last Name (Ar)</Label>
-                    <Input
-                      {...register("last_name_ar")}
-                      error={!!errors.last_name_ar}
-                      hint={errors.last_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Last Name (Ar)"
-                    />
-                  </div>
-                </div>
-
-                {/* Contact Info */}
-
-                <div className="space-y-2">
-                  <Label>Email Address</Label>
+                  <Label>Full Name (En)</Label>
                   <Input
-                    type="email"
-                    {...register("email")}
-                    error={!!errors.email}
-                    hint={errors.email?.message}
-                    placeholder="contact@example.com"
-                    icon={<Mail className="w-4 h-4" />}
+                    {...register("full_name_en")}
+                    error={!!errors.full_name_en}
+                    hint={errors.full_name_en?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your Full Name (En)"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Phone Number</Label>
+                  <Label>Full Name (Ar)</Label>
                   <Input
-                    type="tel"
-                    {...register("mobile")}
-                    error={!!errors.mobile}
-                    hint={errors.mobile?.message}
-                    placeholder="+966 123 456 789"
-                    icon={<Phone className="w-4 h-4" />}
+                    {...register("full_name_ar")}
+                    error={!!errors.full_name_ar}
+                    hint={errors.full_name_ar?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your Full Name (Ar)"
                   />
                 </div>
               </div>
+              <div className="space-y-2">
+                <div className="space-y-2">
+                  <Label>First Name (En)</Label>
+                  <Input
+                    {...register("first_name_en")}
+                    error={!!errors.first_name_en}
+                    hint={errors.first_name_en?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your First Name (En)"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>First Name (Ar)</Label>
+                  <Input
+                    {...register("first_name_ar")}
+                    error={!!errors.first_name_ar}
+                    hint={errors.first_name_ar?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your First Name (Ar)"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="space-y-2">
+                  <Label>Last Name (En)</Label>
+                  <Input
+                    {...register("last_name_en")}
+                    error={!!errors.last_name_en}
+                    hint={errors.last_name_en?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your Last Name (En)"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Last Name (Ar)</Label>
+                  <Input
+                    {...register("last_name_ar")}
+                    error={!!errors.last_name_ar}
+                    hint={errors.last_name_ar?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your Last Name (Ar)"
+                  />
+                </div>
+              </div>
+
+              {/* Contact Info */}
+
+              <div className="space-y-2">
+                <Label>Email Address</Label>
+                <Input
+                  type="email"
+                  {...register("email")}
+                  error={!!errors.email}
+                  hint={errors.email?.message}
+                  placeholder="contact@example.com"
+                  icon={<Mail className="w-4 h-4" />}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Phone Number</Label>
+                <Input
+                  type="tel"
+                  {...register("mobile")}
+                  error={!!errors.mobile}
+                  hint={errors.mobile?.message}
+                  placeholder="+966 123 456 789"
+                  icon={<Phone className="w-4 h-4" />}
+                />
+              </div>
+            </div>
             {/* </div> */}
 
             {/* Tabs Section */}
