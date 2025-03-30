@@ -27,7 +27,7 @@ export const _BranchesApi = {
 
   // UPDATE BRANCH
   updateBranch: async (id: number | undefined, data: any) => {
-    const response = await _axios.put(`/settings/branches/${id}`, data);
+    const response = await _axios.post(`/settings/branches/${id}`, data);
     return response.data;
   },
 

@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Calendar,
   CreditCard,
+  Flag,
+  Folder,
   Globe,
   Home,
   Mail,
@@ -26,12 +28,15 @@ import Switch from "../../../components/form/switch/Switch";
 import { useMeStore } from "../../../store/useMeStore";
 import { IoAdd } from "react-icons/io5";
 import Loader from "@/components/ui/loader/loader";
+import { useFetchCountries } from "@/hooks/useCommon";
 
 export default function CreateBranch() {
   const { id } = useParams();
   const isUpdate = Boolean(id);
   const addBranch = useAddBranch();
   const updateBranch = useUpdateBranch();
+  const { data: countries } = useFetchCountries();
+
   const organizationId = useMeStore((state) => state.organizationId);
 
   const { data: branchData, isLoading }: any = useFetchBranch(Number(id), {
@@ -56,7 +61,7 @@ export default function CreateBranch() {
       street2: branchData?.street2 ?? "",
       city: branchData?.city ?? "",
       postal_code: branchData?.postal_code ?? "",
-      registered_for_vat: branchData?.registered_for_vat ?? false,
+      registered_for_vat: branchData?.registered_for_vat ?? 0,
       tax_registration_number_label:
         branchData?.tax_registration_number_label ?? "",
       tax_registration_number: branchData?.tax_registration_number ?? "",
@@ -76,7 +81,7 @@ export default function CreateBranch() {
       setValue("street2", branchData.street2 ?? "");
       setValue("city", branchData.city ?? "");
       setValue("postal_code", branchData.postal_code ?? "");
-      setValue("registered_for_vat", branchData.registered_for_vat ?? false);
+      setValue("registered_for_vat", branchData.registered_for_vat ?? 0)
       setValue(
         "tax_registration_number_label",
         branchData.tax_registration_number_label ?? ""
@@ -92,15 +97,22 @@ export default function CreateBranch() {
   const onSubmit = async (formData: any) => {
     const payload = {
       organization_id: organizationId,
+      country_state_id: Number(formData.country_state_id),
       ...formData,
     };
 
     if (isUpdate && id) {
-      await updateBranch.mutateAsync({ id: Number(id), data: payload });
+      const updatedPayload = {
+        ...payload,
+        _method: "PUT",
+      };
+      await updateBranch.mutateAsync({ id: Number(id), data: updatedPayload });
     } else {
       await addBranch.mutateAsync(payload);
     }
   };
+
+  console.log("eror: ", errors);
 
   return (
     <div className="py-4 px-1">
@@ -119,7 +131,7 @@ export default function CreateBranch() {
           <Loader />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               <div>
                 <Label htmlFor="branch_name_ar">Name (Ar)</Label>
                 <Input
@@ -181,16 +193,26 @@ export default function CreateBranch() {
                 />
               </div>
               <div>
-                <Label htmlFor="country_state_id">Country/State ID</Label>
-                <Input
-                  type="number"
-                  id="country_state_id"
-                  placeholder="Enter country/state ID"
-                  {...register("country_state_id", { valueAsNumber: true })}
-                  error={!!errors.country_state_id}
-                  hint={errors.country_state_id?.message}
-                  icon={<MapPin className="w-4 h-4" />}
-                />
+                <Label>
+                  Country
+                  <span className="text-error-500">*</span>
+                </Label>
+                <div className="relative">
+                  <select
+                    {...register("country_state_id", { valueAsNumber: true })}
+                    className="text-sm rounded-lg border border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
+                  >
+                    <option value="" disabled selected>
+                      Select a location
+                    </option>
+                    {countries?.data?.map((country) => (
+                      <option key={country.id} value={country.id}>
+                        {country.name_en}
+                      </option>
+                    ))}
+                  </select>
+                  <Flag className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
+                </div>
               </div>
               <div>
                 <Label htmlFor="street1">Street 1</Label>
@@ -281,13 +303,13 @@ export default function CreateBranch() {
               </div>
               <div key="registered_for_vat">
                 <Label htmlFor="registered_for_vat">Registered for VAT</Label>
-                <Switch
-                  label="Registered for VAT"
-                  defaultChecked={branchData?.registered_for_vat ?? false}
-                  onChange={(checked) =>
-                    setValue("registered_for_vat", checked)
-                  }
-                />
+                  <Switch
+                    label=""
+                    defaultChecked={branchData?.registered_for_vat === 1}
+                    onChange={(checked) =>
+                      setValue("registered_for_vat", checked ? 1 : 0)
+                    }
+                  />
               </div>
             </div>
 

@@ -1,6 +1,6 @@
 export interface IProduct {
   id: number;
-  for_selling: number | null ;
+  for_selling: number | null;
   type: "Goods" | "Service" | "Landing Cost";
   product_name_ar: string;
   product_name_en: string;
@@ -11,7 +11,10 @@ export interface IProduct {
   category_id?: number;
   sub_category_id?: number;
   unit_id: number;
-  sub_unit?: string;
+  sub_unit?: number[];
+  sub_units: {
+    id: number | undefined
+  }[];
   warranty_id?: number;
   alert_quantity?: number | null;
   sale_account?: number | null;

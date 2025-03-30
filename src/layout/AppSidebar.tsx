@@ -36,7 +36,7 @@ const AppSidebar: React.FC = () => {
   const { t } = useTranslation("items");
   const { permissions } = useAuthStore();
   const hasPermission = (key?: any) => !key || permissions?.includes(key);
-  
+
   const navItems: NavItem[] = [
     {
       icon: <MonitorIcon />,
@@ -50,11 +50,21 @@ const AppSidebar: React.FC = () => {
         { name: "Products", path: "/products", pro: false },
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
         {
+          name: "Sub Categories",
+          path: "/sub-categories",
+          permissionKey: "sub_categories.view",
+        },
+        {
           name: "Categories",
           path: "/categories",
-          permissionKey: "categories.view",
+          permissionKey: "sub_categories.view",
         },
         { name: "Units", path: "/units", permissionKey: "units.view" },
+        {
+          name: "Sub Units",
+          path: "/sub-units",
+          permissionKey: "sub_units.view",
+        },
         {
           name: "Warranties",
           path: "/warranties",

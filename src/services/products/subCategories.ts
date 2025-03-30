@@ -1,7 +1,6 @@
+import { ISubCategory, SubCategoryForm } from "@/types/products/subCategory";
 import { AxiosResponse } from "axios";
 import { _axios } from "../../interceptor/http-config";
-import type { BrandForm, IBrand } from "../../types/products/brand";
-import { ISubCategory, SubCategoryForm } from "@/types/products/subCategory";
 
 export const _SubCategoriesApi = {
   // GET SUBCATEGORY
@@ -13,7 +12,7 @@ export const _SubCategoriesApi = {
   },
   // GET SUBCATEGORY
   getSubCategory: async (id: number) => {
-    const response = await _axios.get<AxiosResponse<{ subCategory: IBrand }>>(
+    const response = await _axios.get<AxiosResponse<SubCategoryForm>>(
       `/products/sub-categories/${id}`
     );
     return response.data.data;
@@ -31,7 +30,7 @@ export const _SubCategoriesApi = {
     return response.data;
   },
   // UPDATE SUBCATEGORY
-  updateSubCategory: async (id: string, data: BrandForm) => {
+  updateSubCategory: async (id: number |  undefined, data: ISubCategory) => {
     const response = await _axios.put(`/products/sub-categories/${id}`, data);
     return response.data;
   },

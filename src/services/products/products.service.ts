@@ -28,7 +28,7 @@ export const _ProductsApi = {
   },
   // UPDATE PRODUCT
   updateProduct: async (id: number | undefined, data: ProductUpdateForm) => {
-    const response = await _axios.put(`/products/products/${id}`, data);
+    const response = await _axios.post(`/products/products/${id}`, data);
     return response.data;
   },
   // DELETE PRODUCT

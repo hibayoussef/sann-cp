@@ -27,7 +27,7 @@ export const useAddBranch = () => {
   return useMutation({
     mutationFn: _BranchesApi.addBranch,
     onSuccess: () => {
-      navigate("/branches");
+      navigate("/settings/branches");
     },
   });
 };
@@ -39,7 +39,7 @@ export const useUpdateBranch = () => {
     mutationFn: ({ id, data }: { id: number | undefined; data: any }) =>
       _BranchesApi.updateBranch(id, data),
     onSuccess: () => {
-      navigate("/branches");
+      navigate("/settings/branches");
     },
   });
 };

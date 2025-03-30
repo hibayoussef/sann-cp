@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const productSchema = z.object({
   id: z.number().optional(),
-  for_selling: z.number().nullable().optional(),
+  for_selling: z.number().min(0).max(1, "For selling must be either 0 or 1"),
   type: z.enum(["Goods", "Service", "Landing Cost"]),
   product_name_en: z
     .string()
@@ -15,10 +15,8 @@ export const productSchema = z.object({
   tax_id: z.number().nullable().optional(),
   brand_id: z.number().nullable().optional(),
   branch_id: z.number().nullable().optional(),
-  category_id: z.number().nullable().optional(),
   sub_category_id: z.number().nullable().optional(),
   warranty_id: z.number().nullable().optional(),
-  unit_id: z.number().nullable().optional(),
   sub_units: z
     .array(
       z.object({
@@ -46,8 +44,11 @@ export const productSchema = z.object({
       })
     )
     .nonempty("At least one branch is required"),
-  default_sale_unit: z.string().nullable().optional(),
-  default_purchase_unit: z.string().nullable().optional(),
+
+  category_id: z.number().min(1, "Category is required").nullable(),
+  unit_id: z.number().min(1, "Unit is required").nullable(),
+  default_sale_unit: z.string().min(1, "Default sale unit is required"),
+  default_purchase_unit: z.string().min(1, "Default purchase unit is required"),
 });
 
 export type ProductType = z.infer<typeof productSchema>;

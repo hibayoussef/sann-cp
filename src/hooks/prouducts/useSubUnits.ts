@@ -12,39 +12,40 @@ export const useFetchSubUnits = () => {
 };
 
 // FETCH SUB_UNIT
-export const useFetchSubCategory = (id: number) => {
+export const useFetchSubUnit = (id: number, options = {}) => {
   return useQuery({
     queryKey: [QueryKeys.SUB_UNIT, id],
     queryFn: () => _SUB_UnitsApi.getSubUnit(id),
     enabled: !!id,
+    ...options,
   });
 };
 
 // ADD SUB_UNIT
-export const useAddSubCategory = () => {
+export const useAddSubUnit = () => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: _SUB_UnitsApi.addSubUnit,
     onSuccess: () => {
-      navigate("/dashboard/brands");
+      navigate("/sub-units");
     },
   });
 };
 
 // UPDATE SUB_UNIT
-export const useUpdateSubCategory = () => {
+export const useUpdateSubUnit = () => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) =>
       _SUB_UnitsApi.updateSubUnit(id, data),
     onSuccess: () => {
-      navigate("/dashboard/brands");
+      navigate("/sub-units");
     },
   });
 };
 
 // DELETE SUB_UNIT
-export const useDeleteSubCategory = () => {
+export const useDeleteSubUnit = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: _SUB_UnitsApi.deleteSubUnit,

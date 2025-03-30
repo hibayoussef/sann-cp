@@ -4,10 +4,10 @@ import { DataTableRowActions } from "@/components/ui/table-data/data-table-row-a
 import type { ISubCategory } from "@/types/products/subCategory";
 import { ColumnDef } from "@tanstack/react-table";
 
-  export const subCategoryColumns = (permissions: {
-    update: boolean;
-    delete: boolean;
-  }): ColumnDef<ISubCategory>[] => [
+export const subCategoryColumns = (permissions: {
+  update: boolean;
+  delete: boolean;
+}): ColumnDef<ISubCategory>[] => [
   {
     id: "id",
     accessorKey: "id",
@@ -37,6 +37,18 @@ import { ColumnDef } from "@tanstack/react-table";
     cell: ({ row }) => (
       <div className="max-w-[500px] truncate">
         {row.getValue("description_en")}
+      </div>
+    ),
+  },
+  {
+    id: "category_name_en",
+    accessorKey: "category_name_en",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category Name" />
+    ),
+    cell: ({ row }) => (
+      <div className="max-w-[500px] truncate">
+        {row.getValue("category_name_en")}
       </div>
     ),
   },

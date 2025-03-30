@@ -4,10 +4,13 @@ import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { Ruler } from "lucide-react";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export default function Units() {
   const { data } = useFetchUnits();
   const units: any = data || [];
+
+  const { hasPermission } = usePermissions();
 
   return (
     <>
@@ -24,9 +27,17 @@ export default function Units() {
 
         <div className="space-y-4 pt-1">
           <DataTable
-            columns={unitColumns}
+            columns={unitColumns({
+              update: hasPermission("update", "categories"),
+              delete: hasPermission("delete", "categories"),
+            })}
             data={units}
             createPath="/units/create"
+            permissions={{
+              create: hasPermission("create", "units"),
+              update: hasPermission("update", "units"),
+              delete: hasPermission("delete", "units"),
+            }}
           />
         </div>
       </div>

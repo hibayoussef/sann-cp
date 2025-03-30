@@ -36,10 +36,14 @@ import Videos from "../pages/UiElements/Videos";
 import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
-import CreateUnit from "../pages/products/Units/createUnit";
+import CreateUnit from "../pages/products/Units/unitForm";
 import CreateBranch from "@/pages/Settings/branches/createBranch";
 import ProductForm from "@/pages/products/products/productForm";
 import Products from "@/pages/products/products/products";
+import SubCategoryForm from "@/pages/products/SubCategories/SubCategoryForm";
+import SubUnitForm from "@/pages/products/SubUnits/subUnitForm";
+import SubUnits from "@/pages/products/SubUnits/subUnits";
+import UnitForm from "../pages/products/Units/unitForm";
 
 const RoutesComponent = () => {
   return (
@@ -81,16 +85,23 @@ const RoutesComponent = () => {
           <Route path="/categories/update/:id" element={<CreateCategory />} />
 
           <Route path="/sub-categories" element={<SubCategories />} />
-          <Route path="/sub-categories/create" element={<CreateCategory />} />
+          <Route path="/sub-categories/create" element={<SubCategoryForm />} />
           <Route
             path="/sub-categories/update/:id"
-            element={<CreateCategory />}
+            element={<SubCategoryForm />}
           />
 
           <Route path="/categories/sub" element={<Brands />} />
 
           <Route path="/units" element={<Units />} />
-          <Route path="/units/create" element={<CreateUnit />} />
+          <Route path="/units/create" element={<UnitForm />} />
+          <Route path="/units/update/:id" element={<UnitForm />} />
+
+
+          <Route path="/sub-units" element={<SubUnits />} />
+          <Route path="/sub-units/create" element={<SubUnitForm />} />
+          <Route path="/sub-units/update/:id" element={<SubUnitForm />} />
+
 
           {/* Sales */}
           <Route path="/customers" element={<Customers />} />

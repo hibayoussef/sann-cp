@@ -142,7 +142,6 @@ export default function CategoryForm() {
                 </div>
               </div>
 
-              {/* قسم الكود أسفل الأقسام */}
               <div className="mt-6">
                 <Label htmlFor="code">Code</Label>
                 <Input
@@ -159,7 +158,7 @@ export default function CategoryForm() {
               <div className="flex justify-end mt-6">
                 <button
                   type="submit"
-                  className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#575db1] hover:bg-[#474ca1] flex items-center gap-2"
+                  className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF] flex items-center gap-2"
                   disabled={
                     isSubmitting ||
                     addCategory.isPending ||

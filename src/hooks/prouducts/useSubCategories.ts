@@ -12,11 +12,12 @@ export const useFetchSubCategories = () => {
 };
 
 // FETCH SUBCATEGORY
-export const useFetchSubCategory = (id: number) => {
+export const useFetchSubCategory = (id: number, options = {}) => {
   return useQuery({
     queryKey: [QueryKeys.SUB_CATEGORY, id],
     queryFn: () => _SubCategoriesApi.getSubCategory(id),
     enabled: !!id,
+    ...options
   });
 };
 
@@ -34,7 +35,7 @@ export const useAddSubCategory = () => {
   return useMutation({
     mutationFn: _SubCategoriesApi.addSubCategory,
     onSuccess: () => {
-      navigate("/dashboard/brands");
+      navigate("/sub-categories");
     },
   });
 };
@@ -43,10 +44,10 @@ export const useAddSubCategory = () => {
 export const useUpdateSubCategory = () => {
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: number | undefined; data: any }) =>
       _SubCategoriesApi.updateSubCategory(id, data),
     onSuccess: () => {
-      navigate("/dashboard/brands");
+      navigate("/sub-categories");
     },
   });
 };

@@ -1,6 +1,6 @@
 export interface ISubCategory {
   id: number;
-  category_id?: number;
+  category_id?: number | null | undefined;
   category_name_ar?: string;
   category_name_en?: string;
   sub_category_name_ar: string;
@@ -11,7 +11,7 @@ export interface ISubCategory {
 }
 
 export interface SubCategoryForm {
-  category_id: number | null;
+  category_id: number | null | undefined;
   sub_category_name_ar: string;
   sub_category_name_en?: string | null;
   code?: string | null;

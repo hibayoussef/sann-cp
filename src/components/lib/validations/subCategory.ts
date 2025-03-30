@@ -2,6 +2,10 @@ import { z } from "zod";
 
 export const subCategorySchema = z.object({
   id: z.number().optional(),
+  category_id: z.preprocess(
+    (val) => (val === "" ? null : Number(val)),
+    z.number().int().nullable()
+  ),
   sub_category_name_en: z
     .string()
     .min(2, "Sub Category name (EN) must be at least 2 characters"),

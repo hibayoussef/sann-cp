@@ -35,8 +35,7 @@ export default function Branches() {
             })}
             data={branches}
             createPath="/settings/branches/create"
-            hasDetails={true}
-            detailsLink="/categories"
+            // hasDetails={true}
             permissions={{
               create: hasPermission("create", "branches"),
               update: hasPermission("update", "branches"),

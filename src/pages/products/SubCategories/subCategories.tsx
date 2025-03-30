@@ -4,10 +4,12 @@ import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export default function SubCategories() {
   const { data } = useFetchSubCategories();
   const subCategories: any = data || [];
+  const { hasPermission } = usePermissions();
 
   return (
     <>
@@ -20,9 +22,17 @@ export default function SubCategories() {
       <div className="space-y-4">
         <ComponentCard title="Sub Categories">
           <DataTable
-            columns={subCategoryColumns}
+            columns={subCategoryColumns({
+              update: hasPermission("update", "sub_categories"),
+              delete: hasPermission("delete", "sub_categories"),
+            })}
             data={subCategories}
             createPath="/sub-categories/create"
+               permissions={{
+              create: hasPermission("create", "sub_categories"),
+              update: hasPermission("update", "sub_categories"),
+              delete: hasPermission("delete", "sub_categories"),
+            }}
           />
         </ComponentCard>
       </div>

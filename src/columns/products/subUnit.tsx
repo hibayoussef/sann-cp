@@ -1,14 +1,14 @@
 import { unitSchema } from "@/components/lib/validations/unit";
 import { DataTableColumnHeader } from "@/components/ui/table-data/data-table-column-header";
 import { DataTableRowActions } from "@/components/ui/table-data/data-table-row-actions";
-import type { IUnit } from "@/types/products/unit";
+import type { ISubUnit } from "@/types/products/unit";
 import { ColumnDef } from "@tanstack/react-table";
 import { t } from "i18next";
 
-export const unitColumns = (permissions?: {
+export const subUnitColumns = (permissions?: {
   update: boolean;
   delete: boolean;
-}): ColumnDef<IUnit>[] => [
+}): ColumnDef<ISubUnit>[] => [
   {
     id: "id",
     accessorKey: "id",
@@ -47,36 +47,25 @@ export const unitColumns = (permissions?: {
       <div className="font-lg">{row.getValue("multiplier")}</div>
     ),
   },
-  // {
-  //   id: "sub_units",
-  //   accessorKey: "sub_units",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title={t("items:sub_units")} />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const subUnits = row.getValue("sub_units") as Array<any>;
-  //     return subUnits?.length > 0 ? (
-  //       <ul className="list-disc ml-4">
-  //         {subUnits.map((sub, index) => (
-  //           <li key={index} className="text-sm">
-  //             {sub?.unit_name_en} ({sub?.short_name_en}) - {t("items:multiplier")}: {sub?.multiplier}
-  //           </li>
-  //         ))}
-  //       </ul>
-  //     ) : (
-  //       <span className="text-gray-400 text-sm">{t("items:no_sub_units")}</span>
-  //     );
-  //   },
-  // },
+  {
+    id: "allow_decimal",
+    accessorKey: "allow_decimal",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="allow decimal" />
+    ),
+    cell: ({ row }) => (
+      <div className="font-lg">{row.getValue("allow_decimal") ? t("items:yes") : t("items:no")}</div>
+    ),
+  },
   {
     id: "actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}
         schema={unitSchema}
-        viewDetails={`/units/${row.original.id}`}
-        editItem={`/units/update/${row.original.id}`}
-        onDelete={(id) => console.log(`Deleting unit ID: ${id}`)}
+        viewDetails={`/sub-units/${row.original.id}`}
+        editItem={`/sub-units/update/${row.original.id}`}
+        onDelete={(id) => console.log(`Deleting sub-unit ID: ${id}`)}
         permissions={permissions}
       />
     ),
