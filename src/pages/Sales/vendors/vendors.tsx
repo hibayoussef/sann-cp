@@ -36,7 +36,7 @@ export default function Vendors() {
             data={contacts}
             createPath="/vendors/create"
             hasDetails={true}
-            detailsLink="/vendors"
+            // detailsLink="/vendors"
             permissions={{
               create: hasPermission("create", "vendors"),
               update: hasPermission("update", "vendors"),
