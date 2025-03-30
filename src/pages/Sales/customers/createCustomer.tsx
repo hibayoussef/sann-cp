@@ -14,7 +14,7 @@ import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info, Mail, Phone } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
@@ -67,18 +67,31 @@ export default function CustomerForm() {
   const { data: currencies } = useFetchCurrencies();
   const { data: countriesData } = useFetchCountries();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<CustomerType>({
+  const methods = useForm<CustomerType>({
     resolver: zodResolver(customerSchema),
     // defaultValues: customerData ?? {},
+    defaultValues: {
+      contact_persons: [
+        {
+          salutation_ar: "",
+          salutation_en: "",
+          full_name_ar: "",
+          full_name_en: "",
+          first_name_ar: "",
+          first_name_en: "",
+          last_name_ar: "",
+          last_name_en: "",
+          email: "",
+          mobile: "",
+          designation: "",
+          department: "",
+          social_media: "",
+        },
+      ],
+    },
   });
 
-  const contactType = watch("contact_type");
+  const contactType = methods.watch("contact_type");
 
   // useEffect(() => {
   //   if (customerData) {
@@ -87,7 +100,7 @@ export default function CustomerForm() {
   //     });
   //   }
   // }, [customerData, setValue]);
-  console.log(errors);
+  console.log(methods.formState.errors);
   const onSubmit = (formData: CustomerType) => {
     const payload: any = {
       ...formData,
@@ -119,232 +132,228 @@ export default function CustomerForm() {
         {isUpdate && isLoading ? (
           <p>Loading customer data...</p>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Contact Type */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-4">
-                  <Label className="mb-0">Customer Type</Label>{" "}
-                  <div className="flex items-center gap-6">
-                    <Radio
-                      id="individual"
-                      name="contact_type"
-                      value="individual"
-                      checked={contactType === "individual"}
-                      onChange={(value) =>
-                        setValue(
-                          "contact_type",
-                          value as "business" | "individual"
-                        )
-                      }
-                      label="Individual"
-                      className="flex items-center gap-2"
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="space-y-8"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Contact Type */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-4">
+                    <Label className="mb-0">Customer Type</Label>{" "}
+                    <div className="flex items-center gap-6">
+                      <Radio
+                        id="individual"
+                        name="contact_type"
+                        value="individual"
+                        checked={contactType === "individual"}
+                        onChange={(value) =>
+                          methods.setValue(
+                            "contact_type",
+                            value as "business" | "individual"
+                          )
+                        }
+                        label="Individual"
+                        className="flex items-center gap-2"
+                      />
+                      <Radio
+                        id="business"
+                        name="contact_type"
+                        value="business"
+                        checked={contactType === "business"}
+                        onChange={(value) =>
+                          methods.setValue(
+                            "contact_type",
+                            value as "business" | "individual"
+                          )
+                        }
+                        label="Business"
+                        className="flex items-center gap-2"
+                      />
+                    </div>
+                  </div>
+                  {methods.formState.errors.contact_type && (
+                    <p className="text-red-500 text-sm">
+                      {methods.formState.errors.contact_type.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                {/* Primary Contact */}
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label>Full Name (En)</Label>
+                    <Input
+                      {...methods.register("full_name_en")}
+                      error={!!methods.formState.errors.full_name_en}
+                      hint={methods.formState.errors.full_name_en?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Full Name (En)"
                     />
-                    <Radio
-                      id="business"
-                      name="contact_type"
-                      value="business"
-                      checked={contactType === "business"}
-                      onChange={(value) =>
-                        setValue(
-                          "contact_type",
-                          value as "business" | "individual"
-                        )
-                      }
-                      label="Business"
-                      className="flex items-center gap-2"
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Full Name (Ar)</Label>
+                    <Input
+                      {...methods.register("full_name_ar")}
+                      error={!!methods.formState.errors.full_name_ar}
+                      hint={methods.formState.errors.full_name_ar?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Full Name (Ar)"
                     />
                   </div>
                 </div>
-                {errors.contact_type && (
-                  <p className="text-red-500 text-sm">
-                    {errors.contact_type.message}
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label>First Name (En)</Label>
+                    <Input
+                      {...methods.register("first_name_en")}
+                      error={!!methods.formState.errors.first_name_en}
+                      hint={methods.formState.errors.first_name_en?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your First Name (En)"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>First Name (Ar)</Label>
+                    <Input
+                      {...methods.register("first_name_ar")}
+                      error={!!methods.formState.errors.first_name_ar}
+                      hint={methods.formState.errors.first_name_ar?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your First Name (Ar)"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label>Last Name (En)</Label>
+                    <Input
+                      {...methods.register("last_name_en")}
+                      error={!!methods.formState.errors.last_name_en}
+                      hint={methods.formState.errors.last_name_en?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Last Name (En)"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Last Name (Ar)</Label>
+                    <Input
+                      {...methods.register("last_name_ar")}
+                      error={!!methods.formState.errors.last_name_ar}
+                      hint={methods.formState.errors.last_name_ar?.message}
+                      icon={<Info className="w-4 h-4" />}
+                      placeholder="Please Enter Your Last Name (Ar)"
+                    />
+                  </div>
+                </div>
+
+                {/* Contact Info */}
+
+                <div className="space-y-2">
+                  <Label>Email Address</Label>
+                  <Input
+                    type="email"
+                    {...methods.register("email")}
+                    error={!!methods.formState.errors.email}
+                    hint={methods.formState.errors.email?.message}
+                    placeholder="contact@example.com"
+                    icon={<Mail className="w-4 h-4" />}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Phone Number</Label>
+                  <Input
+                    type="tel"
+                    {...methods.register("mobile")}
+                    error={!!methods.formState.errors.mobile}
+                    hint={methods.formState.errors.mobile?.message}
+                    placeholder="+966 123 456 789"
+                    icon={<Phone className="w-4 h-4" />}
+                  />
+                </div>
+              </div>
+              {/* </div> */}
+
+              {/* Tabs Section */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <div className="border-b border-gray-200 mb-6">
+                  <nav className="flex space-x-4">
+                    {TABS.map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`px-4 py-2 text-sm font-medium transition-colors ${
+                          activeTab === tab.id
+                            ? "text-blue-600 border-b-2 border-blue-600"
+                            : "text-gray-500 hover:text-gray-700"
+                        }`}
+                      >
+                        {tab.name}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+
+                {/* Always render all tabs but toggle visibility */}
+                <div className={activeTab === 1 ? "block" : "hidden"}>
+                  <OtherDetailsTab
+                    countriesData={countriesData}
+                    currencies={currencies}
+                    paymentsTerm={paymentsTerm}
+                    branches={branches}
+                  />
+                </div>
+
+                <div className={activeTab === 2 ? "block" : "hidden"}>
+                  <ContactDetailsTab countriesData={countriesData} />
+                </div>
+
+                <div className={activeTab === 3 ? "block" : "hidden"}>
+                  <ContactPersonTab />
+                </div>
+
+                <div className={activeTab === 4 ? "block" : "hidden"}>
+                  <AddressTab countriesData={countriesData} />
+                </div>
+              </div>
+
+              {Object.keys(methods.formState.errors).length > 0 && (
+                <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                  <p className="font-semibold">
+                    Please fix the following errors:
                   </p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              {/* Primary Contact */}
-              <div className="space-y-2">
-                <div className="space-y-2">
-                  <Label>Full Name (En)</Label>
-                  <Input
-                    {...register("full_name_en")}
-                    error={!!errors.full_name_en}
-                    hint={errors.full_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
-                    placeholder="Please Enter Your Full Name (En)"
-                  />
+                  <ul className="list-disc list-inside">
+                    {getErrorMessages(methods.formState.errors).map(
+                      (errorMessage, index) => (
+                        <li key={index} className="text-sm">
+                          {errorMessage}
+                        </li>
+                      )
+                    )}
+                  </ul>
                 </div>
+              )}
 
-                <div className="space-y-2">
-                  <Label>Full Name (Ar)</Label>
-                  <Input
-                    {...register("full_name_ar")}
-                    error={!!errors.full_name_ar}
-                    hint={errors.full_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
-                    placeholder="Please Enter Your Full Name (Ar)"
-                  />
-                </div>
+              {/* Submit Button */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
+                  disabled={addCustomer.isPending || updateCustomer.isPending}
+                >
+                  {isUpdate ? "Update Customer" : "Create Customer"}
+                </button>
               </div>
-              <div className="space-y-2">
-                <div className="space-y-2">
-                  <Label>First Name (En)</Label>
-                  <Input
-                    {...register("first_name_en")}
-                    error={!!errors.first_name_en}
-                    hint={errors.first_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
-                    placeholder="Please Enter Your First Name (En)"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>First Name (Ar)</Label>
-                  <Input
-                    {...register("first_name_ar")}
-                    error={!!errors.first_name_ar}
-                    hint={errors.first_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
-                    placeholder="Please Enter Your First Name (Ar)"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="space-y-2">
-                  <Label>Last Name (En)</Label>
-                  <Input
-                    {...register("last_name_en")}
-                    error={!!errors.last_name_en}
-                    hint={errors.last_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
-                    placeholder="Please Enter Your Last Name (En)"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Last Name (Ar)</Label>
-                  <Input
-                    {...register("last_name_ar")}
-                    error={!!errors.last_name_ar}
-                    hint={errors.last_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
-                    placeholder="Please Enter Your Last Name (Ar)"
-                  />
-                </div>
-              </div>
-
-              {/* Contact Info */}
-
-              <div className="space-y-2">
-                <Label>Email Address</Label>
-                <Input
-                  type="email"
-                  {...register("email")}
-                  error={!!errors.email}
-                  hint={errors.email?.message}
-                  placeholder="contact@example.com"
-                  icon={<Mail className="w-4 h-4" />}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Phone Number</Label>
-                <Input
-                  type="tel"
-                  {...register("mobile")}
-                  error={!!errors.mobile}
-                  hint={errors.mobile?.message}
-                  placeholder="+966 123 456 789"
-                  icon={<Phone className="w-4 h-4" />}
-                />
-              </div>
-            </div>
-            {/* </div> */}
-
-            {/* Tabs Section */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-              <div className="border-b border-gray-200 mb-6">
-                <nav className="flex space-x-4">
-                  {TABS.map((tab) => (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`px-4 py-2 text-sm font-medium transition-colors ${
-                        activeTab === tab.id
-                          ? "text-blue-600 border-b-2 border-blue-600"
-                          : "text-gray-500 hover:text-gray-700"
-                      }`}
-                    >
-                      {tab.name}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Always render all tabs but toggle visibility */}
-              <div className={activeTab === 1 ? "block" : "hidden"}>
-                <OtherDetailsTab
-                  register={register}
-                  errors={errors}
-                  countriesData={countriesData}
-                  currencies={currencies}
-                  paymentsTerm={paymentsTerm}
-                  branches={branches}
-                />
-              </div>
-
-              <div className={activeTab === 2 ? "block" : "hidden"}>
-                <ContactDetailsTab register={register} errors={errors} />
-              </div>
-
-              <div className={activeTab === 3 ? "block" : "hidden"}>
-                <ContactPersonTab register={register} errors={errors} />
-              </div>
-
-              <div className={activeTab === 4 ? "block" : "hidden"}>
-                <AddressTab
-                  register={register}
-                  errors={errors}
-                  countriesData={countriesData}
-                  watch={watch}
-                />
-              </div>
-            </div>
-
-            {Object.keys(errors).length > 0 && (
-              <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-                <p className="font-semibold">
-                  Please fix the following errors:
-                </p>
-                <ul className="list-disc list-inside">
-                  {getErrorMessages(errors).map((errorMessage, index) => (
-                    <li key={index} className="text-sm">
-                      {errorMessage}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
-                disabled={
-                  isSubmitting ||
-                  addCustomer.isPending ||
-                  updateCustomer.isPending
-                }
-              >
-                {isUpdate ? "Update Customer" : "Create Customer"}
-              </button>
-            </div>
-          </form>
+            </form>
+          </FormProvider>
         )}
       </ComponentCard>
     </>

@@ -1,7 +1,9 @@
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
+import { CustomerType } from "@/components/lib/validations/customer";
 import { CountriesData } from "@/types/common";
 import { FileText, Landmark, MapPin, Package, Phone } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 import { FaXRay } from "react-icons/fa";
 
 const selectStyles = `
@@ -12,16 +14,16 @@ const selectStyles = `
 `;
 
 const AddressTab = ({
-  register,
-  errors,
   countriesData,
-  watch,
 }: {
-  register: Function;
-  errors: any;
   countriesData: CountriesData | undefined;
-  watch: Function;
 }) => {
+  const {
+    register,
+    formState: { errors },
+    watch,
+  } = useFormContext<CustomerType>();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="space-y-4">
