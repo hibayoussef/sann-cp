@@ -6,7 +6,7 @@ import {
   MonitorIcon,
   Plus,
   ShoppingBag,
-  ShoppingCart
+  ShoppingCart,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -161,7 +161,8 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
+  // items: NavItem[]
+  const renderMenuItems = (_: any, menuType: "main" | "others") => (
     <ul className="flex flex-col">
       {filteredNavItems.map((nav, index) => (
         <li key={nav.name}>
