@@ -1,8 +1,8 @@
+import type { ProductUpdateForm } from "@/types/products/product";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { _ProductsApi } from "../../services/products/products.service";
 import { QueryKeys } from "../../utils/queryKeys";
-import type { ProductForm, ProductUpdateForm } from "@/types/products/product";
 
 // FETCH PRODUCTS
 export const useFetchProducts = () => {

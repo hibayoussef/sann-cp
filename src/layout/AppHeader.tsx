@@ -8,7 +8,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
@@ -17,13 +17,13 @@ import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { setLanguage } = useLocaliztionStore();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
-  const isSettingsPage = location.pathname.startsWith("/settings");
+  // const isSettingsPage = location.pathname.startsWith("/settings");
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {

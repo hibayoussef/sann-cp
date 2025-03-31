@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/ui/table-data/table-data";
-import { GitBranch, Home } from "lucide-react";
-
+import { GitBranch } from "lucide-react";
 import { branchColumns } from "@/columns/settings/branches";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";

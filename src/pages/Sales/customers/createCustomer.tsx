@@ -5,8 +5,7 @@ import {
 } from "@/components/lib/validations/customer";
 import {
   useAddContact,
-  useFetchContact,
-  useUpdateContact,
+  useUpdateContact
 } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
@@ -59,9 +58,9 @@ export default function CustomerForm() {
   const updateCustomer = useUpdateContact();
   const organizationId = useMeStore((state) => state.organizationId);
 
-  const { data: customerData, isLoading } = useFetchContact(Number(id), {
-    enabled: isUpdate,
-  });
+  // const { data: customerData, isLoading } = useFetchContact(Number(id), {
+  //   enabled: isUpdate,
+  // });
   const { data: branches } = useFetchBranches();
   const { data: paymentsTerm } = useFetchPaymentTerms();
   const { data: currencies } = useFetchCurrencies();
@@ -129,7 +128,7 @@ export default function CustomerForm() {
         }
       />
       <ComponentCard title={isUpdate ? "Update Customer" : "Create Customer"}>
-        {isUpdate && isLoading ? (
+        {isUpdate ? (
           <p>Loading customer data...</p>
         ) : (
           <FormProvider {...methods}>

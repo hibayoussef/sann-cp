@@ -1,15 +1,12 @@
 import { subCategoryColumns } from "@/columns/products/subCategory";
 import { DataTable } from "@/components/ui/table-data/table-data";
-import {
-    useFetchCategory
-} from "@/hooks/prouducts/useCategories";
-import {
-    useFetchSubCategories
-} from "@/hooks/prouducts/useSubCategories";
+import { useFetchCategory } from "@/hooks/prouducts/useCategories";
+import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
 import { useParams } from "react-router";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export default function CategoryDetails() {
   const { id } = useParams();
@@ -17,6 +14,7 @@ export default function CategoryDetails() {
   const { data: categoryData } = useFetchCategory(Number(id));
   const { data } = useFetchSubCategories();
   const subCategories: any = data || [];
+  const { hasPermission } = usePermissions();
 
   return (
     <>
@@ -41,9 +39,17 @@ export default function CategoryDetails() {
             Sub Categories
           </h4>
           <DataTable
-            columns={subCategoryColumns}
+            columns={subCategoryColumns({
+              update: hasPermission("update", "sub_categories"),
+              delete: hasPermission("delete", "sub_categories"),
+            })}
             data={subCategories}
             createPath="/sub-categories/create"
+            permissions={{
+              create: hasPermission("create", "sub_categories"),
+              update: hasPermission("update", "sub_categories"),
+              delete: hasPermission("delete", "sub_categories"),
+            }}
           />
         </ComponentCard>
       </div>

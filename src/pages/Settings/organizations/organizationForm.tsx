@@ -23,21 +23,17 @@ import { useForm } from "react-hook-form";
 export const OrganizationForm = () => {
   const {
     data: organizationData,
-    isLoading,
-    isError,
+    isLoading
   } = useFetchOrganizations();
   const {
     mutate: updateOrganization,
     isPending,
-    isError: isUpdateError,
   } = useUpdateOrganization();
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
-    control,
   } = useForm({
     defaultValues: {
       // Organization Info

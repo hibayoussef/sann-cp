@@ -131,13 +131,6 @@ export default function ProductForm() {
     }
   }, [selectedUnitId, subunits, setValue]);
 
-  // إدارة حالة الحقول المرتبطة
-  const watchUnits = watch([
-    "unit_id",
-    "default_sale_unit",
-    "default_purchase_unit",
-  ]);
-
   useEffect(() => {
     if (productData) {
       setValue("product_name_en", productData.product_name_en ?? "");

@@ -2,7 +2,7 @@ import { subUnitColumns } from "@/columns/products/subUnit";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchSubUnits } from "@/hooks/prouducts/useSubUnits";
 import { usePermissions } from "@/hooks/usePermissions";
-import { Layers, Package, Ruler } from "lucide-react";
+import { Package } from "lucide-react";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 

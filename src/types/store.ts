@@ -1,5 +1,4 @@
 import type { ILoginRequest } from "./auth";
-import type { PermissionDTO } from "./user";
 
 // useAuthStore Type
 export interface AuthState {
