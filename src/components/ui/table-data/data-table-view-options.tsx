@@ -13,6 +13,7 @@ import { Settings2, FileText, Printer } from "lucide-react";
 import * as XLSX from "xlsx";
 import * as Papa from "papaparse";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
