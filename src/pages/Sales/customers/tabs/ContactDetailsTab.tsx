@@ -1,5 +1,7 @@
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
+import { CustomerType } from "@/components/lib/validations/customer";
+import { CountriesData } from "@/types/common";
 import {
   Badge,
   Briefcase,
@@ -14,14 +16,26 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+
+const selectStyles = `
+  w-full text-sm rounded-lg border border-gray-300 shadow-sm 
+  focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
+  transition-colors duration-200 ease-in-out p-1.5
+  text-gray-500
+`;
 
 const ContactDetailsTab = ({
-  register,
-  errors,
+  countriesData,
 }: {
-  register: Function;
-  errors: any;
+  countriesData: CountriesData | undefined;
 }) => {
+  const {
+    register,
+    formState: { errors },
+    watch,
+  } = useFormContext<CustomerType>();
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 dark:bg-gray-900">
@@ -195,13 +209,26 @@ const ContactDetailsTab = ({
 
         <div className="space-y-2">
           <Label>Driving License Issued By</Label>
-          <Input
-            {...register("contact_details.driving_license_issued_by")}
-            error={!!errors.contact_details?.driving_license_issued_by}
-            hint={errors.contact_details?.driving_license_issued_by?.message}
-            placeholder="Enter issuing authority"
-            icon={<Building className="w-4 h-4" />}
-          />
+          <Label>State</Label>
+          <select
+            {...register("contact_details.shipping_address_country_state_id")}
+            className={selectStyles}
+          >
+            <option value="" disabled>
+              Select State
+            </option>
+            {countriesData?.data
+              .find(
+                (country) =>
+                  country.id.toString() ==
+                  watch("contact_details.driving_license_issued_by")
+              )
+              ?.country_states.map((state) => (
+                <option key={state.id} value={state.id}>
+                  {state.name_en} {/* أو nationality_ar حسب اللغة */}
+                </option>
+              ))}
+          </select>
         </div>
 
         <div className="space-y-2">

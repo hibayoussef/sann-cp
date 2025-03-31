@@ -1,9 +1,11 @@
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
+import { CustomerType } from "@/components/lib/validations/customer";
 import { CountriesData, Currency, CurrencyResponse } from "@/types/common";
 import { IBranch } from "@/types/settings/branches";
 import { IPaymentTerm } from "@/types/settings/payment_term";
 import { Wallet } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 import { IoSwapHorizontal } from "react-icons/io5";
 
 const selectStyles = `
@@ -14,20 +16,21 @@ const selectStyles = `
 `;
 
 export const OtherDetailsTab = ({
-  register,
-  errors,
   countriesData,
   branches,
   paymentsTerm,
   currencies,
 }: {
-  register: Function;
-  errors: any;
   countriesData: CountriesData | undefined;
   branches: IBranch[] | undefined;
   paymentsTerm: IPaymentTerm[] | undefined;
   currencies: CurrencyResponse | undefined;
 }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<CustomerType>();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
       <div className="space-y-4">
