@@ -10,7 +10,7 @@ const selectStyles = `
   w-full text-sm rounded-lg border border-gray-300 shadow-sm 
   focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
   transition-colors duration-200 ease-in-out p-1.5
-  text-gray-500
+  text-gray-500  dark:bg-gray-900
 `;
 
 export const OtherDetailsTab = ({
@@ -29,7 +29,7 @@ export const OtherDetailsTab = ({
   currencies: CurrencyResponse | undefined;
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Nationality</Label>
@@ -61,7 +61,7 @@ export const OtherDetailsTab = ({
               </option>
             ))}
           </select>
-          {errors.branch_id && (
+           {errors.branch_id && (
             <p className="text-sm text-red-500">{errors.branch_id?.message}</p>
           )}
         </div>

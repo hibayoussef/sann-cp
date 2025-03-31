@@ -77,7 +77,7 @@ export default function SubUnitForm() {
         baseTitle="Sub Unit"
         pageTitle={isUpdate ? "Update Sub Unit" : "Create Sub Unit"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
@@ -92,7 +92,7 @@ export default function SubUnitForm() {
               <div className="relative">
                 <select
                   {...register("related_to", { valueAsNumber: true })}
-                  className="text-sm rounded-lg border border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
+                  className="text-sm rounded-lg border dark:bg-transparent border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
                 >
                   <option value="">Select Unit</option>
                   {units?.map((unit) => (

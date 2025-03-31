@@ -16,7 +16,7 @@ const selectStyles = `
   w-full text-sm rounded-lg border border-gray-300 shadow-sm 
   focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
   transition-colors duration-200 ease-in-out p-1.5
-  text-gray-500
+  text-gray-500 dark:bg-gray-900
 `;
 
 const AddressTab = ({
@@ -31,8 +31,10 @@ const AddressTab = ({
   watch: Function;
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
+
       <div className="space-y-4">
+        
         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           <Wallet className="w-4 h-4 text-gray-600" />
           Billing Address
@@ -155,7 +157,7 @@ const AddressTab = ({
         </div>
       </div>
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           <Truck className="w-4 h-4 text-gray-600" />
           Shipping Address
         </h3>

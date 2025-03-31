@@ -93,8 +93,8 @@ export default function UnitForm() {
         baseTitle="Unit"
         pageTitle={isUpdate ? "Update Unit" : "Create Unit"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
-            <IoAdd className="w-5 h-5" />
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
+            <IoAdd className="w-5 h-5 " />
           </div>
         }
       />

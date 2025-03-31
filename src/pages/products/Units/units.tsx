@@ -18,11 +18,11 @@ export default function Units() {
         title="Units Management | Dashboard"
         description="Manage your product Units in the system."
       />
-      <div className="space-y-4 px-1 py-1">
+      <div className="space-y-4 px-1  py-1">
         <PageBreadcrumb
           baseTitle={"Dashboard"}
           pageTitle={"Units"}
-          icon={<Ruler className="w-5 h-5" />}
+          icon={<Ruler className="w-5 h-5 "   />}
         />
 
         <div className="space-y-4 pt-1">

@@ -25,7 +25,7 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-1 items-center space-x-2  dark:text-gray-400">
         <Input
           placeholder="Filter tasks..."
           value={
@@ -67,7 +67,7 @@ export function DataTableToolbar<TData>({
         {permissions?.create && (
           <Button
             variant="outline"
-            className="h-8 px-2 ml-4 lg:px-3 bg-[#465FFF] text-white"
+            className="h-8 px-2 ml-4 lg:px-3 bg-[#465FFF] text-white  dark:text-gray-100"
             onClick={() => navigate(createPath)}
           >
             <Plus /> Create

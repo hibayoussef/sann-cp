@@ -31,13 +31,14 @@ const SettingsSidebar: React.FC = () => {
 
   const navItems: NavItem[] = [
     {
-      icon: <MonitorIcon className="w-4 h-4 text-gray-500" />,
+      icon: <MonitorIcon className="w-4 h-4 text-gray-500 dark:text-gray-100 " />,
       name: "Dashboard",
       path: "/home",
+    
     },
     {
       name: "Organization",
-      icon: <Building className="w-4 h-4 text-gray-600" />,
+      icon: <Building className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
       subItems: [
         { name: "Profile", path: "/settings/orgProfile" },
         { name: "Branding", path: "" },
@@ -49,7 +50,7 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Users & Roles",
-      icon: <Users className="w-4 h-4 text-gray-600" />,
+      icon: <Users className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
       subItems: [
         { name: "User Management", path: "/users/manage" },
         { name: "Role Permissions", path: "/users/permissions" },
@@ -57,7 +58,7 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Preferences",
-      icon: <SettingsIcon className="w-4 h-4 text-gray-600" />,
+      icon: <SettingsIcon className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
       subItems: [
         { name: "General", path: "/preferences/general" },
         { name: "Notifications", path: "/preferences/notifications" },
@@ -65,7 +66,7 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Sales",
-      icon: <ShoppingCart className="w-4 h-4 text-gray-600" />,
+      icon: <ShoppingCart className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
       subItems: [
         { name: "Orders", path: "/sales/orders" },
         { name: "Invoices", path: "/sales/invoices" },
@@ -73,14 +74,14 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Purchases",
-      icon: <Package className="w-4 h-4 text-gray-600" />,
+      icon: <Package className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
       subItems: [
         { name: "Suppliers", path: "/purchases/suppliers" },
         { name: "Bills", path: "/purchases/bills" },
       ],
     },
     {
-      icon: <LogOut className="w-4 h-4 text-gray-500" />,
+      icon: <LogOut className="w-4 h-4 text-gray-500 dark:text-gray-100" />,
       name: t("logout"),
       path: "/logout",
     },
@@ -115,28 +116,28 @@ const SettingsSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`absolute top-0 bg-gray-100 shadow-sm transition-all z-40 border-r h-screen
+      className={`absolute top-0 bg-gray-100 dark:bg-gray-900    shadow-sm transition-all z-40 border-r h-screen
       ${isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"}
       ${direction === "rtl" ? "right-0" : "left-0"}
-      hover:bg-gray-200`}
+      hover:bg-gray-200  `}
     >
       <div
         className={`py-1 w-full flex ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
         }`}
       ></div>
-      <nav className="p-1 flex flex-col gap-2">
+      <nav className="p-1 flex flex-col gap-2 ">
         {navItems.map((nav, index) => (
           <div key={nav.name}>
             {nav.subItems ? (
               <>
                 <button
                   onClick={() => handleSubmenuToggle(index)}
-                  className="flex items-center gap-2 p-2 hover:bg-gray-300 rounded-md w-full text-[13px] font-medium"
+                  className="flex items-center gap-2 p-2 hover:bg-gray-400  dark:text-gray-100 rounded-md w-full text-[13px] font-medium"
                 >
                   {nav.icon}
                   {(isExpanded || isMobileOpen) && (
-                    <span className="text-[13px] text-gray-700">{nav.name}</span>
+                    <span className="text-[13px] text-gray-700   dark:text-gray-100">{nav.name}</span>
                   )}
                   <ChevronDownIcon
                     className={`ml-auto w-4 h-4 transition-transform ${
@@ -158,10 +159,10 @@ const SettingsSidebar: React.FC = () => {
                 >
                   <ul className="mt-1 ml-4 text-[13px]">
                     {nav.subItems.map((subItem) => (
-                      <li key={subItem.name} className="relative group">
+                      <li key={subItem.name} className="relative group hover:bg-gray-400 ">
                         <Link
                           to={subItem.path}
-                          className={`menu-dropdown-item text-[13px] ${
+                          className={`menu-dropdown-item text-[13px] hover:bg-gray-400 ${
                             isActive(subItem.path)
                               ? "menu-dropdown-item-active"
                               : "menu-dropdown-item-inactive"
@@ -175,34 +176,36 @@ const SettingsSidebar: React.FC = () => {
                 </div>
               </>
             ) : nav.name === "Logout" ? (
-              <button
+                <button
+                  
                 onClick={async () => {
                   try {
                     await _AuthApi.logout();
+                    
                     navigate("/signin");
                   } catch (error) {
                     console.error("Logout failed:", error);
                   }
                 }}
-                className={`flex items-center gap-2 p-2 hover:bg-gray-400 rounded-lg w-full ${
+                className={`flex items-center gap-2 p-2 hover:bg-gray-400 d rounded-lg w-full ${
                   isActive(nav.path || "") ? "bg-gray-200" : ""
                 }`}
               >
                 {nav.icon}
                 {(isExpanded || isMobileOpen) && (
-                  <span className="text-[13px] text-gray-700">{nav.name}</span>
+                  <span className="text-[13px] text-gray-700  dark:text-gray-200">{nav.name}</span>
                 )}
               </button>
             ) : (
               <Link
                 to={nav.path || ""}
-                className={`flex items-center gap-2 p-2 hover:bg-gray-300 rounded-md text-[13px] ${
+                className={`flex items-center gap-2 p-2 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-md text-[13px] ${
                   isActive(nav.path || "") ? "bg-gray-200" : ""
                 }`}
               >
                 {nav.icon}
                 {(isExpanded || isMobileOpen) && (
-                  <span className="text-gray-700">{nav.name}</span>
+                  <span className="text-gray-700 dark:text-gray-200">{nav.name}</span>
                 )}
               </Link>
             )}

@@ -656,8 +656,8 @@ export default function ProductForm() {
                           }`}
                         >
                           {selectedUnit && (
-                            <option value={selectedUnit.id? selectedUnit.id: ""}>
-                              {selectedUnit.unit_name_en} (Main)
+                              <option value={selectedUnit.id ? selectedUnit.id : ""}>
+                                {selectedUnit.unit_name_en} (Main)
                             </option>
                           )}
                           {subunits?.data?.map((subunit) => (

@@ -86,12 +86,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} createPath={createPath}  permissions={permissions}/>
-      <div className="rounded-md border  border-gray-100 shadow-md bg-white">
+      <div className="rounded-md border  border-gray-100 shadow-md bg-white dark:border-gray-700 dark:bg-gray-900">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                <TableHead colSpan={1} className="w-fit px-0 absolute top-1">
+                <TableHead colSpan={1} className="w-fit px-0 absolute top-1 ">
                   <CustomizeColumnsModal
                     setColumns={setTableColumns}
                     table={table}

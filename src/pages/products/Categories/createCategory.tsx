@@ -81,7 +81,7 @@ export default function CategoryForm() {
           baseTitle="Category"
           pageTitle={isUpdate ? "Update Category" : "Create Category"}
           icon={
-            <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+            <div className="w-6 h-6 flex items-center dark:bg-gray-800 justify-center bg-gray-200 rounded-full">
               <IoAdd className="w-5 h-5" />
             </div>
           }

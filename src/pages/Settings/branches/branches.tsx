@@ -21,11 +21,11 @@ export default function Branches() {
         title="Categories Management | Dashboard"
         description="Manage your product categories in the system."
       />
-      <div className="space-y-4 px-1 py-1">
+      <div className="space-y-4 px-1 py-1 ">
         <PageBreadcrumb
           baseTitle={t("settings")}
           pageTitle={t("branches")}
-          icon={<GitBranch className="w-5 h-5" />}
+          icon={<GitBranch className="w-5 h-5 "  />}
         />
         <div className="space-y-4 pt-1">
           <DataTable

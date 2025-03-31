@@ -110,7 +110,7 @@ export default function CustomerForm() {
         baseTitle="Customers"
         pageTitle={isUpdate ? "Update Customer" : "Create Customer"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center   bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
@@ -265,7 +265,7 @@ export default function CustomerForm() {
             {/* </div> */}
 
             {/* Tabs Section */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
               <div className="border-b border-gray-200 mb-6">
                 <nav className="flex space-x-4">
                   {TABS.map((tab) => (

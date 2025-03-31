@@ -56,10 +56,11 @@ export function DataTableColumnHeader<TData, TValue>({
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-white shadow-md border border-gray-200 z-[9999] !opacity-100 !visible">
+        <DropdownMenuContent className="bg-white shadow-md border border-gray-200 dark:bg-gray-800 z-[9999] !opacity-100 !visible">
           <DropdownMenuItem
             aria-label="Sort ascending"
             onClick={() => column.toggleSorting(false)}
+            className="dark:text-gray-100"
           >
             <ArrowUpIcon
               className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
@@ -70,6 +71,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             aria-label="Sort descending"
             onClick={() => column.toggleSorting(true)}
+            className="dark:text-gray-100"
           >
             <ArrowDownIcon
               className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
@@ -81,6 +83,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             aria-label="Hide column"
             onClick={() => column.toggleVisibility(false)}
+            className="dark:text-gray-100"
           >
             <EyeOff
               className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"

@@ -49,7 +49,7 @@ export function DataTableRowActions<TData>({
     <>
       <div
         className={cn(
-          "flex items-center justify-end",
+          "flex items-center justify-end ",
           viewDetails && "cursor-pointer hover:bg-gray-50"
         )}
         onClick={(e) => {
@@ -72,7 +72,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-[200px] bg-white shadow-md border border-gray-200 z-[9999]"
+            className="w-[200px] bg-white shadow-md border border-gray-200 z-[9999] dark:text-gray-400 dark:bg-gray-800"
           >
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 

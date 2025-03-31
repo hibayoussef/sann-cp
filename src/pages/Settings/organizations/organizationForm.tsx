@@ -333,13 +333,13 @@ export const OrganizationForm = () => {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="">
               <Label className="text-xs font-medium text-gray-600">
                 Status
               </Label>
               <select
                 {...register("subscription.status")}
-                className="w-full text-xs h-9 px-2 border rounded-md bg-white"
+                className="w-full text-xs h-9 px-2 border rounded-md bg-white dark:bg-gray-900 dark:text-gray-400"
               >
                 <option value="Active">Active</option>
                 <option value="Expired">Expired</option>
@@ -375,19 +375,19 @@ export const OrganizationForm = () => {
           title="Enabled Modules"
           icon={<Boxes className="w-5 h-5 text-purple-600" />}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 dark:bg-gray-900">
             {organizationData?.modules.map((module: any, index: any) => (
               <div
                 key={module.id}
-                className="p-4 bg-white rounded-lg shadow-md border border-gray-200"
+                className="p-4 bg-white rounded-lg shadow-md border border-gray-200 dark:bg-gray-900"
               >
-                <h3 className="text-xs font-semibold text-gray-800 flex items-center gap-2">
+                <h3 className="text-xs font-semibold text-gray-800 dark:text-gray-300 flex items-center gap-2">
                   <FolderTree className="w-5 h-5 text-purple-500" />
                   {module.name_en}
                 </h3>
 
                 <div className="mt-3">
-                  <p className="text-xs font-medium text-gray-600">Features:</p>
+                  <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Features:</p>
                   {module.features.length > 0 ? (
                     <>
                       {" "}
@@ -395,7 +395,7 @@ export const OrganizationForm = () => {
                         {module.features.map((feature: any, fIndex: any) => (
                           <li
                             key={feature.id}
-                            className="flex items-center gap-2 p-2 bg-gray-100 rounded-md"
+                            className="flex items-center gap-2 p-2 dark:bg-gray-800 bg-gray-100 rounded-md"
                           >
                             <Boxes className="w-4 h-4 text-gray-500" />
                             <Input
@@ -426,20 +426,20 @@ export const OrganizationForm = () => {
             {organizationData?.branches.map((branch: any, index: any) => (
               <div
                 key={branch.id}
-                className="p-4 bg-white rounded-lg shadow-md border border-gray-200"
+                className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200"
               >
-                <h3 className="text-xs font-semibold text-gray-800 flex items-center gap-2 text-xs">
-                  <Building className="w-5 h-5 text-orange-500" />
+                <h3 className="text-xs font-semibold text-gray-800 dark:text-gray-300 flex items-center gap-2 text-xs">
+                  <Building className="w-5 h-5 text-orange-500 dark:text-gray-300" />
                   {branch.branch_name_en}
                 </h3>
 
                 <div className="mt-3">
-                  <h4 className="text-xs font-medium text-gray-600">Stores:</h4>
+                  <h4 className="text-xs font-medium text-gray-600 dark:text-gray-400">Stores:</h4>
                   <div className="grid grid-cols-1 gap-3 mt-2">
                     {branch.stores.map((store: any, sIndex: any) => (
                       <div
                         key={store.id}
-                        className="p-3 bg-gray-100 rounded-md w-full flex items-center gap-2"
+                        className="p-3 bg-gray-100 dark:bg-gray-800 rounded-md w-full flex items-center gap-2"
                       >
                         <Store className="w-4 h-4 text-gray-500" />
                         <Input

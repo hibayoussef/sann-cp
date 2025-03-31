@@ -1,19 +1,20 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useSidebar } from "../context/SidebarContext";
+import { ChevronDownIcon, GridIcon, HorizontaLDots, TableIcon } from "../icons";
+import { _AuthApi } from "../services/auth.service";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useTranslation } from "react-i18next";
 import {
+  Box,
   Briefcase,
   LogOut,
   MonitorIcon,
   Plus,
   ShoppingBag,
-  ShoppingCart
+  ShoppingCart,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link, useLocation, useNavigate } from "react-router";
-import { useSidebar } from "../context/SidebarContext";
-import { ChevronDownIcon } from "../icons";
-import { _AuthApi } from "../services/auth.service";
 
 type NavItem = {
   name: string;
@@ -310,7 +311,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`absolute top-0 bg-white shadow-md transition-all z-40 border-r h-screen
+      className={`absolute top-0 bg-white shadow-md transition-all z-40 border-r h-screen dark:text-gray-400 dark:bg-gray-900
       ${isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"}
       ${direction === "rtl" ? "right-0" : "left-0"}`}
     >

@@ -86,7 +86,7 @@ export default function WarrantyForm() {
         baseTitle="Warranties"
         pageTitle={isUpdate ? "Update Warranty" : "Create Warranty"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center dark:bg-gray-800  justify-center bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
@@ -147,7 +147,7 @@ export default function WarrantyForm() {
                   <Label htmlFor="duration-type">Duration Type</Label>
                   <select
                     id="duration-type"
-                    className="w-full p-1 border rounded-md"
+                    className="w-full p-1 border rounded-md dark:bg-gray-900 dark:text-gray-400"
                     {...register("duration_type")}
                   >
                     <option value="Days">{WarrantiesType.Days}</option>

@@ -12,7 +12,7 @@ const LayoutContent: React.FC = () => {
   const isSettingsPage = location.pathname.startsWith("/settings");
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFFFFF]">
+    <div className="min-h-screen flex flex-col bg-[#FFFFFF] dark:bg-gray-900">
       <div className="fixed top-0 left-0 w-full z-50 bg-white shadow">
         <AppHeader />
       </div>

@@ -7,6 +7,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
+ import { Clock} from "lucide-react";
 import {
   useAddTax,
   useFetchTax,
@@ -14,7 +15,7 @@ import {
 } from "@/hooks/prouducts/useTaxes";
 import { taxSchema, TaxType } from "@/components/lib/validations/tax";
 import { IoAdd } from "react-icons/io5";
-
+import { ShoppingBag } from "lucide-react";
 const Switch = ({
   checked,
   onChange,
@@ -27,7 +28,7 @@ const Switch = ({
       <input
         type="checkbox"
         value=""
-        className="sr-only peer"
+        className="sr-only peer "
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
@@ -101,7 +102,7 @@ export default function TaxForm() {
         baseTitle="Taxes"
         pageTitle={isUpdate ? "Update Tax" : "Create Tax"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
@@ -124,7 +125,8 @@ export default function TaxForm() {
                     {...register("tax_name_en")}
                     error={!!errors.tax_name_en}
                     hint={errors.tax_name_en?.message}
-                    className="w-full p-2 border rounded-md mt-1"
+                      className="w-full p-2 border rounded-md mt-1"
+                       icon={<ShoppingBag className="w-4 h-4" />}
                   />
                 </div>
                 <div className="py-2">
@@ -135,12 +137,13 @@ export default function TaxForm() {
                     placeholder="Please enter tax name (Ar)"
                     {...register("tax_name_ar")}
                     error={!!errors.tax_name_ar}
-                    hint={errors.tax_name_ar?.message}
+                      hint={errors.tax_name_ar?.message}
+                       icon={<ShoppingBag className="w-4 h-4" />}
                     className="w-full p-2 border rounded-md mt-1"
                   />
                 </div>
               </div>
-
+<div className="grid grid-cols-1 md:grid-cols-2">
               {/* Amount Field (Full Width) */}
               <div className="py-2">
                 <Label htmlFor="amount">Amount</Label>
@@ -151,19 +154,20 @@ export default function TaxForm() {
                   {...register("amount", { valueAsNumber: true })}
                   error={!!errors.amount}
                   hint={errors.amount?.message}
-                  className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md"
+                     icon={<Clock className="w-4 h-4" />}
                 />
               </div>
 
               {/* Is Active Switch */}
-              <div className="flex items-center justify-between mt-3">
+              <div className="pl-6 mt-3">
                 <Label htmlFor="is-active">Is This Tax Actived ?</Label>
                 <Switch
                   checked={watch("is_active") as boolean}
                   onChange={(checked) => setValue("is_active", checked)}
                 />
               </div>
-            </div>
+            </div></div>
 
             {/* Submit Button */}
             <div className="flex justify-end mt-12">

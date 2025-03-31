@@ -34,14 +34,14 @@ const SettingsSidebar = () => {
   const { direction, setDirection } = useLocaliztionStore();
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600 hover:text-gray-900"
+        className="p-2 text-gray-600  hover:text-gray-900 "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
+          className="h-5 w-5 "
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -60,7 +60,7 @@ const SettingsSidebar = () => {
       </button>
 
       <div
-        className={`fixed  top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 z-50 ${
+        className={`fixed  top-0 h-full w-60 bg-white  dark:bg-gray-800 shadow-xl transform transition-transform duration-300 z-50 ${
           direction === "ltr"
             ? isOpen
               ? "translate-x-0"
@@ -70,7 +70,7 @@ const SettingsSidebar = () => {
             : "-translate-x-full"
         } ${direction === "rtl" ? "left-0" : "right-0"}`}
       >
-        <div className="p-3 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
+        <div className="p-3 border-b  dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
           <h2 className="text-lg font-bold"></h2>
           <button
             onClick={() => setIsOpen(false)}

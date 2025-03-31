@@ -83,16 +83,16 @@ export function CustomizeColumnsModal<T extends BaseItem>({
           <Settings2 />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="dark:bg-gray-800  dark:text-gray-100">
         <DialogHeader>
-          <DialogTitle className="flex flex-row items-center gap-2">
+          <DialogTitle className="dark:text-gray-100 flex flex-row items-center gap-2">
             <Settings2 />
-            <h2>{t("Customize Columns")}</h2>
+            <h2 className="dark:text-gray-100">{t("Customize Columns")}</h2>
           </DialogTitle>
         </DialogHeader>
         <Input
           placeholder={t("Search")}
-          className="my-2"
+          className="my-2 dark:text-gray-100"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -116,7 +116,7 @@ export function CustomizeColumnsModal<T extends BaseItem>({
                     checked={col.getIsVisible()}
                     id={col.id.toString()}
                   />
-                  <label htmlFor={col.id.toString()}>
+                  <label htmlFor={col.id.toString()} className=" dark:text-gray-100">
                     {" "}
                     {col?.id
                       .replace(/_/g, " ")
