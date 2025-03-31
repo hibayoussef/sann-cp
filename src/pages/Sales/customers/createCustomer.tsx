@@ -281,7 +281,7 @@ export default function CustomerForm() {
               {/* </div> */}
 
               {/* Tabs Section */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+              <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
                 <div className="border-b border-gray-200 mb-6">
                   <nav className="flex space-x-4">
                     {TABS.map((tab) => (
