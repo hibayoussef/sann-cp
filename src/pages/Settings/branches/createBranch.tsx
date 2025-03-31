@@ -1,24 +1,25 @@
 import { branchSchema, BranchType } from "@/components/lib/validations/branch";
+import Loader from "@/components/ui/loader/loader";
 import {
   useAddBranch,
   useFetchBranch,
   useUpdateBranch,
 } from "@/hooks/settings/useBranches";
+import { useFetchCountries } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Calendar,
   CreditCard,
   Flag,
-  Folder,
   Globe,
-  Home,
   Mail,
   MapPin,
   Phone,
-  Tag,
+  Tag
 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
@@ -26,9 +27,6 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Switch from "../../../components/form/switch/Switch";
 import { useMeStore } from "../../../store/useMeStore";
-import { IoAdd } from "react-icons/io5";
-import Loader from "@/components/ui/loader/loader";
-import { useFetchCountries } from "@/hooks/useCommon";
 
 export default function CreateBranch() {
   const { id } = useParams();

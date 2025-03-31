@@ -3,9 +3,7 @@ import ComponentCard from "@/components/common/ComponentCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import Label from "@/components/form/Label";
 import DropzoneComponent from "@/components/form/form-elements/DropZone";
-import FileInputExample from "@/components/form/form-elements/FileInputExample";
 import Input from "@/components/form/input/InputField";
-import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader/loader";
 import {
   useFetchOrganizations,

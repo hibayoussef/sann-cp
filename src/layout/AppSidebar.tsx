@@ -1,20 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
-import { useSidebar } from "../context/SidebarContext";
-import { ChevronDownIcon, GridIcon, HorizontaLDots, TableIcon } from "../icons";
-import { _AuthApi } from "../services/auth.service";
-import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useTranslation } from "react-i18next";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import {
-  Box,
   Briefcase,
   LogOut,
   MonitorIcon,
   Plus,
   ShoppingBag,
-  ShoppingCart,
+  ShoppingCart
 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useSidebar } from "../context/SidebarContext";
+import { ChevronDownIcon } from "../icons";
+import { _AuthApi } from "../services/auth.service";
 
 type NavItem = {
   name: string;

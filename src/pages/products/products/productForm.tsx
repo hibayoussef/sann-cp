@@ -12,8 +12,7 @@ import {
 } from "@/hooks/prouducts/useProducts";
 import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
 import {
-  useFetchSubUnits,
-  useFetchSubUnitsById,
+  useFetchSubUnitsById
 } from "@/hooks/prouducts/useSubUnits";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
@@ -23,13 +22,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Calendar,
-  DeleteIcon,
   DollarSign,
   GitBranch,
   Info,
   Layers,
   Package,
-  Tag,
+  Tag
 } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";

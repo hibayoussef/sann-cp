@@ -1,6 +1,5 @@
 import { _OrganizationsApi } from "@/services/settings/organizations.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { QueryKeys } from "../../utils/queryKeys";
 
 // FETCH ORGANIZATIONS

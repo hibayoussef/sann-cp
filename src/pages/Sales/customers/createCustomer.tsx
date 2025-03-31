@@ -22,10 +22,10 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import ContactDetailsTab from "./tabs/ContactDetailsTab";
 import AddressTab from "./tabs/AddressTab";
-import { OtherDetailsTab } from "./tabs/OtherDetailsTab";
+import ContactDetailsTab from "./tabs/ContactDetailsTab";
 import ContactPersonTab from "./tabs/ContactPersonTab";
+import { OtherDetailsTab } from "./tabs/OtherDetailsTab";
 
 const TABS = [
   { id: 1, name: "Other Details" },

@@ -12,7 +12,6 @@ import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import type { Currency } from "@/types/common";
-import { IContact } from "@/types/sales/contact";
 import type { IBranch } from "@/types/settings/branches";
 import type { IPaymentTerm } from "@/types/settings/payment_term";
 import { zodResolver } from "@hookform/resolvers/zod";

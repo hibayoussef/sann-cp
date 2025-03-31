@@ -1,12 +1,11 @@
 import { subCategoryColumns } from "@/columns/products/subCategory";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
-import ComponentCard from "../../../components/common/ComponentCard";
+import { usePermissions } from "@/hooks/usePermissions";
+import { FolderTree } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
-import { usePermissions } from "@/hooks/usePermissions";
-import { useTranslation } from "react-i18next";
-import { FolderTree } from "lucide-react";
 export default function SubCategories() {
   const { data } = useFetchSubCategories();
   const subCategories: any = data || [];

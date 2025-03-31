@@ -1,3 +1,4 @@
+import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,6 @@ import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
 import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
-import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();

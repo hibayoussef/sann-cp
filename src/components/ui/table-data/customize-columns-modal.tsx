@@ -1,12 +1,11 @@
-import { useState } from "react";
 import {
-  DndContext,
   closestCenter,
+  DndContext,
   KeyboardSensor,
   PointerSensor,
+  UniqueIdentifier,
   useSensor,
   useSensors,
-  UniqueIdentifier,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -14,8 +13,12 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useState } from "react";
 
-import { SortableItem } from "./sortable-item";
+import { Table } from "@tanstack/react-table";
+import { Settings2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Button } from "../button";
 import {
   Dialog,
   DialogContent,
@@ -23,11 +26,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../dialog";
-import { Settings2 } from "lucide-react";
-import { Button } from "../button";
 import { Input } from "../input";
-import { useTranslation } from "react-i18next";
-import { Table } from "@tanstack/react-table";
+import { SortableItem } from "./sortable-item";
 
 interface BaseItem {
   id: UniqueIdentifier;

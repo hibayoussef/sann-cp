@@ -24,9 +24,9 @@ import {
 } from "@/components/ui/table";
 import type { ICategory } from "@/types/products/categories";
 import { useNavigate } from "react-router";
+import { CustomizeColumnsModal } from "./customize-columns-modal";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { CustomizeColumnsModal } from "./customize-columns-modal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
