@@ -21,7 +21,7 @@ const { t } = useTranslation("items");
         <div className="space-y-4 px-1 py-1">
         <PageBreadcrumb
           baseTitle={t("dashboard")}
-           pageTitle={t("categories")}
+           pageTitle="Sub Categories"
           icon={<FolderTree className="w-5 h-5" />}
            />
 
