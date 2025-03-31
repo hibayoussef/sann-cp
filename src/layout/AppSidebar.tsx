@@ -51,15 +51,16 @@ const AppSidebar: React.FC = () => {
         { name: "Products", path: "/products", pro: false },
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
         {
-          name: "Sub Categories",
-          path: "/sub-categories",
-          permissionKey: "sub_categories.view",
-        },
-        {
           name: "Categories",
           path: "/categories",
           permissionKey: "sub_categories.view",
         },
+        {
+          name: "Sub Categories",
+          path: "/sub-categories",
+          permissionKey: "sub_categories.view",
+        },
+
         { name: "Units", path: "/units", permissionKey: "units.view" },
         {
           name: "Sub Units",
