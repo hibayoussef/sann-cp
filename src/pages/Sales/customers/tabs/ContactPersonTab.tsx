@@ -5,12 +5,9 @@ import Button from "@/components/ui/button/Button";
 import {
   Briefcase,
   Building,
-  Facebook,
   Mail,
   MessageSquareText,
   Phone,
-  Plus,
-  Trash,
   User,
   UserCheck,
   UserCircle,
@@ -28,21 +25,17 @@ const ContactPersonTab = () => {
     name: "contact_persons",
   });
 
-  // const socialMediaFields = fields.map((_, index) =>
-  //   useFieldArray({
-  //     control,
-  //     name: `contact_persons.${index}.social_media`,
-  //   })
-  // );
+  const socialMediaFields = fields.map((_, index) =>
+    useFieldArray({
+      control,
+      name: `contact_persons.${index}.social_media`,
+    })
+  );
 
   return (
     <div className="space-y-6">
       {fields.map((field, index) => {
-        // const {
-        //   fields: socialFields,
-        //   append: appendSocial,
-        //   remove: removeSocial,
-        // } = socialMediaFields[index];
+        const { fields: socialFields } = socialMediaFields[index];
 
         return (
           <div
@@ -189,7 +182,7 @@ const ContactPersonTab = () => {
               </div>
 
               {/* Social Media Section */}
-              {/* <div className="space-y-2">
+              <div className="space-y-2">
                 <Label>Social Media</Label>
                 {socialFields.map((socialField, socialIndex) => (
                   <div key={socialField.id} className="flex gap-2 items-center">
@@ -197,30 +190,18 @@ const ContactPersonTab = () => {
                       {...register(
                         `contact_persons.${index}.social_media.${socialIndex}.platform`
                       )}
-                      placeholder="Platform (e.g., Facebook)"
+                      readOnly
                     />
                     <Input
                       {...register(
                         `contact_persons.${index}.social_media.${socialIndex}.url`
                       )}
                       placeholder="URL"
+                      type="url"
                     />
-                    <button
-                      onClick={() => removeSocial(socialIndex)}
-                      className=" bg-red-500 text-white p-1.5 rounded"
-                    >
-                      <Trash className="w-4 h-4" />
-                    </button>
                   </div>
                 ))}
-                <Button
-                  onClick={() => appendSocial({ platform: "", url: "" })}
-                  size="sm"
-                  variant="outline"
-                >
-                  <Plus className="w-4 h-4 mr-2" /> Add Social Media
-                </Button>
-              </div> */}
+              </div>
             </div>
 
             {/* Remove Contact Button */}

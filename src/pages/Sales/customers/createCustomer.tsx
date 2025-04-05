@@ -3,10 +3,7 @@ import {
   customerSchema,
   type CustomerType,
 } from "@/components/lib/validations/customer";
-import {
-  useAddContact,
-  useUpdateContact
-} from "@/hooks/sales/contacts";
+import { useAddContact, useUpdateContact } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
@@ -70,6 +67,22 @@ export default function CustomerForm() {
     resolver: zodResolver(customerSchema),
     // defaultValues: customerData ?? {},
     defaultValues: {
+      contact_details: {
+        social_media: [
+          {
+            platform: "Facebook",
+            url: "",
+          },
+          {
+            platform: "Instagram",
+            url: "",
+          },
+          {
+            platform: "Twitter",
+            url: "",
+          },
+        ],
+      },
       contact_persons: [
         {
           salutation_ar: "",
@@ -86,11 +99,15 @@ export default function CustomerForm() {
           department: "",
           social_media: [
             {
-              platform: "",
+              platform: "Facebook",
               url: "",
             },
             {
-              platform: "",
+              platform: "Instagram",
+              url: "",
+            },
+            {
+              platform: "Twitter",
               url: "",
             },
           ],
@@ -113,6 +130,14 @@ export default function CustomerForm() {
     const payload: any = {
       ...formData,
       organization_id: organizationId?.toString()!,
+      contact_persons: formData?.contact_persons?.map((item) => ({
+        ...item,
+        social_media: JSON.stringify(item.social_media),
+      })),
+      contact_details: {
+        ...formData.contact_details,
+        social_media: JSON.stringify(formData.contact_details?.social_media),
+      },
       type: "customer",
     };
 
