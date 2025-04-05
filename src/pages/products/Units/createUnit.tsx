@@ -7,13 +7,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { IoAdd } from "react-icons/io5";
 
 export default function UnitForm() {
   const { id } = useParams();
@@ -39,7 +39,7 @@ export default function UnitForm() {
       unit_name_ar: unitData?.unit_name_ar ?? "",
       short_name_en: unitData?.short_name_en ?? "",
       short_name_ar: unitData?.short_name_ar ?? "",
-      allow_decimal: unitData?.allow_decimal ?? false,
+      allow_decimal: unitData?.allow_decimal ?? 0,
       multiplier: unitData?.multiplier ?? 0,
       sub_units:
         unitData?.sub_units?.map((sub) => ({
@@ -64,7 +64,7 @@ export default function UnitForm() {
       setValue("unit_name_ar", unitData.unit_name_ar ?? "");
       setValue("short_name_en", unitData.short_name_en ?? "");
       setValue("short_name_ar", unitData.short_name_ar ?? "");
-      setValue("allow_decimal", unitData.allow_decimal ?? false);
+      setValue("allow_decimal", unitData.allow_decimal ?? 0);
       setValue("multiplier", unitData.multiplier ?? 0);
       // setValue("sub_units", unitData.sub_units ?? []);
     }
@@ -93,8 +93,8 @@ export default function UnitForm() {
         baseTitle="Unit"
         pageTitle={isUpdate ? "Update Unit" : "Create Unit"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
-            <IoAdd className="w-5 h-5" />
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
+            <IoAdd className="w-5 h-5 " />
           </div>
         }
       />

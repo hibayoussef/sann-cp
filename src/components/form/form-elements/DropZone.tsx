@@ -84,7 +84,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
             {...getRootProps()}
             className={`dropzone rounded-xl border-dashed border-gray-300 p-4 lg:p-6 h-full ${
               isDragActive
-                ? "border-brand-500 bg-gray-100 dark:bg-gray-800"
+                ? "border-brand-500 bg-gray-100 dark:bg-gray-900"
                 : "border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900"
             }`}
             id="demo-upload"
@@ -138,7 +138,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
           )}
         </div>
 
-        <div className="flex-1 p-4 bg-blue-50 border border-blue-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 h-full">
+        <div className="flex-1 p-4 bg-blue-50 border border-blue-200 rounded-lg dark:bg-gray-900 dark:border-gray-700 h-full">
           <h3 className="text-sm font-semibold mb-3 dark:text-white">
             Image Specifications
           </h3>
@@ -156,7 +156,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
         <button
           type="button"
           onClick={handleUpload}
-          className="px-5 py-2 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF] flex items-center gap-2"
+          className="px-5 py-2 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF]  hover:bg-[#465FFF] flex items-center gap-2"
           disabled={isPending || !file}
         >
           {isPending ? (
@@ -181,7 +181,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
               ></path>
             </svg>
           ) : (
-            <UploadIcon className="h-4 w-4 text-white" />
+            <UploadIcon className="h-4 w-4 text-white " />
           )}
           {isUploading ? "Uploading..." : "Upload"}
         </button>

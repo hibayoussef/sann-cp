@@ -21,6 +21,14 @@ export const useFetchSubUnit = (id: number, options = {}) => {
   });
 };
 
+export const useFetchSubUnitsById = (unit_id: number) => {
+  return useQuery({
+    queryKey: [QueryKeys.SUB_CATEGORIES, unit_id],
+    queryFn: () => _SUB_UnitsApi.getSubUnitsById(unit_id),
+    enabled: !!unit_id,
+  });
+};
+
 // ADD SUB_UNIT
 export const useAddSubUnit = () => {
   const navigate = useNavigate();

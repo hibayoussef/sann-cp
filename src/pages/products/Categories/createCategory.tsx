@@ -8,9 +8,10 @@ import {
   useUpdateCategory,
 } from "@/hooks/prouducts/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, Home, Tag } from "lucide-react";
+import { Code, Tag } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
@@ -18,7 +19,6 @@ import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { IoAdd } from "react-icons/io5";
 
 export default function CategoryForm() {
   const { id } = useParams();
@@ -81,7 +81,7 @@ export default function CategoryForm() {
           baseTitle="Category"
           pageTitle={isUpdate ? "Update Category" : "Create Category"}
           icon={
-            <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+            <div className="w-6 h-6 flex items-center dark:bg-gray-800 justify-center bg-gray-200 rounded-full">
               <IoAdd className="w-5 h-5" />
             </div>
           }

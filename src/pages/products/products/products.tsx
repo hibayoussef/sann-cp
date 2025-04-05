@@ -24,7 +24,7 @@ export default function Products() {
         <PageBreadcrumb
           baseTitle={t("dashboard")}
           pageTitle={t("products")}
-          icon={<Package className="w-5 h-5" />}
+          icon={<Package className="w-5 h-5 " />}
         />
 
         <div className="space-y-4 pt-1">

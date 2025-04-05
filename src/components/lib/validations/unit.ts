@@ -14,7 +14,7 @@ export const unitSchema = z.object({
   short_name_ar: z
     .string()
     .min(1, "Short name (AR) must be at least 1 character"),
-  allow_decimal: z.boolean(),
+  allow_decimal: z.number(),
   multiplier: z.number().min(1, "Multiplier must be provided"),
   sub_units: z
     .array(

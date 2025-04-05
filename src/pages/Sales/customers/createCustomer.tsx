@@ -5,8 +5,7 @@ import {
 } from "@/components/lib/validations/customer";
 import {
   useAddContact,
-  useFetchContact,
-  useUpdateContact,
+  useUpdateContact
 } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
@@ -22,9 +21,9 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
+import AddressTab from "./tabs/AddressTab";
 import ContactDetailsTab from "./tabs/ContactDetailsTab";
 import ContactPersonTab from "./tabs/ContactPersonTab";
-import AddressTab from "./tabs/AddressTab";
 import { OtherDetailsTab } from "./tabs/OtherDetailsTab";
 
 const TABS = [
@@ -59,9 +58,9 @@ export default function CustomerForm() {
   const updateCustomer = useUpdateContact();
   const organizationId = useMeStore((state) => state.organizationId);
 
-  const { data: customerData, isLoading } = useFetchContact(Number(id), {
-    enabled: isUpdate,
-  });
+  // const { data: customerData, isLoading } = useFetchContact(Number(id), {
+  //   enabled: isUpdate,
+  // });
   const { data: branches } = useFetchBranches();
   const { data: paymentsTerm } = useFetchPaymentTerms();
   const { data: currencies } = useFetchCurrencies();
@@ -132,13 +131,13 @@ export default function CustomerForm() {
         baseTitle="Customers"
         pageTitle={isUpdate ? "Update Customer" : "Create Customer"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center   bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
       />
       <ComponentCard title={isUpdate ? "Update Customer" : "Create Customer"}>
-        {isUpdate && isLoading ? (
+        {isUpdate ? (
           <p>Loading customer data...</p>
         ) : (
           <FormProvider {...methods}>
@@ -291,7 +290,7 @@ export default function CustomerForm() {
               {/* </div> */}
 
               {/* Tabs Section */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+              <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
                 <div className="border-b border-gray-200 mb-6">
                   <nav className="flex space-x-4">
                     {TABS.map((tab) => (

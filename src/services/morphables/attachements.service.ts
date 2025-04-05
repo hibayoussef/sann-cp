@@ -1,6 +1,6 @@
+import type { IAttachment } from "@/types/morphables/attatchement";
 import { AxiosResponse } from "axios";
 import { _axios } from "../../interceptor/http-config";
-import type { IAttachment } from "@/types/morphables/attatchement";
 
 export const _MorphablesApi = {
   uploadAttachment: async (

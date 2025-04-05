@@ -26,13 +26,13 @@ const UserDropdown = () => {
       {isDropdownOpen && (
         <div className="relative">
           <div
-            className={`absolute top-[-5px] transform rotate-45 w-3 h-4 bg-white border-l border-t border-gray-200 z-50 ${
+            className={`absolute top-[-5px] transform rotate-45 w-3 h-4  bg-white border-l border-t border-gray-200 z-50 ${
               direction === "rtl" ? "left-3" : "right-3"
             }`}
           />
 
           <div
-            className={`fixed top-12 h-full w-96 bg-white shadow-xl border-l border-gray-200 z-50 flex flex-col ${
+            className={`fixed top-12 h-full w-96 bg-white shadow-xl border-l  dark:bg-gray-800 border-gray-200 z-50 flex flex-col ${
               direction === "rtl" ? "left-0" : "right-0 "
             }`}
           >
@@ -40,14 +40,14 @@ const UserDropdown = () => {
               <div className="space-y-1 border-b border-gray-200 pb-6">
                 <div className="flex justify-between items-start">
                   <div>
-                    <div className="font-semibold text-gray-800 text-lg">
+                    <div className="font-semibold text-gray-800 dark:text-gray-100 text-lg">
                       {userData?.user.name}
                     </div>
-                    <div className="text-sm text-gray-600 mt-1">
+                    <div className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                       {userData?.user?.email}
                     </div>
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                     {userData?.user?.email}
                   </div>
                 </div>
@@ -61,15 +61,15 @@ const UserDropdown = () => {
               </div>
               <div className="flex gap-4 text-sm">
                 <div className="flex items-center gap-1">
-                  <span className="font-medium text-gray-700">User ID:</span>
-                  <span className="text-gray-600">{userData?.user?.id}</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-400">User ID:</span>
+                  <span className="text-gray-600 dark:text-gray-300">{userData?.user?.id}</span>
                 </div>
                 <div className="h-4 w-px bg-gray-300"></div>
-                <div className="flex items-center gap-1">
-                  <span className="font-medium text-gray-700">
+                <div className="flex items-center gap-1 ">
+                  <span className="font-medium text-gray-700 dark:text-gray-400">
                     Organization ID:
                   </span>
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-300">
                     {userData?.organization?.id}
                   </span>
                 </div>
@@ -80,7 +80,7 @@ const UserDropdown = () => {
               <div className="flex justify-between items-center">
                 <button
                   onClick={() => navigate("/profile")}
-                  className="text-[#575db1] hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
+                  className= "px-4 text-[#575db1] hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
                 >
                   My Account
                 </button>
@@ -102,7 +102,7 @@ const UserDropdown = () => {
             </div>
 
             {/* Trial Section */}
-            <div className="pb-4 border-b border-gray-200">
+            <div className="pb-4 border-b border-gray-200 px-4 py-5">
               <div className="text-sm font-medium text-red-600">
                 Your free trial is over
               </div>

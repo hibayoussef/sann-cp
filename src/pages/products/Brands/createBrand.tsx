@@ -77,7 +77,7 @@ export default function BrandForm() {
         baseTitle="Brand"
         pageTitle={isUpdate ? "Update Brand" : "Create Brand"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }

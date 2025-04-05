@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
-import { useSidebar } from "../context/SidebarContext";
-import { ChevronDownIcon, GridIcon, HorizontaLDots, TableIcon } from "../icons";
-import { _AuthApi } from "../services/auth.service";
-import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useTranslation } from "react-i18next";
+import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import {
-  Box,
+  Briefcase,
   LogOut,
   MonitorIcon,
   Plus,
   ShoppingBag,
   ShoppingCart,
 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useSidebar } from "../context/SidebarContext";
+import { ChevronDownIcon } from "../icons";
+import { _AuthApi } from "../services/auth.service";
 
 type NavItem = {
   name: string;
@@ -50,15 +50,16 @@ const AppSidebar: React.FC = () => {
         { name: "Products", path: "/products", pro: false },
         { name: "Brands", path: "/brands", permissionKey: "brands.view" },
         {
-          name: "Sub Categories",
-          path: "/sub-categories",
-          permissionKey: "sub_categories.view",
-        },
-        {
           name: "Categories",
           path: "/categories",
           permissionKey: "sub_categories.view",
         },
+        {
+          name: "Sub Categories",
+          path: "/sub-categories",
+          permissionKey: "sub_categories.view",
+        },
+
         { name: "Units", path: "/units", permissionKey: "units.view" },
         {
           name: "Sub Units",
@@ -87,7 +88,7 @@ const AppSidebar: React.FC = () => {
     },
     {
       name: "Purchases",
-      icon: <ShoppingCart />,
+      icon: <Briefcase />,
       subItems: [
         {
           name: "Vendors",
@@ -160,7 +161,8 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
+  // items: NavItem[]
+  const renderMenuItems = (_: any, menuType: "main" | "others") => (
     <ul className="flex flex-col">
       {filteredNavItems.map((nav, index) => (
         <li key={nav.name}>
@@ -310,7 +312,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`absolute top-0 bg-white shadow-md transition-all z-40 border-r h-screen
+      className={`absolute top-0 bg-white shadow-md transition-all z-40 border-r h-screen dark:text-gray-400 dark:bg-gray-900
       ${isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"}
       ${direction === "rtl" ? "right-0" : "left-0"}`}
     >

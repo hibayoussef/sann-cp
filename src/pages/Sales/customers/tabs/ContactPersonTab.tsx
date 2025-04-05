@@ -1,6 +1,7 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
+import { CustomerType } from "@/components/lib/validations/customer";
+import Button from "@/components/ui/button/Button";
 import {
   Briefcase,
   Building,
@@ -14,8 +15,7 @@ import {
   UserCheck,
   UserCircle,
 } from "lucide-react";
-import Button from "@/components/ui/button/Button";
-import { CustomerType } from "@/components/lib/validations/customer";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 const ContactPersonTab = () => {
   const {

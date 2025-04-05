@@ -2,12 +2,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { _axios } from "../interceptor/http-config";
 import { useSignInValidation } from "../pages/AuthPages/validations/useAuthValidation";
 import { _AuthApi } from "../services/auth.service";
 import { useAuthStore } from "../store/useAuthStore";
 import type { ILoginRequest } from "../types/auth";
-import { toast } from "react-toastify";
 
 export const useRegister = () => {
   return useMutation({

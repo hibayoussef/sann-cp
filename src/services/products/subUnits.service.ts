@@ -1,7 +1,6 @@
+import type { IUnit } from "@/types/products/unit";
 import { AxiosResponse } from "axios";
 import { _axios } from "../../interceptor/http-config";
-import type { BrandForm, IBrand } from "../../types/products/brand";
-import type { ISubUnit, IUnit } from "@/types/products/unit";
 
 export const _SUB_UnitsApi = {
   // GET SUBUNITS
@@ -17,6 +16,13 @@ export const _SUB_UnitsApi = {
       `/products/sub-units/${id}`
     );
     return response.data.data;
+  },
+
+  getSubUnitsById: async (unit_id: number) => {
+    const response = await _axios.get<{ data: any[] }>(
+      `/products/sub-units?unit_id=${unit_id}`
+    );
+    return response?.data;
   },
   // ADD SUBUNIT
   addSubUnit: async (data: IUnit) => {

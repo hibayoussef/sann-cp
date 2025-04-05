@@ -1,24 +1,25 @@
 import { branchSchema, BranchType } from "@/components/lib/validations/branch";
+import Loader from "@/components/ui/loader/loader";
 import {
   useAddBranch,
   useFetchBranch,
   useUpdateBranch,
 } from "@/hooks/settings/useBranches";
+import { useFetchCountries } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Calendar,
   CreditCard,
   Flag,
-  Folder,
   Globe,
-  Home,
   Mail,
   MapPin,
   Phone,
-  Tag,
+  Tag
 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
@@ -26,9 +27,6 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Switch from "../../../components/form/switch/Switch";
 import { useMeStore } from "../../../store/useMeStore";
-import { IoAdd } from "react-icons/io5";
-import Loader from "@/components/ui/loader/loader";
-import { useFetchCountries } from "@/hooks/useCommon";
 
 export default function CreateBranch() {
   const { id } = useParams();
@@ -121,7 +119,7 @@ export default function CreateBranch() {
         baseTitle="Branches"
         pageTitle={isUpdate ? "Update Branch" : "Create Branch"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
@@ -200,7 +198,7 @@ export default function CreateBranch() {
                 <div className="relative">
                   <select
                     {...register("country_state_id", { valueAsNumber: true })}
-                    className="text-sm rounded-lg border border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
+                    className="text-sm rounded-lg border dark:bg-gray-900 dark:text-gray-400 border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
                   >
                     <option value="" disabled selected>
                       Select a location

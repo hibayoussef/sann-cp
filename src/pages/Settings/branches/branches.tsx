@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/ui/table-data/table-data";
-import { GitBranch, Home } from "lucide-react";
-
+import { GitBranch } from "lucide-react";
 import { branchColumns } from "@/columns/settings/branches";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";
@@ -21,11 +20,11 @@ export default function Branches() {
         title="Categories Management | Dashboard"
         description="Manage your product categories in the system."
       />
-      <div className="space-y-4 px-1 py-1">
+      <div className="space-y-4 px-1 py-1 ">
         <PageBreadcrumb
           baseTitle={t("settings")}
           pageTitle={t("branches")}
-          icon={<GitBranch className="w-5 h-5" />}
+          icon={<GitBranch className="w-5 h-5 "  />}
         />
         <div className="space-y-4 pt-1">
           <DataTable

@@ -1,8 +1,8 @@
+import { brandSchema } from "@/components/lib/validations/brand";
 import { DataTableColumnHeader } from "@/components/ui/table-data/data-table-column-header";
 import { DataTableRowActions } from "@/components/ui/table-data/data-table-row-actions";
-import { ColumnDef } from "@tanstack/react-table";
-import { brandSchema } from "@/components/lib/validations/brand";
 import type { IBrand } from "@/types/products/brand";
+import { ColumnDef } from "@tanstack/react-table";
 
 export const brandColumns = (permissions: {
   update: boolean;

@@ -8,10 +8,10 @@ import Badge from "../ui/badge/Badge";
 
 export default function EcommerceMetrics() {
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 ">
       {/* <!-- Metric Item Start --> */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-900">
+        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-white/[0.03]">
           <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
         </div>
 
@@ -34,7 +34,7 @@ export default function EcommerceMetrics() {
 
       {/* <!-- Metric Item Start --> */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-white/[0.03]">
           <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
         </div>
         <div className="flex items-end justify-between mt-5">

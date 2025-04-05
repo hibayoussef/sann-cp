@@ -13,6 +13,7 @@ import { Settings2, FileText, Printer } from "lucide-react";
 import * as XLSX from "xlsx";
 import * as Papa from "papaparse";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -116,25 +117,25 @@ export function DataTableViewOptions<TData>({
       <Button
         variant="outline"
         size="sm"
-        className="h-8 lg:flex"
+        className="h-8 lg:flex dark:text-gray-400 "
         onClick={handlePrint}
       >
-        <Printer className="ml-auto mr-2 h-4 w-4" />
+        <Printer className="ml-auto mr-2 h-4 w-4 dark:text-gray-400 dark:border-gray-400" />
         Print
       </Button>
       {/* Export options dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className=" ml-auto h-8 lg:flex">
+          <Button variant="outline" size="sm" className=" ml-auto h-8 lg:flex dark:text-gray-400 dark:border-gray-400">
             <FileText className="mr-2 h-4 w-4" />
             Export
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="w-[200px] bg-white shadow-md border border-gray-200"
+          className="w-[200px] bg-white shadow-md border border-gray-200 dark:bg-gray-800"
         >
-          <DropdownMenuLabel className="flex items-center text-[13px] gap-2 text-gray-600">
+          <DropdownMenuLabel className="flex items-center text-[13px] gap-2  text-gray-600 dark:text-gray-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -142,6 +143,7 @@ export function DataTableViewOptions<TData>({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
+
               className="text-blue-500"
             >
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -153,7 +155,7 @@ export function DataTableViewOptions<TData>({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={handleExportCSV}
-            className="flex items-center gap-2 text-[13px] hover:bg-gray-50"
+            className="flex items-center gap-2 text-[13px] hover:bg-gray- dark:text-gray-400"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +176,7 @@ export function DataTableViewOptions<TData>({
 
           <DropdownMenuItem
             onClick={handleExportExcel}
-            className="flex items-center gap-2 text-[13px] hover:bg-gray-50"
+            className="flex items-center gap-2 text-[13px] hover:bg-gray-50 dark:text-gray-400"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +197,7 @@ export function DataTableViewOptions<TData>({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleExportPDF}
-            className="flex items-center gap-2 text-[13px] hover:bg-gray-50"
+            className="flex items-center gap-2 text-[13px] hover:bg-gray-50 dark:text-gray-400"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -225,7 +227,7 @@ export function DataTableViewOptions<TData>({
           <Button
             variant="outline"
             size="sm"
-            className="ml-auto hidden h-8 lg:flex"
+            className="ml-auto hidden h-8 lg:flex dark:text-gray-400 dark:border-gray-400"
           >
             <Settings2 className="mr-2 h-4 w-4" />
             View
@@ -233,9 +235,9 @@ export function DataTableViewOptions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="w-[250px] bg-white shadow-md border border-gray-200"
+          className="w-[250px] bg-white shadow-md border border-gray-200 dark:bg-gray-800"
         >
-          <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+          <DropdownMenuLabel className="dark:text-gray-400">Toggle columns</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {table
             .getAllColumns()
@@ -246,7 +248,7 @@ export function DataTableViewOptions<TData>({
             .map((column) => (
               <DropdownMenuCheckboxItem
                 key={column.id}
-                className="capitalize"
+                className="capitalize dark:text-gray-400"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >

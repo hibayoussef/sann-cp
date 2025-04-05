@@ -1,3 +1,4 @@
+import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +8,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
@@ -16,13 +17,13 @@ import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { setLanguage } = useLocaliztionStore();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
-  const isSettingsPage = location.pathname.startsWith("/settings");
+  // const isSettingsPage = location.pathname.startsWith("/settings");
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {
@@ -60,7 +61,7 @@ const AppHeader: React.FC = () => {
         <div className="flex items-center justify-between w-full gap-1 px-3 py-1 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0">
           <Link to="/" className="flex items-center gap-2">
             <img
-              className="dark:hidden"
+              className=""
               src="/images/logo/logo-icon.svg"
               alt="Logo"
               width={26}
@@ -159,12 +160,12 @@ const AppHeader: React.FC = () => {
             isApplicationMenuOpen ? "flex" : "hidden"
           } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
-          <DropdownMenu>
+        <DropdownMenu>
             <DropdownMenuTrigger className="text-sm">
               {/* {language} */}
               <button
                 className="h-4.5 w-4.5 relative flex items-center justify-center text-gray-500 
-   transition-colors dropdown-toggle hover:text-gray-700 dark:text-gray-400 
+   transition-colors dropdown-toggle hover:text-gray-700 dark:text-gray-400   
    dark:hover:text-white"
                 style={{ backgroundColor: "transparent" }}
               >
@@ -185,10 +186,10 @@ const AppHeader: React.FC = () => {
                 </svg>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="dark:bg-gray-800 ">
               <DropdownMenuItem
                 onClick={() => setLanguage("en")}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 dark:text-white dark:hover:bg-gray-700 "
               >
                 <svg
                   width="20"
@@ -211,7 +212,7 @@ const AppHeader: React.FC = () => {
 
               <DropdownMenuItem
                 onClick={() => setLanguage("ar")}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 dark:text-white dark:hover:bg-gray-700"
               >
                 <svg
                   width="20"
@@ -227,12 +228,12 @@ const AppHeader: React.FC = () => {
                 </svg>
                 العربية
               </DropdownMenuItem>
-            </DropdownMenuContent>
+            </DropdownMenuContent >
           </DropdownMenu>
           <div className="flex items-end gap-1 2xsm:gap-3">
             {/* <!-- Dark Mode Toggler --> */}
             {/* <LanguageSwitcher /> */}
-            {/* <ThemeToggleButton /> */}
+            <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
             <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}
@@ -243,7 +244,7 @@ const AppHeader: React.FC = () => {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 animate-spin duration-3000"
+              className="h-6 w-6 animate-spin duration-3000 dark:hover:text-gray-200 dark:text-gray-200"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
