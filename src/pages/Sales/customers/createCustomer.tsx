@@ -85,7 +85,16 @@ export default function CustomerForm() {
           mobile: "",
           designation: "",
           department: "",
-          social_media: "",
+          social_media: [
+            {
+              platform: "",
+              url: "",
+            },
+            {
+              platform: "",
+              url: "",
+            },
+          ],
         },
       ],
     },

@@ -68,7 +68,14 @@ const contactPersonSchema = z.object({
     .optional(),
   department: z.string().optional(),
   designation: z.string().optional(),
-  social_media: z.string().optional(),
+  social_media: z
+    .array(
+      z.object({
+        platform: z.string().optional(),
+        url: z.string().url().optional(),
+      })
+    )
+    .optional(),
 });
 
 export const customerSchema = z.object({
