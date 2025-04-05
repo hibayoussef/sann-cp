@@ -125,7 +125,6 @@ export default function CustomerForm() {
   //     });
   //   }
   // }, [customerData, setValue]);
-  console.log(methods.formState.errors);
   const onSubmit = (formData: CustomerType) => {
     const payload: any = {
       ...formData,
@@ -141,7 +140,6 @@ export default function CustomerForm() {
       type: "customer",
     };
 
-    console.log(payload);
     if (isUpdate && id) {
       updateCustomer.mutateAsync({ id: Number(id), data: payload });
     } else {

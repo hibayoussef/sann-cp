@@ -19,24 +19,16 @@ const ContactPersonTab = () => {
     register,
     control,
     formState: { errors },
+    watch,
   } = useFormContext<CustomerType>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "contact_persons",
   });
 
-  const socialMediaFields = fields.map((_, index) =>
-    useFieldArray({
-      control,
-      name: `contact_persons.${index}.social_media`,
-    })
-  );
-
   return (
     <div className="space-y-6">
       {fields.map((field, index) => {
-        const { fields: socialFields } = socialMediaFields[index];
-
         return (
           <div
             key={field.id}
@@ -184,23 +176,28 @@ const ContactPersonTab = () => {
               {/* Social Media Section */}
               <div className="space-y-2">
                 <Label>Social Media</Label>
-                {socialFields.map((socialField, socialIndex) => (
-                  <div key={socialField.id} className="flex gap-2 items-center">
-                    <Input
-                      {...register(
-                        `contact_persons.${index}.social_media.${socialIndex}.platform`
-                      )}
-                      readOnly
-                    />
-                    <Input
-                      {...register(
-                        `contact_persons.${index}.social_media.${socialIndex}.url`
-                      )}
-                      placeholder="URL"
-                      type="url"
-                    />
-                  </div>
-                ))}
+                {watch(`contact_persons.${index}.social_media`)?.map(
+                  (socialField, socialIndex) => (
+                    <div
+                      key={socialField.platform}
+                      className="flex gap-2 items-center"
+                    >
+                      <Input
+                        {...register(
+                          `contact_persons.${index}.social_media.${socialIndex}.platform`
+                        )}
+                        readOnly
+                      />
+                      <Input
+                        {...register(
+                          `contact_persons.${index}.social_media.${socialIndex}.url`
+                        )}
+                        placeholder="URL"
+                        type="url"
+                      />
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
@@ -236,7 +233,11 @@ const ContactPersonTab = () => {
             mobile: "",
             designation: "",
             department: "",
-            social_media: [],
+            social_media: [
+              { platform: "Facebook", url: "" },
+              { platform: "Instagram", url: "" },
+              { platform: "Twitter", url: "" },
+            ],
           })
         }
       >

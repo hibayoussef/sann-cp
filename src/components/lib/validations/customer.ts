@@ -11,7 +11,7 @@ const contactDetailsSchema = z.object({
     .array(
       z.object({
         platform: z.string().optional(),
-        url: z.string().url().optional(),
+        url: z.string().optional(),
       })
     )
     .optional(),
@@ -79,7 +79,7 @@ const contactPersonSchema = z.object({
     .array(
       z.object({
         platform: z.string().optional(),
-        url: z.string().url().optional(),
+        url: z.string().optional(),
       })
     )
     .optional(),

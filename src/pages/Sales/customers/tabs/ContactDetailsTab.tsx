@@ -222,7 +222,7 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Driving License Issued By</Label>
           <select
-            {...register("contact_details.shipping_address_country_state_id")}
+            {...register("contact_details.driving_license_issued_by")}
             className={selectStyles}
           >
             <option value="" disabled>
@@ -230,9 +230,7 @@ const ContactDetailsTab = ({
             </option>
             {countriesData?.data
               .find(
-                (country) =>
-                  country.id.toString() ==
-                  watch("contact_details.driving_license_issued_by")
+                (country) => country.id.toString() == watch("nationality_id")
               )
               ?.country_states.map((state) => (
                 <option key={state.id} value={state.id}>
