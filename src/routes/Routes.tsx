@@ -3,6 +3,7 @@
 import SettingsLayout from "@/layout/SettingsLayout";
 import ShouldBeLogged from "@/middleware/shouldBeLogged";
 import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
+import SignOtp from "@/pages/AuthPages/SignOtp";
 import CreateCustomer from "@/pages/Sales/customers/createCustomer";
 import Customers from "@/pages/Sales/customers/customers";
 import VendorForm from "@/pages/Sales/vendors/vendorForm";
@@ -54,6 +55,7 @@ const RoutesComponent = () => {
       <Route element={<ShouldNotBeLogged />}>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/signin-otp" element={<SignOtp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />

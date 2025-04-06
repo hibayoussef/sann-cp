@@ -8,7 +8,7 @@ export interface ISubCategory {
   code?: string | null;
   description_en?: string | null;
   description_ar?: string | null;
-}
+}//store
 
 export interface SubCategoryForm {
   category_id: number | null | undefined;
@@ -17,4 +17,4 @@ export interface SubCategoryForm {
   code?: string | null;
   description_en?: string | null;
   description_ar?: string | null;
-}
+}//body

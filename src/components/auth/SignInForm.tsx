@@ -4,14 +4,12 @@ import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/useLogin";
 import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
-import Checkbox from "../form/input/Checkbox";
 import Input from "../form/input/InputField";
 import Loader from "../ui/loader/loader";
 import { signinValidationSchema } from "./registerStepps/validations/siginValidation";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
 
   const { onSubmit, errors, isPending } = useLogin();
 
@@ -80,12 +78,13 @@ export default function SignInForm() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Checkbox checked={isChecked} onChange={setIsChecked} />
-                      <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                        Remember me
-                      </span>
-                    </div>
+                    <Link
+                      to="/signin-otp"
+                      className="text-sm font-medium text-brand-500 hover:underline dark:text-brand-400"
+                    >
+                      Sign in using email OTP
+                    </Link>
+
                     <Link
                       to="/forgot-password"
                       className="text-sm text-red-600 hover:text-red-700 dark:text-red-500"

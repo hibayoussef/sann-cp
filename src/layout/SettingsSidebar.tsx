@@ -116,7 +116,7 @@ const SettingsSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`absolute top-0 bg-gray-100 dark:bg-gray-900    shadow-sm transition-all z-40 border-r h-screen
+      className={`absolute top-0 bg-gray-100 dark:bg-gray-900    shadow-sm transition-all z-40 dark:border-gray-700 border-r h-screen
       ${isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"}
       ${direction === "rtl" ? "right-0" : "left-0"}
       hover:bg-gray-200  `}

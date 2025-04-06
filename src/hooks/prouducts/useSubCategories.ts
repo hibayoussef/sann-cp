@@ -21,7 +21,7 @@ export const useFetchSubCategory = (id: number, options = {}) => {
   });
 };
 
-export const useFetchSubCategoryById = (category_id: number) => {
+export const useFetchSubCategoryById = (category_id: number | null) => {
   return useQuery({
     queryKey: [QueryKeys.SUB_CATEGORIES, category_id],
     queryFn: () => _SubCategoriesApi.getSubCategoriesById(category_id),

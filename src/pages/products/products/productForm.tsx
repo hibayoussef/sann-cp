@@ -10,26 +10,26 @@ import {
   useFetchProduct,
   useUpdateProduct,
 } from "@/hooks/prouducts/useProducts";
-import { useFetchSubCategories } from "@/hooks/prouducts/useSubCategories";
-import {
-  useFetchSubUnitsById
-} from "@/hooks/prouducts/useSubUnits";
+import { useFetchSubCategoryById } from "@/hooks/prouducts/useSubCategories";
+import { useFetchSubUnitsById } from "@/hooks/prouducts/useSubUnits";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { useFetchWarranties } from "@/hooks/prouducts/useWarranties";
+import { useFetchAccounts } from "@/hooks/settings/useAccounts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Calendar,
-  DollarSign,
   GitBranch,
   Info,
   Layers,
   Package,
-  Tag
+  Settings,
+  Tag,
+  Wallet,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaMoneyBill } from "react-icons/fa";
 import { IoAdd, IoColorPalette, IoTrash } from "react-icons/io5";
@@ -46,19 +46,22 @@ export default function ProductForm() {
   const addProduct = useAddProduct();
   const updateProduct = useUpdateProduct();
   const organizationId = useMeStore((state) => state.organizationId);
-
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
   const { data: productData, isLoading } = useFetchProduct(Number(id), {
     enabled: isUpdate,
   });
+  const { data: accounts } = useFetchAccounts();
 
-  // Fetching required lists
   const { data: taxes } = useFetchTaxes();
   const { data: categories } = useFetchCategories();
-  const { data: subCategories } = useFetchSubCategories();
+
+  const { data: subCategories, isLoading: subCategoriesLoading } =
+    useFetchSubCategoryById(selectedCategoryId);
   const { data: warranties } = useFetchWarranties();
   const { data: brands } = useFetchBrands();
   const { data: units } = useFetchUnits();
-  // const { data: subUnits } = useFetchSubUnits();
   const { data: branches } = useFetchBranches();
 
   const {
@@ -77,17 +80,17 @@ export default function ProductForm() {
       product_name_ar: productData?.product_name_ar ?? "",
       sku: productData?.sku ?? "",
       color: productData?.color ?? "",
-      tax_id: productData?.tax_id ?? 0,
-      brand_id: productData?.brand_id ?? 0,
-      category_id: productData?.category_id ?? 0,
-      sub_category_id: productData?.sub_category_id ?? 0,
-      warranty_id: productData?.warranty_id ?? 0,
-      unit_id: productData?.unit_id ?? 0,
-      alert_quantity: productData?.alert_quantity ?? 0,
-      sale_account: productData?.sale_account ?? 0,
-      purchase_account: productData?.purchase_account ?? 0,
-      sale_return_account: productData?.sale_return_account ?? 0,
-      purchase_return_account: productData?.purchase_return_account ?? 0,
+      tax_id: productData?.tax_id ?? null,
+      brand_id: productData?.brand_id ?? null,
+      category_id: productData?.category_id ?? null,
+      sub_category_id: productData?.sub_category_id ?? null,
+      warranty_id: productData?.warranty_id ?? null,
+      unit_id: productData?.unit_id ?? null,
+      alert_quantity: productData?.alert_quantity ?? 1,
+      sale_account: productData?.sale_account ?? null,
+      purchase_account: productData?.purchase_account ?? null,
+      sale_return_account: productData?.sale_return_account ?? null,
+      purchase_return_account: productData?.purchase_return_account ?? null,
       purchase_price: productData?.purchase_price ?? 0,
       sale_price: productData?.sale_price ?? 0,
       expiry_date: productData?.expiry_date ?? "",
@@ -115,14 +118,14 @@ export default function ProductForm() {
   } = useFetchSubUnitsById(selectedUnitId);
 
   useEffect(() => {
-  if (productData) {
-    setValue(
-      "sub_units",
-      productData.sub_units?.map(su => ({ id: su.id })) || []
-    );
-  }
+    if (productData) {
+      setValue(
+        "sub_units",
+        productData.sub_units?.map((su) => ({ id: su.id })) || []
+      );
+    }
   }, [productData, setValue]);
-  
+
   useEffect(() => {
     if (selectedUnitId) {
       const defaultSubUnit = subunits?.data?.[0]?.id || selectedUnitId;
@@ -131,36 +134,75 @@ export default function ProductForm() {
     }
   }, [selectedUnitId, subunits, setValue]);
 
+  console.log("prprprprp: ", productData);
   useEffect(() => {
     if (productData) {
+      // Basic Information
       setValue("product_name_en", productData.product_name_en ?? "");
       setValue("product_name_ar", productData.product_name_ar ?? "");
       setValue("sku", productData.sku ?? "");
-      setValue("sale_price", productData.sale_price ?? 0);
-      setValue("is_active", productData.is_active ?? false);
-      setValue("unit_id", productData?.unit_id ?? 0);
-      setValue("category_id", productData.category_id ?? 0);
-      setValue("brand_id", productData.brand_id ?? 0);
-      setValue("tax_id", productData.tax_id ?? 0);
-      setValue("warranty_id", productData.warranty_id ?? 0);
-      setValue("sub_category_id", productData.sub_category_id ?? 0);
-        setValue(
-      "sub_units",
-      productData.sub_units?.map(su => ({ id: su.id })) || []
-    );
+      setValue("color", productData.color ?? "blue");
+      setValue("type", productData.type ?? "Goods");
+
+      // Pricing
+      setValue("purchase_price", Number(productData.purchase_price) ?? 0);
+      setValue("sale_price", Number(productData.sale_price) ?? 0);
+      setValue("expiry_date", productData.expiry_date?.split("T")[0] ?? ""); // Format date for input[type=date]
+
+      // Inventory
+      setValue("alert_quantity", productData.alert_quantity ?? 1);
+
+      // Accounts
+      setValue("sale_account", productData.sale_account ?? null);
+      setValue("purchase_account", productData.purchase_account ?? null);
+      setValue("sale_return_account", productData.sale_return_account ?? null);
+      setValue(
+        "purchase_return_account",
+        productData.purchase_return_account ?? null
+      );
+
+      // Relationships
+      setValue("tax_id", productData.tax_id ?? null);
+      setValue("brand_id", productData.brand_id ?? null);
+      setValue("category_id", productData.category_id ?? null);
+      setValue("sub_category_id", productData.sub_category_id ?? null);
+      setValue("unit_id", productData.unit_id ?? null);
+      setValue("warranty_id", productData.warranty_id ?? null);
+
+      // Units
+      setValue(
+        "sub_units",
+        productData.sub_units?.map((su) => ({ id: su.id })) || []
+      );
+
+      // Statuses
+      setValue("is_active", Boolean(productData.is_active));
+      setValue("for_selling", productData.for_selling ?? 1);
+
+      // Branches
+      setValue(
+        "branches",
+        productData.branches?.map((b) => ({
+          branch_id: b.branch_id,
+          is_active: Boolean(b.is_active),
+        })) || [{ branch_id: 0, is_active: true }]
+      );
+
+      // Default Units
+      setValue("default_sale_unit", productData.default_sale_unit ?? 0);
+      setValue("default_purchase_unit", productData.default_purchase_unit ?? 0);
     }
   }, [productData, setValue]);
 
   useEffect(() => {
-  if (selectedUnitId && subunits?.data) {
-    // تحديد كل الوحدات الفرعية تلقائيًا إذا كانت موجودة
-    setValue(
-      "sub_units",
-      subunits.data.map(subunit => ({ id: subunit.id }))
-    )
-  }
+    if (selectedUnitId && subunits?.data) {
+      setValue(
+        "sub_units",
+        subunits.data.map((subunit) => ({ id: subunit.id }))
+      );
+    }
   }, [subunits?.data, setValue]);
-  
+
   console.log("error r:", errors);
   const onSubmit = async (formData: any) => {
     const payload = {
@@ -188,6 +230,7 @@ export default function ProductForm() {
       purchase_return_account: formData.purchase_return_account
         ? Number(formData.purchase_return_account)
         : 0,
+      ...(isUpdate && id ? { _method: "PUT" } : {}),
     };
 
     if (isUpdate && id) {
@@ -223,131 +266,209 @@ export default function ProductForm() {
         <p>Loading product data...</p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Basic Information Section */}
-          <ComponentCard
-            title="Basic Information"
-            icon={<Package className="text-blue-500 w-5 h-5" />}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="product_name_en">English Name</Label>
-                <Input
-                  type="text"
-                  id="product_name_en"
-                  {...register("product_name_en")}
-                  placeholder="Please enter product name (En)"
-                  error={!!errors.product_name_en}
-                  hint={errors.product_name_en?.message}
-                  icon={<Info className="w-4 h-4" />}
-                />
-              </div>
-              <div>
-                <Label htmlFor="product_name_ar">Arabic Name</Label>
-                <Input
-                  type="text"
-                  id="product_name_ar"
-                  {...register("product_name_ar")}
-                  placeholder="Please enter product name (Ar)"
-                  error={!!errors.product_name_ar}
-                  hint={errors.product_name_ar?.message}
-                  icon={<Info className="w-4 h-4" />}
-                />
-              </div>
-              <div>
-                <Label htmlFor="sku">SKU</Label>
-                <Input
-                  type="text"
-                  id="sku"
-                  placeholder="Enter SKU"
-                  {...register("sku")}
-                  error={!!errors.sku}
-                  hint={errors.sku?.message}
-                  icon={<Box className="w-4 h-4" />}
-                />
-              </div>
-              <div>
-                <Label htmlFor="color">Color</Label>
-                <Input
-                  type="text"
-                  id="color"
-                  placeholder="Enter color"
-                  {...register("color")}
-                  error={!!errors.color}
-                  hint={errors.color?.message}
-                  icon={<IoColorPalette className="w-4 h-4" />}
-                />
-              </div>
-            </div>
-          </ComponentCard>
-
-          {/* Two Columns Layout for Next Sections */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Pricing & Inventory Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Basic Information Section */}
             <ComponentCard
-              title="Pricing & Inventory"
-              icon={<DollarSign className="text-green-500 w-5 h-5" />}
+              title="Basic Information"
+              icon={<Package className="text-blue-500 w-5 h-5" />}
             >
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="purchase_price">Purchase Price</Label>
+                  <Label htmlFor="product_name_en">English Name</Label>
                   <Input
-                    type="number"
-                    id="purchase_price"
-                    placeholder="Enter purchase price"
-                    {...register("purchase_price", { valueAsNumber: true })}
-                    error={!!errors.purchase_price}
-                    hint={errors.purchase_price?.message}
-                    icon={<FaMoneyBill className="w-4 h-4" />}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="sale_price">Sale Price</Label>
-                  <Input
-                    type="number"
-                    id="sale_price"
-                    placeholder="Enter sale price"
-                    {...register("sale_price", { valueAsNumber: true })}
-                    error={!!errors.sale_price}
-                    hint={errors.sale_price?.message}
-                    icon={<FaMoneyBill className="w-4 h-4" />}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="alert_quantity">Alert Quantity</Label>
-                  <Input
-                    type="number"
-                    id="alert_quantity"
-                    placeholder="Enter alert quantity"
-                    {...register("alert_quantity", { valueAsNumber: true })}
-                    error={!!errors.alert_quantity}
-                    hint={errors.alert_quantity?.message}
+                    type="text"
+                    id="product_name_en"
+                    {...register("product_name_en")}
+                    placeholder="Please enter product name (En)"
+                    error={!!errors.product_name_en}
+                    hint={errors.product_name_en?.message}
                     icon={<Info className="w-4 h-4" />}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="expiry_date">Expiry Date</Label>
+                  <Label htmlFor="product_name_ar">Arabic Name</Label>
                   <Input
-                    type="date"
-                    id="expiry_date"
-                    {...register("expiry_date")}
-                    error={!!errors.expiry_date}
-                    hint={errors.expiry_date?.message}
-                    icon={<Calendar className="w-4 h-4" />}
+                    type="text"
+                    id="product_name_ar"
+                    {...register("product_name_ar")}
+                    placeholder="Please enter product name (Ar)"
+                    error={!!errors.product_name_ar}
+                    hint={errors.product_name_ar?.message}
+                    icon={<Info className="w-4 h-4" />}
                   />
+                </div>
+                <div>
+                  <Label htmlFor="sku">SKU</Label>
+                  <Input
+                    type="text"
+                    id="sku"
+                    placeholder="Enter SKU"
+                    {...register("sku")}
+                    error={!!errors.sku}
+                    hint={errors.sku?.message}
+                    icon={<Box className="w-4 h-4" />}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="color">Color</Label>
+                  <Input
+                    type="text"
+                    id="color"
+                    placeholder="Enter color"
+                    {...register("color")}
+                    error={!!errors.color}
+                    hint={errors.color?.message}
+                    icon={<IoColorPalette className="w-4 h-4" />}
+                  />
+                </div>
+                {/* Product Type Section */}
+                <div>
+                  <Label htmlFor="type">Product Type*</Label>
+                  <select
+                    {...register("type", { required: "Type is required" })}
+                    className={selectStyles}
+                  >
+                    <option value="Goods">Goods</option>
+                    <option value="Service">Service</option>
+                    <option value="Landing Cost">Landing Cost</option>
+                  </select>
+                  {errors.type && (
+                    <p className="text-red-500 text-sm">
+                      {errors.type.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </ComponentCard>
 
-            {/* Category & Tax Section */}
+            {/* <ComponentCard
+              title="General Settings"
+              icon={<Settings className="text-gray-500 w-5 h-5" />}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="for_selling">Available for Selling</Label>
+                  <Switch
+                    label=""
+                    defaultChecked={watch("for_selling") === 1}
+                    onChange={(checked) =>
+                      setValue("for_selling", checked ? 1 : 0)
+                    }
+                  />
+                  {errors.for_selling && (
+                    <p className="text-red-500 text-sm">
+                      {errors.for_selling.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="is_active">Active Status</Label>
+                  <Switch
+                    label=""
+                    defaultChecked={watch("is_active")}
+                    onChange={(checked) => setValue("is_active", checked)}
+                  />
+
+                  {errors.is_active && (
+                    <p className="text-red-500 text-sm">
+                      {errors.is_active.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </ComponentCard> */}
+            <ComponentCard
+              title="General Settings"
+              icon={<Settings className="text-gray-500 w-5 h-5" />}
+              className="bg-gray-50 rounded-xl"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label
+                    htmlFor="for_selling"
+                    className="text-[14px] font-medium text-gray-700"
+                  >
+                    Product Availability
+                  </Label>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                    {/* SWITCH SECTION WITH DIVIDER */}
+                    <div className="pr-3 border-r border-gray-200">
+                      <Switch
+                        label="Available for Selling"
+                        defaultChecked={watch("for_selling") === 1}
+                        onChange={(checked) =>
+                          setValue("for_selling", checked ? 1 : 0)
+                        }
+                      />
+                    </div>
+
+                    {/* TEXT SECTION */}
+                    <div className="flex-1 pl-3">
+                      <p className="text-sm font-medium">
+                        Available for Selling
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Enable to list product in sales channels
+                      </p>
+                    </div>
+                  </div>
+                  {errors.for_selling && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.for_selling.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label
+                    htmlFor="is_active"
+                    className="text-[14px] font-medium text-gray-700"
+                  >
+                    Product Status
+                  </Label>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                    {/* SWITCH WITH DIVIDER */}
+                    <div className="pr-3 border-r border-gray-200">
+                      <Switch
+                        label="Active Status"
+                        defaultChecked={watch("is_active")}
+                        onChange={(checked) => setValue("is_active", checked)}
+                      />
+                    </div>
+
+                    {/* TEXT SIDE */}
+                    <div className="flex-1 pl-3">
+                      <p className="text-sm font-medium">Active Status</p>
+                      <p className="text-xs text-gray-500">
+                        Enable to make product visible in system
+                      </p>
+                    </div>
+                  </div>
+                  {errors.is_active && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.is_active.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </ComponentCard>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ComponentCard
               title="Classification"
               icon={<Tag className="text-red-500 w-5 h-5" />}
             >
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="category_id">Category</Label>
                   <select
                     {...register("category_id", { valueAsNumber: true })}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      setSelectedCategoryId(value);
+                      setValue("sub_category_id", 0);
+                    }}
                     className={selectStyles}
                   >
                     <option
@@ -375,37 +496,45 @@ export default function ProductForm() {
                   )}
                 </div>
 
-                <div>
-                  <Label htmlFor="sub_category_id">Sub Category</Label>
-                  <select
-                    {...register("sub_category_id", { valueAsNumber: true })}
-                    className={selectStyles}
-                  >
-                    <option
-                      value=""
-                      disabled
-                      selected
-                      className="text-gray-400"
-                    >
-                      Select Sub Category
-                    </option>
-                    {subCategories?.map((subCategory) => (
-                      <option
-                        key={subCategory.id}
-                        className="text-gray-950"
-                        value={subCategory.id}
+                {selectedCategoryId && (
+                  <div>
+                    <Label htmlFor="sub_category_id">Sub Category</Label>
+                    {subCategoriesLoading ? (
+                      <p>Loading subcategories...</p>
+                    ) : (
+                      <select
+                        {...register("sub_category_id", {
+                          valueAsNumber: true,
+                        })}
+                        className={selectStyles}
                       >
-                        {subCategory.sub_category_name_en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.sub_category_id && (
-                    <p className="text-red-500 text-sm">
-                      {errors?.sub_category_id.message}
-                    </p>
-                  )}
-                </div>
-
+                        <option
+                          value=""
+                          disabled
+                          selected
+                          className="text-gray-400"
+                        >
+                          Select Sub Category
+                        </option>
+                        {subCategories &&
+                          subCategories?.data?.map((subCategory) => (
+                            <option
+                              key={subCategory.id}
+                              className="text-gray-950"
+                              value={subCategory.id}
+                            >
+                              {subCategory.sub_category_name_en}
+                            </option>
+                          ))}
+                      </select>
+                    )}
+                    {errors.sub_category_id && (
+                      <p className="text-red-500 text-sm">
+                        {errors?.sub_category_id.message}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div>
                   <Label htmlFor="warranty_id">Warranty</Label>
                   <select
@@ -500,6 +629,139 @@ export default function ProductForm() {
                 </div>
               </div>
             </ComponentCard>
+            <ComponentCard
+              title="Pricing & Accounts"
+              icon={<Wallet className="text-purple-500 w-5 h-5" />}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="purchase_price">Purchase Price</Label>
+                  <Input
+                    type="number"
+                    id="purchase_price"
+                    placeholder="Enter purchase price"
+                    {...register("purchase_price", { valueAsNumber: true })}
+                    error={!!errors.purchase_price}
+                    hint={errors.purchase_price?.message}
+                    icon={<FaMoneyBill className="w-4 h-4" />}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="sale_price">Sale Price</Label>
+                  <Input
+                    type="number"
+                    id="sale_price"
+                    placeholder="Enter sale price"
+                    {...register("sale_price", { valueAsNumber: true })}
+                    error={!!errors.sale_price}
+                    hint={errors.sale_price?.message}
+                    icon={<FaMoneyBill className="w-4 h-4" />}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="sale_account">Sale Account*</Label>
+                  <select
+                    {...register("sale_account", {
+                      required: "Sale account is required",
+                    })}
+                    className={selectStyles}
+                  >
+                    <option value="" disabled className="text-gray-400">
+                      Select Sale Account
+                    </option>
+                    {accounts &&
+                      accounts?.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.account_name_en}
+                        </option>
+                      ))}
+                  </select>
+                  {errors.sale_account && (
+                    <p className="text-red-500 text-sm">
+                      {errors.sale_account.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="purchase_account">Purchase Account*</Label>
+                  <select
+                    {...register("purchase_account", {
+                      required: "Purchase account is required",
+                    })}
+                    className={selectStyles}
+                  >
+                    <option value="" disabled className="text-gray-400">
+                      Select Purchase Account
+                    </option>
+                    {accounts &&
+                      accounts?.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.account_name_en}
+                        </option>
+                      ))}
+                  </select>
+                  {errors.purchase_account && (
+                    <p className="text-red-500 text-sm">
+                      {errors.purchase_account.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="sale_return_account">
+                    Sale Return Account*
+                  </Label>
+                  <select
+                    {...register("sale_return_account", {
+                      required: "Sale return account is required",
+                    })}
+                    className={selectStyles}
+                  >
+                    <option value="" disabled className="text-gray-400">
+                      Select Sale retrun Account
+                    </option>
+                    {accounts &&
+                      accounts?.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.account_name_en}
+                        </option>
+                      ))}
+                  </select>
+                  {errors.sale_account && (
+                    <p className="text-red-500 text-sm">
+                      {errors.sale_account.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="purchase_return_account">
+                    Purchase Return Account*
+                  </Label>
+                  <select
+                    {...register("purchase_return_account", {
+                      required: "Purchase account is required",
+                    })}
+                    className={selectStyles}
+                  >
+                    <option value="" disabled className="text-gray-400">
+                      Select Purchase Return Account
+                    </option>
+                    {accounts &&
+                      accounts?.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.account_name_en}
+                        </option>
+                      ))}
+                  </select>
+                  {errors.purchase_account && (
+                    <p className="text-red-500 text-sm">
+                      {errors.purchase_account.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </ComponentCard>
           </div>
 
           {/* Two Columns Layout for Units and Branch Sections */}
@@ -509,7 +771,6 @@ export default function ProductForm() {
               icon={<Layers className="text-blue-500 w-5 h-5" />}
             >
               <div className="space-y-4">
-                {/* حقل الوحدة الرئيسية */}
                 <div>
                   <Label htmlFor="unit_id">Main Unit*</Label>
                   <select
@@ -528,7 +789,7 @@ export default function ProductForm() {
                     {units?.map((unit) => (
                       <option
                         key={unit.id}
-                        value={unit.id? unit.id:""}
+                        value={unit.id ? unit.id : ""}
                         className="text-gray-950"
                       >
                         {unit.unit_name_en}
@@ -542,7 +803,6 @@ export default function ProductForm() {
                   )}
                 </div>
 
-                {/* شرط إظهار الوحدات الفرعية */}
                 {selectedUnitId && (
                   <>
                     {subunitsLoading ? (
@@ -554,7 +814,8 @@ export default function ProductForm() {
                         Error loading subunits
                       </div>
                     ) : (
-                     subunits &&  subunits?.data?.length > 0 && (
+                      subunits &&
+                      subunits?.data?.length > 0 && (
                         <div>
                           <Label htmlFor="sub_units">Available Sub Units</Label>
                           <select
@@ -581,8 +842,8 @@ export default function ProductForm() {
                                 value={subunit.id}
                                 className="text-gray-950"
                               >
-                                {subunit.unit_name_en} ({subunit.conversion_factor}{" "}
-                                per main unit)
+                                {subunit.unit_name_en} (
+                                {subunit.conversion_factor} per main unit)
                               </option>
                             ))}
                           </select>
@@ -611,7 +872,9 @@ export default function ProductForm() {
                           }`}
                         >
                           {selectedUnit && (
-                            <option value={selectedUnit.id? selectedUnit.id: ""}>
+                            <option
+                              value={selectedUnit.id ? selectedUnit.id : ""}
+                            >
                               {selectedUnit.unit_name_en} (Main)
                             </option>
                           )}
@@ -647,8 +910,10 @@ export default function ProductForm() {
                           }`}
                         >
                           {selectedUnit && (
-                              <option value={selectedUnit.id ? selectedUnit.id : ""}>
-                                {selectedUnit.unit_name_en} (Main)
+                            <option
+                              value={selectedUnit.id ? selectedUnit.id : ""}
+                            >
+                              {selectedUnit.unit_name_en} (Main)
                             </option>
                           )}
                           {subunits?.data?.map((subunit) => (
@@ -670,8 +935,36 @@ export default function ProductForm() {
                     </div>
                   </>
                 )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="alert_quantity">Alert Quantity</Label>
+                    <Input
+                      type="number"
+                      id="alert_quantity"
+                      placeholder="Enter alert quantity"
+                      {...register("alert_quantity", {
+                        valueAsNumber: true,
+                      })}
+                      error={!!errors.alert_quantity}
+                      hint={errors.alert_quantity?.message}
+                      icon={<Info className="w-4 h-4" />}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="expiry_date">Expiry Date</Label>
+                    <Input
+                      type="date"
+                      id="expiry_date"
+                      {...register("expiry_date")}
+                      error={!!errors.expiry_date}
+                      hint={errors.expiry_date?.message}
+                      icon={<Calendar className="w-4 h-4" />}
+                    />
+                  </div>
+                </div>
               </div>
             </ComponentCard>
+
             {/* Branch & Status Section */}
             <ComponentCard title="Branch Management" icon={<GitBranch />}>
               <div className="space-y-4">

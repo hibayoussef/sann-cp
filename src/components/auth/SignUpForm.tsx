@@ -83,15 +83,15 @@ export default function SignUpForm() {
   const navigate = useNavigate(); 
 
   return (
-    <div className="flex flex-col flex-1 w-full overflow-y-auto no-scrollbar">
+    <div className="flex flex-col flex-1 w-full overflow-y-auto no-scrollbar ">
       <div className="flex flex-col justify-center align-center flex-1 w-full max-w-xxl mx-auto">
-        <div className="mb-5 sm:mb-8 text-center mt-6">
-          <div className="flex justify-center items-center space-x-4">
+        <div className="mb-5 sm:mb-8 text-center mt-6 ">
+          <div className="flex justify-center items-center space-x-4 ">
             {[...Array(totalSteps)].map((_, index) => (
               <div
                 key={index}
                 className={`h-2 w-13 rounded-full ${
-                  step > index ? "bg-[#465FFF]" : "bg-gray-300"
+                  step > index ? "bg-[#465FFF]" : "bg-gray-300 "
                 }`}
               ></div>
             ))}
@@ -154,7 +154,7 @@ export default function SignUpForm() {
 
           {showPopup && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+              <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
                 <h2 className="text-lg font-semibold text-gray-800">
                   Verify Your Email
                 </h2>

@@ -12,7 +12,17 @@ export const _AuthApi = {
     const res = await _axios.post<ILoginDTO>("/auth/login", data);
     return res.data;
   },
+  // SEND OTP FOR LOGIN
+  sendOtpForLogin: async (email: string) => {
+    return _axios
+      .post("/auth/send-otp-for-login", { email })
+      .then((res) => res.data);
+  },
 
+  // LOGIN USING OTP
+  loginUsingOtp: async (data: { email: string; otp?: string }) => {
+    return _axios.post("/auth/login-using-otp", data).then((res) => res.data);
+  },
   // VERIFY EMAIL
   verifyEmail: async (token: string) => {
     return _axios.post("/auth/verfiy-email", { token }).then((res) => res.data);

@@ -113,7 +113,7 @@ export function DataTableViewOptions<TData>({
   };
 
   return (
-    <div className="flex space-x-4">
+    <div className="flex  space-x-4  ">
       <Button
         variant="outline"
         size="sm"
@@ -126,8 +126,8 @@ export function DataTableViewOptions<TData>({
       {/* Export options dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className=" ml-auto h-8 lg:flex dark:text-gray-400 dark:border-gray-400">
-            <FileText className="mr-2 h-4 w-4" />
+          <Button variant="outline" size="sm" className=" ml-auto h-8 lg:flex   dark:text-gray-400 dark:border-gray-400">
+            <FileText className="mr-2 h-4 w-4 " />
             Export
           </Button>
         </DropdownMenuTrigger>

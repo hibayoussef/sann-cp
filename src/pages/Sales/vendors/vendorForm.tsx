@@ -3,10 +3,7 @@ import {
   customerSchema,
   type CustomerType,
 } from "@/components/lib/validations/customer";
-import {
-  useAddContact,
-  useUpdateContact
-} from "@/hooks/sales/contacts";
+import { useAddContact, useUpdateContact } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
@@ -21,11 +18,10 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import AddressTab from "../customers/tabs/AddressTab";
+import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
 import ContactDetailsTab from "../customers/tabs/ContactDetailsTab";
 import ContactPersonTab from "../customers/tabs/ContactPersonTab";
-import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
-
+import AddressTab from "../customers/tabs/AddressTab";
 
 const TABS = [
   { id: 1, name: "Other Details" },
@@ -71,6 +67,22 @@ export default function CustomerForm() {
     resolver: zodResolver(customerSchema),
     // defaultValues: customerData ?? {},
     defaultValues: {
+      contact_details: {
+        social_media: [
+          {
+            platform: "Facebook",
+            url: "",
+          },
+          {
+            platform: "Instagram",
+            url: "",
+          },
+          {
+            platform: "Twitter",
+            url: "",
+          },
+        ],
+      },
       contact_persons: [
         {
           salutation_ar: "",
@@ -85,7 +97,20 @@ export default function CustomerForm() {
           mobile: "",
           designation: "",
           department: "",
-          social_media: "",
+          social_media: [
+            {
+              platform: "Facebook",
+              url: "",
+            },
+            {
+              platform: "Instagram",
+              url: "",
+            },
+            {
+              platform: "Twitter",
+              url: "",
+            },
+          ],
         },
       ],
     },
@@ -100,15 +125,21 @@ export default function CustomerForm() {
   //     });
   //   }
   // }, [customerData, setValue]);
-  console.log(methods.formState.errors);
   const onSubmit = (formData: CustomerType) => {
     const payload: any = {
       ...formData,
       organization_id: organizationId?.toString()!,
+      contact_persons: formData?.contact_persons?.map((item) => ({
+        ...item,
+        social_media: JSON.stringify(item.social_media),
+      })),
+      contact_details: {
+        ...formData.contact_details,
+        social_media: JSON.stringify(formData.contact_details?.social_media),
+      },
       type: "vendor",
     };
 
-    console.log(payload);
     if (isUpdate && id) {
       updateCustomer.mutateAsync({ id: Number(id), data: payload });
     } else {
@@ -349,7 +380,7 @@ export default function CustomerForm() {
                   className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
                   disabled={addCustomer.isPending || updateCustomer.isPending}
                 >
-                  {isUpdate ? "Update Customer" : "Create Customer"}
+                  {isUpdate ? "Update Vendor" : "Create Vendor"}
                 </button>
               </div>
             </form>

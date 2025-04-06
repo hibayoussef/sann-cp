@@ -18,7 +18,7 @@ export const _SubCategoriesApi = {
     return response.data.data;
   },
   // GET SUB-CATEGORIES
-  getSubCategoriesById: async (category_id: number) => {
+  getSubCategoriesById: async (category_id: number | null) => {
     const response = await _axios.get<{ data: ISubCategory[] }>(
       `/products/sub-categories?category_id=${category_id}`
     );

@@ -18,7 +18,7 @@ export const _SUB_UnitsApi = {
     return response.data.data;
   },
 
-  getSubUnitsById: async (unit_id: number) => {
+  getSubUnitsById: async (unit_id: number | null) => {
     const response = await _axios.get<{ data: any[] }>(
       `/products/sub-units?unit_id=${unit_id}`
     );

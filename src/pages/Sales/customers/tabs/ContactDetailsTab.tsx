@@ -16,7 +16,7 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 const selectStyles = `
   w-full text-sm rounded-lg border border-gray-300 shadow-sm 
@@ -34,7 +34,13 @@ const ContactDetailsTab = ({
     register,
     formState: { errors },
     watch,
+    control,
   } = useFormContext<CustomerType>();
+
+  const { fields: socialFields } = useFieldArray({
+    control,
+    name: "contact_details.social_media",
+  });
 
   return (
     <div className="space-y-4">
@@ -105,16 +111,22 @@ const ContactDetailsTab = ({
             icon={<Badge className="w-4 h-4" />}
           />
         </div>
-
+        {/* Social Media Section */}
         <div className="space-y-2">
           <Label>Social Media</Label>
-          <Input
-            {...register("contact_details.social_media")}
-            error={!!errors.contact_details?.social_media}
-            hint={errors.contact_details?.social_media?.message}
-            placeholder="Enter social media profile/link"
-            icon={<Globe className="w-4 h-4" />}
-          />
+          {socialFields?.map((socialField, index) => (
+            <div key={socialField.id} className="flex gap-2 items-center">
+              <Input
+                {...register(`contact_details.social_media.${index}.platform`)}
+                readOnly
+              />
+              <Input
+                {...register(`contact_details.social_media.${index}.url`)}
+                placeholder="URL"
+                type="url"
+              />
+            </div>
+          ))}
         </div>
 
         <div className="space-y-2">
@@ -209,9 +221,8 @@ const ContactDetailsTab = ({
 
         <div className="space-y-2">
           <Label>Driving License Issued By</Label>
-          <Label>State</Label>
           <select
-            {...register("contact_details.shipping_address_country_state_id")}
+            {...register("contact_details.driving_license_issued_by")}
             className={selectStyles}
           >
             <option value="" disabled>
@@ -219,9 +230,7 @@ const ContactDetailsTab = ({
             </option>
             {countriesData?.data
               .find(
-                (country) =>
-                  country.id.toString() ==
-                  watch("contact_details.driving_license_issued_by")
+                (country) => country.id.toString() == watch("nationality_id")
               )
               ?.country_states.map((state) => (
                 <option key={state.id} value={state.id}>

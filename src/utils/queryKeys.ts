@@ -31,4 +31,6 @@ export enum QueryKeys {
   PAYMENT_TERM = "payment_term",
   PRODUCTS = "products",
   PRODUCT = "product",
+  ACCOUNTS = "accounts",
+  ACCOUNT = "account",
 }

@@ -91,7 +91,7 @@ export default function Step1() {
                     name="industry_id"
                     onChange={handleChange}
                     value={values.industry_id}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="w-full  dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                   >
                     <option value="">Select an industry</option>
                     {industries?.data.map((industry) => (
@@ -110,7 +110,7 @@ export default function Step1() {
                     name="language"
                     onChange={handleChange}
                     value={values.language}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="w-full dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                   >
                     <option value="">Select a Language</option>
                     <option key="1" value="en">
@@ -132,7 +132,7 @@ export default function Step1() {
                       name="country_id"
                       value={values.country_id}
                       onChange={handleCountryChange}
-                      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="w-full dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     >
                       <option value="">Select a location</option>
                       {countries?.data.map((country) => (
@@ -151,7 +151,7 @@ export default function Step1() {
                       name="country_state_id"
                       onChange={handleStateChange}
                       value={values.country_state_id}
-                      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="w-full dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     >
                       <option value="">
                         {selectedCountry

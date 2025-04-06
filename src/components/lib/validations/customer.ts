@@ -7,7 +7,14 @@ const contactDetailsSchema = z.object({
   department: z.string().optional(),
   profession: z.string().optional(),
   designation: z.string().optional(),
-  social_media: z.string().optional(),
+  social_media: z
+    .array(
+      z.object({
+        platform: z.string().optional(),
+        url: z.string().optional(),
+      })
+    )
+    .optional(),
   id_issued_date: z.string().optional(),
   id_expiry_date: z.string().optional(),
   unified_number: z.string().optional(),
@@ -68,7 +75,14 @@ const contactPersonSchema = z.object({
     .optional(),
   department: z.string().optional(),
   designation: z.string().optional(),
-  social_media: z.string().optional(),
+  social_media: z
+    .array(
+      z.object({
+        platform: z.string().optional(),
+        url: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 export const customerSchema = z.object({
