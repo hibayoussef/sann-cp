@@ -20,7 +20,7 @@ const contactDetailsSchema = z.object({
   unified_number: z.string().optional(),
   date_of_birth: z.string().optional(),
   place_of_birth: z.string().optional(),
-  visit_visa_number: z.number().optional(),
+  visit_visa_number: z.number().optional().or(z.literal("")),
   driving_license_number: z.string().optional(),
   driving_license_issued_by: z.string().optional(),
   driving_license_issued_date: z.string().optional(),
@@ -50,29 +50,14 @@ const contactDetailsSchema = z.object({
 const contactPersonSchema = z.object({
   salutation_ar: z.string().optional(),
   salutation_en: z.string().optional(),
-  full_name_ar: z
-    .string()
-    .min(2, "Full name (Arabic) must be at least 2 characters"),
-  full_name_en: z
-    .string()
-    .min(2, "Full name (English) must be at least 2 characters"),
-  first_name_ar: z
-    .string()
-    .min(2, "First name (Arabic) must be at least 2 characters"),
-  first_name_en: z
-    .string()
-    .min(2, "First name (English) must be at least 2 characters"),
-  last_name_ar: z
-    .string()
-    .min(2, "Last name (Arabic) must be at least 2 characters"),
-  last_name_en: z
-    .string()
-    .min(2, "Last name (English) must be at least 2 characters"),
-  email: z.string().email("Invalid email format").optional(),
-  mobile: z
-    .string()
-    .min(10, "Mobile number must be at least 10 digits")
-    .optional(),
+  full_name_ar: z.string().optional(),
+  full_name_en: z.string().min(1, "The full name en field is required."),
+  first_name_en: z.string().min(1, "The first name en field is required."),
+  last_name_en: z.string().min(1, "The last name en field is required."),
+  first_name_ar: z.string().optional(),
+  last_name_ar: z.string().optional(),
+  email: z.string().min(1, "The email field is required.").email(),
+  mobile: z.string().optional(),
   department: z.string().optional(),
   designation: z.string().optional(),
   social_media: z
@@ -86,32 +71,27 @@ const contactPersonSchema = z.object({
 });
 
 export const customerSchema = z.object({
-  branch_id: z.string().min(1, "Branch is required"),
-  portal_access: z.enum(["0", "1"]).optional(),
+  branch_id: z.string().min(1, "The branch id field is required."),
+  portal_access: z.enum(["0", "1"], {
+    required_error: "The portal access field is required.",
+  }),
+  contact_type: z.enum(["business", "individual"], {
+    required_error: "The contact type field is required.",
+  }),
+  full_name_en: z.string().min(1, "The full name en field is required."),
+  first_name_en: z.string().min(1, "The first name en field is required."),
+  last_name_en: z.string().min(1, "The last name en field is required."),
+  email: z.string().min(1, "The email field is required.").email(),
+  mobile: z.string().min(1, "The mobile field is required."),
+  payment_term_id: z.string().min(1, "The payment term id field is required."),
+  currency_id: z.string().min(1, "The currency id field is required."),
+  exchange_rate: z.string().min(1, "The exchange rate field is required."),
+  balance: z.string().min(1, "The balance field is required."),
+  nationality_id: z.string().min(1, "The nationality id field is required."),
   portal_language: z.enum(["en", "ar"]).default("en").optional(),
-  type: z.enum(["customer", "employee", "vendor"]).optional(),
-  contact_type: z.enum(["business", "individual"]).optional(),
-
-  full_name_ar: z
-    .string()
-    .min(2, "The Arabic name must contain at least two letters."),
-  full_name_en: z.string().min(2, "Name must contain at least 2 characters"),
+  full_name_ar: z.string().optional(),
   first_name_ar: z.string().optional(),
-  first_name_en: z.string().optional(),
   last_name_ar: z.string().optional(),
-  last_name_en: z.string().optional(),
-
-  email: z.string().email("Invalid email format"),
-  mobile: z
-    .string()
-    .min(10, "The mobile number must contain at least 8 digits."),
-
-  payment_term_id: z.string().min(1, "Payment Term is required"),
-  currency_id: z.string().min(1, "Currency is required"),
-  exchange_rate: z.string().min(1, "Exchange rate is required"),
-  balance: z.string().min(1, "Balance is required"),
-
-  nationality_id: z.string().min(1, "Nationality is required"),
   contact_details: contactDetailsSchema.optional(),
   contact_persons: z.array(contactPersonSchema).optional(),
 });

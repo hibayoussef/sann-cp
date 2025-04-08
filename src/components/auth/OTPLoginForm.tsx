@@ -57,13 +57,13 @@ export default function OTPLoginForm() {
       await sendOtp(email, {
         onSuccess: () => {
           setEmailSent(true);
-          setCountdown(15);
+          setCountdown(60);
         },
-        onError: (error) => {
+        onError: (error:any) => {
           setEmailSent(false);
           setError('email', {
             type: 'manual',
-            message: error.message || 'Invalid email address',
+            message: error?.response?.data?.message || 'Invalid email address',
           });
           resetField('otp');
         }

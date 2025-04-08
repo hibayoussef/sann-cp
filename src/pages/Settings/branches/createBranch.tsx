@@ -214,7 +214,7 @@ export default function CreateBranch() {
                 <div className="relative">
                   <select
                     {...register("country_state_id", { valueAsNumber: true })}
-                    className="text-sm rounded-lg border border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
+                    className="text-sm rounded-lg border dark:bg-gray-900 border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
                   >
                     <option value="" disabled selected>
                       Select a location

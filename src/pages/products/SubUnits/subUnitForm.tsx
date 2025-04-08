@@ -8,7 +8,7 @@ import {
   useUpdateSubUnit,
 } from "@/hooks/prouducts/useSubUnits";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
@@ -19,6 +19,18 @@ import Label from "../../../components/form/Label";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { Folder, ShoppingBag, Type, Hash } from "lucide-react";
 import Switch from "@/components/form/switch/Switch";
+import { CustomSelect } from "@/components/ui/select/customSelect";
+
+const isFieldRequired = (fieldName: keyof SubUnitType): boolean => {
+  const schemaShape = subUnitSchema.shape;
+  const fieldSchema = schemaShape[fieldName];
+
+  if (fieldSchema._def.typeName === "ZodOptional") {
+    return false;
+  }
+
+  return true;
+};
 
 export default function SubUnitForm() {
   const { id } = useParams();
@@ -30,38 +42,75 @@ export default function SubUnitForm() {
     enabled: isUpdate,
   });
 
+  const [unitOptions, setUnitOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
+    trigger,
+    watch,
   } = useForm<SubUnitType>({
     resolver: zodResolver(subUnitSchema),
     defaultValues: {
-      related_to: subUnitData?.related_to ?? 0,
+      related_to: subUnitData?.related_to?.toString() ?? "",
       unit_name_en: subUnitData?.unit_name_en ?? "",
       unit_name_ar: subUnitData?.unit_name_ar ?? "",
       short_name_en: subUnitData?.short_name_en ?? "",
       short_name_ar: subUnitData?.short_name_ar ?? "",
       allow_decimal: subUnitData?.allow_decimal ?? 0,
-      multiplier: subUnitData?.multiplier ?? 0,
+      multiplier: subUnitData?.multiplier ?? null,
     },
   });
 
+  const relatedToValue = watch("related_to");
+
+  const handleSelectChange = async (name: keyof SubUnitType, value: string) => {
+    setValue(name, value, { shouldValidate: true });
+    await trigger(name);
+  };
+
+  useEffect(() => {
+    if (units) {
+      const options = units.map((unit) => ({
+        value: unit.id?.toString() || "",
+        label: unit.unit_name_en || "Unnamed Unit",
+      }));
+      setUnitOptions(options);
+
+      if (subUnitData?.related_to && options.length > 0) {
+        const selectedUnit = options.find(
+          (opt) => opt.value === subUnitData.related_to?.toString()
+        );
+        if (selectedUnit) {
+          setValue("related_to", selectedUnit.value);
+        }
+      }
+    }
+  }, [units, subUnitData, setValue]);
+
   useEffect(() => {
     if (subUnitData) {
-      setValue("related_to", subUnitData.related_to ?? 0);
-      setValue("unit_name_en", subUnitData.unit_name_en ?? "");
-      setValue("unit_name_ar", subUnitData.unit_name_ar ?? "");
-      setValue("short_name_en", subUnitData.short_name_en ?? "");
-      setValue("short_name_ar", subUnitData.short_name_ar ?? "");
-      setValue("allow_decimal", subUnitData.allow_decimal ?? 0);
-      setValue("multiplier", subUnitData.multiplier ?? 0);
+      setTimeout(() => {
+        setValue("related_to", subUnitData.related_to?.toString() ?? "");
+        setValue("unit_name_en", subUnitData.unit_name_en ?? "");
+        setValue("unit_name_ar", subUnitData.unit_name_ar ?? "");
+        setValue("short_name_en", subUnitData.short_name_en ?? "");
+        setValue("short_name_ar", subUnitData.short_name_ar ?? "");
+        setValue("allow_decimal", subUnitData.allow_decimal ?? 0);
+        setValue("multiplier", subUnitData.multiplier ?? null);
+      }, 100);
     }
   }, [subUnitData, setValue]);
 
   const onSubmit = async (formData: SubUnitType) => {
-    const payload = { ...formData };
+    const payload: any = {
+      ...formData,
+      related_to: formData.related_to ? Number(formData.related_to) : null,
+    };
 
     if (isUpdate && id) {
       await updateSubUnit.mutateAsync({ id: id, data: payload });
@@ -89,24 +138,19 @@ export default function SubUnitForm() {
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-6">
-              <div className="relative">
-                <select
-                  {...register("related_to", { valueAsNumber: true })}
-                  className="text-sm rounded-lg border dark:bg-transparent border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
-                >
-                  <option value="">Select Unit</option>
-                  {units?.map((unit) => (
-                    <option key={unit.id} value={unit.id? unit.id :""}>
-                      {unit.unit_name_en}
-                    </option>
-                  ))}
-                </select>
-                {errors.related_to && (
-                  <p className="text-red-500 text-sm">
-                    {errors?.related_to.message}
-                  </p>
-                )}
-                <Folder className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
+              <div className="space-y-2">
+                <Label>Unit</Label>
+                <CustomSelect
+                  name="related_to"
+                  options={unitOptions}
+                  placeholder="Select Unit"
+                  searchPlaceholder="Search units..."
+                  error={errors.related_to?.message}
+                  onChange={(value) => handleSelectChange("related_to", value)}
+                  isRequired={isFieldRequired("related_to")}
+                  icon={<Folder className="w-4 h-4" />}
+                  value={relatedToValue}
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -116,7 +160,7 @@ export default function SubUnitForm() {
                     {...register("unit_name_en")}
                     placeholder="Enter unit name (English)"
                     error={!!errors.unit_name_en}
-                    icon={<Type className="w-4 h-4 text-gray-500" />}
+                    icon={<Type className="w-4 h-4" />}
                     hint={errors.unit_name_en?.message}
                   />
                 </div>
@@ -126,7 +170,7 @@ export default function SubUnitForm() {
                     {...register("unit_name_ar")}
                     placeholder="Enter unit name (Arabic)"
                     error={!!errors.unit_name_ar}
-                    icon={<Type className="w-4 h-4 text-gray-500" />}
+                    icon={<Type className="w-4 h-4" />}
                     hint={errors.unit_name_ar?.message}
                   />
                 </div>
@@ -139,7 +183,7 @@ export default function SubUnitForm() {
                     {...register("short_name_en")}
                     placeholder="Enter short name (English)"
                     error={!!errors.short_name_en}
-                    icon={<ShoppingBag className="w-4 h-4 text-gray-500" />}
+                    icon={<ShoppingBag className="w-4 h-4" />}
                     hint={errors.short_name_en?.message}
                   />
                 </div>
@@ -149,7 +193,7 @@ export default function SubUnitForm() {
                     {...register("short_name_ar")}
                     placeholder="Enter short name (Arabic)"
                     error={!!errors.short_name_ar}
-                    icon={<ShoppingBag className="w-4 h-4 text-gray-500" />}
+                    icon={<ShoppingBag className="w-4 h-4" />}
                     hint={errors.short_name_ar?.message}
                   />
                 </div>
@@ -163,7 +207,7 @@ export default function SubUnitForm() {
                     {...register("multiplier", { valueAsNumber: true })}
                     placeholder="Enter multiplier value"
                     error={!!errors.multiplier}
-                    icon={<Hash className="w-4 h-4 text-gray-500" />}
+                    icon={<Hash className="w-4 h-4" />}
                     hint={errors.multiplier?.message}
                   />
                 </div>

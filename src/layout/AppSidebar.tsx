@@ -415,7 +415,7 @@ type NavItem = {
 };
 
 const AppSidebar: React.FC = () => {
-  const { isExpanded, isMobileOpen, isHovered } = useSidebar();
+  const { isExpanded, isMobileOpen, isHovered,toggleMobileSidebar } = useSidebar();
   const { direction } = useLocaliztionStore();
   const { t } = useTranslation("items");
   const { permissions } = useAuthStore();
@@ -535,7 +535,12 @@ const AppSidebar: React.FC = () => {
         hasPermission(item.permissionKey) ||
         (item.subItems && item.subItems.length > 0)
     );
-
+const handleLinkClick = (path: string) => {
+    if (isMobileOpen) {
+      toggleMobileSidebar(); // إغلاق الشريط الجانبي في الشاشات الصغيرة
+    }
+    navigate(path);
+  };
   const handleSubmenuToggle = (index: number) => {
     setOpenSubmenu((prevOpenSubmenu) =>
       prevOpenSubmenu === index ? null : index
@@ -543,14 +548,19 @@ const AppSidebar: React.FC = () => {
   };
 
   return (
-    <aside
-      className={`fixed mt-12 flex flex-col lg:mt-0 top-0 left-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
+<aside
+    className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
         isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"
-      } ${direction === "rtl" ? "right-0" : "left-0"}   ${
-        isMobileOpen ? "translate-x-0" : "-translate-x-full"
-      }
-        lg:translate-x-0`}
+    } ${direction === "rtl" ? "right-0" : "left-0"} ${
+        isMobileOpen
+            ? "translate-x-0"
+            : direction === "rtl"
+            ? "translate-x-full"
+            : "-translate-x-full"
+    } lg:translate-x-0  `} // إضافة lg:translate-x-0
     >
+       {/* ${direction === "rtl" ? "lg:translate-x-0" : "lg:-translate-x-0"} */}
+     
       <div
         className={`lg:py-3 px-6 w-full flex ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
@@ -620,8 +630,8 @@ const AppSidebar: React.FC = () => {
                                 key={subItem.name}
                                 className="relative group hover:bg-gray-400 dark:hover:hover:bg-gray-700 "
                               >
-                                <Link
-                                  to={subItem.path}
+                                  <button
+                                  onClick={() => handleLinkClick(subItem.path)} // استخدم handleLinkClick هنا
                                   className={`menu-dropdown-item text-[13px] hover:bg-gray-400 dark:hover:hover:bg-gray-700 ${
                                     isActive(subItem.path)
                                       ? "menu-dropdown-item-active"
@@ -629,7 +639,7 @@ const AppSidebar: React.FC = () => {
                                   }`}
                                 >
                                   {subItem.name}
-                                </Link>
+                                </button>
                               </li>
                             ))}
                           </ul>
@@ -641,6 +651,7 @@ const AppSidebar: React.FC = () => {
                           try {
                             await _AuthApi.logout();
                             navigate("/signin");
+                            
                           } catch (error) {
                             console.error("Logout failed:", error);
                           }

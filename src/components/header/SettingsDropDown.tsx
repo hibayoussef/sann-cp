@@ -1,3 +1,4 @@
+
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
@@ -7,10 +8,20 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 const ToggleSwitcher = ({
   enabled,
   onClick,
+  direction, // إضافة خاصية الاتجاه
 }: {
   enabled: boolean;
   onClick: () => void;
+  direction: string; // تحديد نوع الاتجاه
 }) => {
+  const translateX = enabled
+    ? direction === "rtl"
+      ? "translate-x-1"
+      : "translate-x-6"
+    : direction === "rtl"
+    ? "translate-x-6"
+    : "translate-x-1";
+ 
   return (
     <button
       onClick={onClick}
@@ -19,9 +30,7 @@ const ToggleSwitcher = ({
       }`}
     >
       <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          enabled ? "translate-x-6" : "translate-x-1"
-        }`}
+        className={`absolute right-7 h-4 w-4 transform rounded-full bg-white  transition-transform ${translateX}`}
       />
     </button>
   );
@@ -32,12 +41,11 @@ const SettingsSidebar = () => {
   const { theme, toggleTheme } = useTheme();
 
   const { direction, setDirection } = useLocaliztionStore();
-
   return (
-    <div className="relative ">
+    <div className="relative  ">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600  hover:text-gray-900 "
+        className="p-2 text-gray-600  hover:text-gray-300 "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +68,7 @@ const SettingsSidebar = () => {
       </button>
 
       <div
-        className={`fixed  top-0 h-full w-60 bg-white  dark:bg-gray-800 shadow-xl transform transition-transform duration-300 z-50 ${
+        className={`fixed  top-12 h-full w-60 bg-white   dark:bg-gray-800 shadow-xl transform transition-transform duration-300 z-50 ${
           direction === "ltr"
             ? isOpen
               ? "translate-x-0"
@@ -70,7 +78,7 @@ const SettingsSidebar = () => {
             : "-translate-x-full"
         } ${direction === "rtl" ? "left-0" : "right-0"}`}
       >
-        <div className="p-3 border-b  dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
+        <div className="p-3 border-b  dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
           <h2 className="text-lg font-bold"></h2>
           <button
             onClick={() => setIsOpen(false)}
@@ -81,20 +89,20 @@ const SettingsSidebar = () => {
         </div>
         <div className="p-4 flex flex-col space-y-2">
           <button
-            className="w-full py-1 text-[14px] text-white rounded-md"
-            style={{ backgroundColor: "rgb(78, 98, 177)" }}
+            className="w-full py-1 text-[14px] text-white rounded-md "
+            style={{ backgroundColor: "#fd853a" }}
           >
             View Demo
           </button>
           <button
             className="w-full py-1 text-[14px] text-white rounded-md"
-            style={{ backgroundColor: "rgb(187, 186, 66)" }}
+            style={{ backgroundColor: "#F04438" }}
           >
             Our Portfolio
           </button>
           <button
             className="w-full py-1 text-[14px] text-white rounded-md"
-            style={{ backgroundColor: "#43ce85" }}
+            style={{ backgroundColor: "#12876A" }}
           >
             Licenses
           </button>
@@ -114,7 +122,9 @@ const SettingsSidebar = () => {
                   <RadioGroupItem value="rtl" id="rtl" />
                   <Label htmlFor="rtl">RTL</Label>
                 </div>
-              </RadioGroup>
+
+
+</RadioGroup>
             </div>
           </div>
 
@@ -151,13 +161,14 @@ const SettingsSidebar = () => {
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500  text-[13px] dark:text-gray-300">
+                    <span className="text-gray-500   text-[13px] dark:text-gray-300">
                       {themeOption.label}
                     </span>
                   </div>
                   <ToggleSwitcher
                     enabled={theme === themeOption.value}
                     onClick={toggleTheme}
+                    direction={direction}
                   />
                 </div>
               ))}

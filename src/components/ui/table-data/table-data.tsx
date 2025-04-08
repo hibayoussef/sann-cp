@@ -38,7 +38,7 @@ interface DataTableProps<TData, TValue> {
     create: boolean;
     update: boolean;
     delete: boolean;
-  }; 
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -47,7 +47,7 @@ export function DataTable<TData, TValue>({
   createPath,
   hasDetails,
   detailsLink,
-  permissions
+  permissions,
 }: DataTableProps<TData, TValue>) {
   const [tableColumns, setTableColumns] = React.useState<any>(columns);
 
@@ -85,9 +85,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} createPath={createPath}  permissions={permissions}/>
+      <DataTableToolbar
+        table={table}
+        createPath={createPath}
+        permissions={permissions}
+      />
       <div className="rounded-md border  border-gray-100 shadow-md bg-white dark:border-gray-700 dark:bg-gray-900">
-        <Table>
+        <Table id="table-container">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

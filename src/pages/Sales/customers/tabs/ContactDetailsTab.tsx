@@ -1,6 +1,7 @@
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { CustomerType } from "@/components/lib/validations/customer";
+import { CustomSelect } from "@/components/ui/select/customSelect";
 import { CountriesData } from "@/types/common";
 import {
   Badge,
@@ -9,21 +10,38 @@ import {
   Building2,
   Calendar,
   CreditCard,
+  Facebook,
   FileText,
   Globe,
   IdCard,
   Inbox,
+  Instagram,
   MapPin,
+  MessageSquare,
   Phone,
+  Plus,
+  X,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-const selectStyles = `
-  w-full text-sm rounded-lg border border-gray-300 shadow-sm 
-  focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
-  transition-colors duration-200 ease-in-out p-1.5
-  text-gray-500
-`;
+const socialMediaOptions = [
+  {
+    id: "facebook",
+    label: "Facebook",
+    icon: <Facebook className="w-4 h-4" />,
+  },
+  {
+    id: "instagram",
+    label: "Instagram",
+    icon: <Instagram className="w-4 h-4" />,
+  },
+  {
+    id: "tiktok",
+    label: "TikTok",
+    icon: <MessageSquare className="w-4 h-4" />,
+  },
+];
 
 const ContactDetailsTab = ({
   countriesData,
@@ -35,12 +53,85 @@ const ContactDetailsTab = ({
     formState: { errors },
     watch,
     control,
+    setValue,
+    getValues,
   } = useFormContext<CustomerType>();
 
-  const { fields: socialFields } = useFieldArray({
+  const {
+    fields: socialFields
+  } = useFieldArray({
     control,
     name: "contact_details.social_media",
   });
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Get the current nationality ID to filter states
+  const nationalityId = watch("nationality_id");
+  const [stateOptions, setStateOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
+  // Update state options when nationality changes
+  useEffect(() => {
+    if (countriesData && nationalityId) {
+      const country = countriesData.data.find(
+        (country) => country.id.toString() === nationalityId
+      );
+      if (country) {
+        const options = country.country_states.map((state) => ({
+          value: state.id.toString(),
+          label: state.name_en,
+        }));
+        setStateOptions(options);
+      } else {
+        setStateOptions([]);
+      }
+    } else {
+      setStateOptions([]);
+    }
+  }, [nationalityId, countriesData]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleAddSocialMedia = (_: any, platform: string) => {
+    const currentSocials = getValues(`contact_details.social_media`) || [];
+    const exists = currentSocials.some(
+      (field: any) => field.platform.toLowerCase() === platform.toLowerCase()
+    );
+
+    if (!exists) {
+      const newSocials = [...currentSocials, { platform, url: "" }];
+      setValue(`contact_details.social_media`, newSocials);
+    }
+    setIsMenuOpen(false);
+  };
+
+  const getSocialMediaIcon = (platform: string) => {
+    const option = socialMediaOptions.find(
+      (opt) => opt.id.toLowerCase() === platform.toLowerCase()
+    );
+    return option ? option.icon : <Globe className="w-4 h-4" />;
+  };
+
+  const handleRemoveSocialMedia = (_: any, socialIndex: number) => {
+    const currentSocials = [...(getValues(`contact_details.social_media`) || [])];
+    currentSocials.splice(socialIndex, 1);
+    setValue(`contact_details.social_media`, currentSocials);
+  };
 
   return (
     <div className="space-y-4">
@@ -112,21 +203,75 @@ const ContactDetailsTab = ({
           />
         </div>
         {/* Social Media Section */}
-        <div className="space-y-2">
-          <Label>Social Media</Label>
-          {socialFields?.map((socialField, index) => (
-            <div key={socialField.id} className="flex gap-2 items-center">
-              <Input
-                {...register(`contact_details.social_media.${index}.platform`)}
-                readOnly
-              />
-              <Input
-                {...register(`contact_details.social_media.${index}.url`)}
-                placeholder="URL"
-                type="url"
-              />
+        <div className="space-y-2 md:col-span-1">
+          <div className="flex items-center gap-2">
+            <Label>Social Media</Label>
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200"
+              >
+                <Plus className="w-3 h-3" />
+              </button>
+
+              {isMenuOpen && (
+                <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 overflow-hidden border border-gray-200 dark:border-gray-700">
+                  {socialMediaOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => handleAddSocialMedia(0, option.id)}
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
+                    >
+                      <span className="mr-2">{option.icon}</span>
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
+          </div>
+
+          {socialFields.length === 0 ? (
+            <div className="text-sm text-gray-500 dark:text-gray-400 italic py-2">
+              No social media accounts added
+            </div>
+          ) : (
+            socialFields.map((socialField: any, socialIndex) => (
+              <div
+                key={socialIndex}
+                className="flex gap-2 items-center mb-2 animate-fade-in"
+              >
+                <div className="relative w-1/3">
+                  <Input
+                    {...register(
+                      `contact_details.social_media.${socialIndex}.platform`
+                    )}
+                    readOnly
+                    icon={getSocialMediaIcon(socialField.platform)}
+                    className="text-xs"
+                  />
+                </div>
+                <div className="flex-1">
+                  <Input
+                    {...register(
+                      `contact_details.social_media.${socialIndex}.url`
+                    )}
+                    placeholder="Enter URL"
+                    type="url"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSocialMedia(0, socialIndex)}
+                  className="text-gray-500 hover:text-red-500 transition-colors duration-200 p-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="space-y-2">
@@ -181,13 +326,13 @@ const ContactDetailsTab = ({
           <div className="relative group">
             <Input
               {...register("contact_details.visit_visa_number", {
-                valueAsNumber: true,
+                setValueAs: (v) => (v === "" ? undefined : Number(v)),
               })}
               error={!!errors.contact_details?.visit_visa_number}
               hint={errors.contact_details?.visit_visa_number?.message}
               type="number"
               className="pl-12"
-              placeholder="Enter visit visa number"
+              placeholder="Enter visit visa number (optional)"
             />
             <div className="absolute inset-y-0 left-0 flex items-center px-3 pointer-events-none bg-gray-50 border-r border-gray-300 rounded-l-md group-focus-within:border-blue-500 dark:bg-gray-800 dark:border-gray-700">
               <svg
@@ -216,28 +361,22 @@ const ContactDetailsTab = ({
             type="number"
             placeholder="Enter driving license number"
             icon={<CreditCard className="w-4 h-4" />}
+            
           />
         </div>
 
         <div className="space-y-2">
           <Label>Driving License Issued By</Label>
-          <select
-            {...register("contact_details.driving_license_issued_by")}
-            className={selectStyles}
-          >
-            <option value="" disabled>
-              Select State
-            </option>
-            {countriesData?.data
-              .find(
-                (country) => country.id.toString() == watch("nationality_id")
-              )
-              ?.country_states.map((state) => (
-                <option key={state.id} value={state.id}>
-                  {state.name_en} {/* أو nationality_ar حسب اللغة */}
-                </option>
-              ))}
-          </select>
+          <CustomSelect
+            name="contact_details.driving_license_issued_by"
+            options={stateOptions}
+            placeholder="Select State"
+            searchPlaceholder="Search states..."
+            error={errors.contact_details?.driving_license_issued_by?.message}
+            onChange={(value) => {
+              setValue("contact_details.driving_license_issued_by", value);
+            }}
+          />
         </div>
 
         <div className="space-y-2">

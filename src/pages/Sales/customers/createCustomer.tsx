@@ -30,18 +30,14 @@ const TABS = [
   { id: 4, name: "Address" },
 ];
 
-const getErrorMessages = (errors: any, parentKey = ""): string[] => {
-  return Object.entries(errors).flatMap(([key, value]: [string, any]) => {
-    if (value?.message) {
-      return [`${parentKey ? `${parentKey} > ` : ""}${key}: ${value.message}`];
-    }
+const getErrorMessages = (errors: any): string[] => {
+  return Object.values(errors).flatMap((value: any) => {
+    if (value?.message) return [value.message];
     if (Array.isArray(value)) {
-      return value.flatMap((item, index) =>
-        getErrorMessages(item, `Person Details[${index}]`)
-      );
+      return value.flatMap((item) => getErrorMessages(item));
     }
     if (typeof value === "object") {
-      return getErrorMessages(value, key);
+      return getErrorMessages(value);
     }
     return [];
   });
@@ -68,20 +64,7 @@ export default function CustomerForm() {
     // defaultValues: customerData ?? {},
     defaultValues: {
       contact_details: {
-        social_media: [
-          {
-            platform: "Facebook",
-            url: "",
-          },
-          {
-            platform: "Instagram",
-            url: "",
-          },
-          {
-            platform: "Twitter",
-            url: "",
-          },
-        ],
+        social_media: [],
       },
       contact_persons: [
         {
@@ -97,20 +80,7 @@ export default function CustomerForm() {
           mobile: "",
           designation: "",
           department: "",
-          social_media: [
-            {
-              platform: "Facebook",
-              url: "",
-            },
-            {
-              platform: "Instagram",
-              url: "",
-            },
-            {
-              platform: "Twitter",
-              url: "",
-            },
-          ],
+          social_media: [],
         },
       ],
     },
@@ -154,7 +124,7 @@ export default function CustomerForm() {
         baseTitle="Customers"
         pageTitle={isUpdate ? "Update Customer" : "Create Customer"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center   bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center  dark:bg-gray-900  bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
@@ -305,7 +275,7 @@ export default function CustomerForm() {
                     {...methods.register("mobile")}
                     error={!!methods.formState.errors.mobile}
                     hint={methods.formState.errors.mobile?.message}
-                    placeholder="+966 123 456 789"
+                    placeholder="Enter Your phone number"
                     icon={<Phone className="w-4 h-4" />}
                   />
                 </div>
@@ -313,9 +283,9 @@ export default function CustomerForm() {
               {/* </div> */}
 
               {/* Tabs Section */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
-                <div className="border-b border-gray-200 mb-6">
-                  <nav className="flex space-x-4">
+              <div className="bg-white  p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
+                <div className="border-b  border-gray-200 mb-6">
+                  <nav className="flex flex-col justify-start items-center  md:flex-row space-x-4">
                     {TABS.map((tab) => (
                       <button
                         key={tab.id}
@@ -360,7 +330,12 @@ export default function CustomerForm() {
                 <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
                   <p className="font-semibold">
                     Please fix the following errors:
-                  </p>
+                    </p>
+                    {
+                      <>{
+                       console.log('methods.formState.errors:', methods.formState.errors) 
+                      }</>
+                    }
                   <ul className="list-disc list-inside">
                     {getErrorMessages(methods.formState.errors).map(
                       (errorMessage, index) => (

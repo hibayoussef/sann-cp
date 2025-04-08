@@ -32,12 +32,25 @@ const UserDropdown = () => {
           />
 
           <div
-            className={`fixed top-12 h-full w-96 bg-white shadow-xl border-l  dark:bg-gray-800 border-gray-200 z-50 flex flex-col ${
+            className={`fixed top-12 h-full w-72 md:w-96 bg-white shadow-xl border-l  dark:bg-gray-800 border-gray-200 z-50 flex flex-col ${
               direction === "rtl" ? "left-0" : "right-0 "
             }`}
           >
-            <div className="mt-4 p-4 space-y-4">
+             <button
+                  onClick={() => setIsDropdownOpen(false)}
+                  className="text-gray-500  hover:text-gray-700 p-1 "
+                >
+                  <IoClose className="w-6 h-6" />
+                </button>
+            <div className="mt-4 p-4 space-y-4 ">
+               
               <div className="space-y-1 border-b border-gray-200 pb-6">
+                 {/* <button
+                  onClick={() => setIsDropdownOpen(false)}
+                  className="text-gray-500  hover:text-gray-700 p-1 -mt-1"
+                >
+                  <IoClose className="w-6 h-6" />
+                </button> */}
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-semibold text-gray-800 dark:text-gray-100 text-lg">
@@ -47,17 +60,12 @@ const UserDropdown = () => {
                       {userData?.user?.email}
                     </div>
                   </div>
-                  <div className="text-sm text-gray-600 mt-1 dark:text-gray-400">
+                  {/* <div className="text-sm text-gray-600 mt-1 dark:text-gray-400">
                     {userData?.user?.email}
-                  </div>
+                  </div> */}
                 </div>
 
-                <button
-                  onClick={() => setIsDropdownOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 p-1 -mt-1"
-                >
-                  <IoClose className="w-6 h-6" />
-                </button>
+               
               </div>
               <div className="flex gap-4 text-sm">
                 <div className="flex items-center gap-1">
@@ -80,7 +88,7 @@ const UserDropdown = () => {
               <div className="flex justify-between items-center">
                 <button
                   onClick={() => navigate("/profile")}
-                  className= "px-4 text-[#575db1] hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
+                  className= "px-4 text-[#7fc4ef] hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
                 >
                   My Account
                 </button>
@@ -94,7 +102,7 @@ const UserDropdown = () => {
                       console.error("Logout failed:", error);
                     }
                   }}
-                  className="text-red-600 hover:bg-gray-50 p-2 rounded cursor-pointer text-sm transition-colors"
+                  className="text-[#f04438] hover:bg-gray-50 px-5 md:p-2 rounded cursor-pointer text-sm transition-colors"
                 >
                   Sign Out
                 </button>
@@ -103,7 +111,7 @@ const UserDropdown = () => {
 
             {/* Trial Section */}
             <div className="pb-4 border-b border-gray-200 px-4 py-5">
-              <div className="text-sm font-medium text-red-600">
+              <div className="text-sm font-medium text-[#f04438]">
                 Your free trial is over
               </div>
             </div>
@@ -112,39 +120,39 @@ const UserDropdown = () => {
             <div className="p-4 space-y-4">
               <a
                 href="#"
-                className="block text-blue-600 hover:underline text-sm"
+                className="block text-[#12876a] hover:underline text-sm"
               >
                 What’s New? →
               </a>
               <a
                 href="#"
-                className="block text-blue-600 hover:underline text-sm"
+                className="block text-[#12876a] hover:underline text-sm"
               >
                 Essential guides for your business →
               </a>
               <a
                 href="#"
-                className="block text-blue-600 hover:underline text-sm"
+                className="block text-[#12876a] hover:underline text-sm"
               >
                 Navigate faster with keyboard shortcuts →
               </a>
               <a
                 href="#"
-                className="block text-blue-600 hover:underline text-sm"
+                className="block text-[#12876a] hover:underline text-sm"
               >
                 Download the mobile app →
               </a>
               <a
                 href="#"
-                className="block text-blue-600 hover:underline text-sm"
+                className="block text-[#12876a] hover:underline text-sm"
               >
                 Work simpler with Windows app →
               </a>
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-200">
-              <div className="text-xs text-gray-500">
+            <div className="p-4 bg-gray-800 border-t border-gray-200">
+              <div className="text-xs text-[#fd853a]">
                 Web: https://www.schmit.edu/ (cdn/School)
               </div>
             </div>

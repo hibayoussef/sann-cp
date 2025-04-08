@@ -10,7 +10,7 @@ import {
 } from "@/hooks/prouducts/useSubCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Code, Folder, Tag } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
@@ -19,6 +19,18 @@ import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { IoAdd } from "react-icons/io5";
+import { CustomSelect } from "@/components/ui/select/customSelect";
+
+const isFieldRequired = (fieldName: keyof SubCategoryType): boolean => {
+  const schemaShape = subCategorySchema.shape;
+  const fieldSchema = schemaShape[fieldName];
+
+  if (fieldSchema._def.typeName === "ZodOptional") {
+    return false;
+  }
+
+  return true;
+};
 
 export default function SubCategoryForm() {
   const { id } = useParams();
@@ -32,15 +44,21 @@ export default function SubCategoryForm() {
     enabled: isUpdate,
   });
 
+  const [categoryOptions, setCategoryOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
+    trigger,
+    watch,
   } = useForm<SubCategoryType>({
     resolver: zodResolver(subCategorySchema),
     defaultValues: {
-      category_id: subCategoryData?.category_id ?? null,
+      category_id: subCategoryData?.category_id?.toString() ?? "",
       sub_category_name_en: subCategoryData?.sub_category_name_en ?? "",
       sub_category_name_ar: subCategoryData?.sub_category_name_ar ?? "",
       code: subCategoryData?.code ?? "",
@@ -49,26 +67,59 @@ export default function SubCategoryForm() {
     },
   });
 
+  const categoryId = watch("category_id");
+
+  const handleSelectChange = async (
+    name: keyof SubCategoryType,
+    value: string
+  ) => {
+    setValue(name, value, { shouldValidate: true });
+    await trigger(name);
+  };
+
+  useEffect(() => {
+    if (categories) {
+      const options = categories.map((category: any) => ({
+        value: category?.id.toString(),
+        label: category.category_name_en || "Unnamed Category",
+      }));
+      setCategoryOptions(options);
+
+      if (subCategoryData?.category_id && options.length > 0) {
+        const selectedCategory = options.find(
+          (opt) => opt.value === subCategoryData.category_id?.toString()
+        );
+        if (selectedCategory) {
+          setValue("category_id", selectedCategory.value);
+        }
+      }
+    }
+  }, [categories, subCategoryData, setValue]);
+
   useEffect(() => {
     if (subCategoryData) {
-      setValue("category_id", subCategoryData.category_id ?? null);
-      setValue(
-        "sub_category_name_en",
-        subCategoryData.sub_category_name_en ?? ""
-      );
-      setValue(
-        "sub_category_name_ar",
-        subCategoryData.sub_category_name_ar ?? ""
-      );
-      setValue("description_en", subCategoryData.description_en ?? "");
-      setValue("description_ar", subCategoryData.description_ar ?? "");
-      setValue("code", subCategoryData.code ?? "");
+      // تأخير تعيين القيم حتى يتم تحميل الخيارات
+      setTimeout(() => {
+        setValue("category_id", subCategoryData.category_id?.toString() ?? "");
+        setValue(
+          "sub_category_name_en",
+          subCategoryData.sub_category_name_en ?? ""
+        );
+        setValue(
+          "sub_category_name_ar",
+          subCategoryData.sub_category_name_ar ?? ""
+        );
+        setValue("description_en", subCategoryData.description_en ?? "");
+        setValue("description_ar", subCategoryData.description_ar ?? "");
+        setValue("code", subCategoryData.code ?? "");
+      }, 100);
     }
   }, [subCategoryData, setValue]);
 
   const onSubmit = async (formData: SubCategoryType) => {
-    const payload = {
+    const payload: any = {
       ...formData,
+      category_id: formData.category_id ? Number(formData.category_id) : null,
     };
 
     if (isUpdate && id) {
@@ -104,26 +155,18 @@ export default function SubCategoryForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Category Field */}
               <div className="space-y-2">
-                <Label htmlFor="category_id">Category</Label>
-                <div className="relative">
-                  <select
-                    {...register("category_id", { valueAsNumber: true })}
-                    className="text-sm rounded-lg border dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400 border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
-                  >
-                    <option value="">Select Category</option>
-                    {categories?.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.category_name_en}
-                      </option>
-                    ))}
-                  </select>
-                  <Folder className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
-                </div>
-                {errors.category_id && (
-                  <p className="text-red-500 text-sm">
-                    {errors?.category_id.message}
-                  </p>
-                )}
+                <Label>Category</Label>
+                <CustomSelect
+                  name="category_id"
+                  options={categoryOptions}
+                  placeholder="Select Category"
+                  searchPlaceholder="Search categories..."
+                  error={errors.category_id?.message}
+                  onChange={(value) => handleSelectChange("category_id", value)}
+                  isRequired={isFieldRequired("category_id")}
+                  icon={<Folder className="w-4 h-4" />}
+                  value={categoryId}
+                />
               </div>
 
               {/* Code Field */}

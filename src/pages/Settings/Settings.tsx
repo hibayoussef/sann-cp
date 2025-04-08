@@ -9,11 +9,12 @@ const categories = [
       "Profile",
       "Branding",
       "Custom Domain",
-      "Branches", // Branches هنا
+      "Branches",
       "Currencies",
       "Approvals",
       "Opening Balances",
       "Manage Subscription",
+      "Payment Term"
     ],
   },
   {
@@ -135,8 +136,11 @@ export default function Settings() {
     if (link === "Branches") {
       navigate("/settings/branches"); 
     }
-    if (link === "profile") {
+    if (link === "Profile") {
       navigate("/settings/orgProfile"); 
+    }
+    if (link === "Payment Term") {
+      navigate("/settings/payment_terms"); 
     }
   };
 

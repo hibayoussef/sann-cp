@@ -1,5 +1,7 @@
 // // src/routes/Routes.tsx
 
+import TwoFactorForm from "@/components/auth/TwoFactorForm";
+import SecuritySettings from "@/components/auth/securitySettings";
 import SettingsLayout from "@/layout/SettingsLayout";
 import ShouldBeLogged from "@/middleware/shouldBeLogged";
 import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
@@ -12,6 +14,8 @@ import Settings from "@/pages/Settings/Settings";
 import Branches from "@/pages/Settings/branches/branches";
 import CreateBranch from "@/pages/Settings/branches/createBranch";
 import { OrganizationForm } from "@/pages/Settings/organizations/organizationForm";
+import PaymentTerm from "@/pages/Settings/paymentTerm/paymentTerm";
+import PaymentTermForm from "@/pages/Settings/paymentTerm/paymentTermForm";
 import Categories from "@/pages/products/Categories/categories";
 import CategoriesLayout from "@/pages/products/Categories/categoriesLayout";
 import SubCategoryForm from "@/pages/products/SubCategories/SubCategoryForm";
@@ -56,6 +60,7 @@ const RoutesComponent = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signin-otp" element={<SignOtp />} />
+        <Route path="/two-factor-verify" element={<TwoFactorForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
@@ -138,6 +143,10 @@ const RoutesComponent = () => {
           <Route path="branches" element={<Branches />} />
           <Route path="branches/create" element={<CreateBranch />} />
           <Route path="branches/update/:id" element={<CreateBranch />} />
+          <Route path="security" element={<SecuritySettings />} />
+          <Route path="payment_terms" element={<PaymentTerm />} />
+          <Route path="payment_terms/create" element={<PaymentTermForm />} />
+          <Route path="payment_terms/update/:id" element={<PaymentTermForm />} />
         </Route>
       </Route>
 

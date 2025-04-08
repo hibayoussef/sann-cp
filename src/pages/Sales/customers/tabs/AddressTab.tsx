@@ -1,27 +1,25 @@
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { CustomerType } from "@/components/lib/validations/customer";
+import { CustomSelect } from "@/components/ui/select/customSelect";
 import { CountriesData } from "@/types/common";
 import {
   FileText,
+  Flag,
+  Globe,
+  Home,
   Landmark,
   MapPin,
   Package,
   Phone,
   Truck,
-  Wallet,
+  Wallet
 } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { FaXRay } from "react-icons/fa";
 
-const selectStyles = `
-  w-full text-sm rounded-lg border border-gray-300 shadow-sm 
-  focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
-  transition-colors duration-200 ease-in-out p-1.5
-  text-gray-500 dark:bg-gray-900
-`;
-
-const AddressTab = ({
+export const AddressTab = ({
   countriesData,
 }: {
   countriesData: CountriesData | undefined;
@@ -29,21 +27,95 @@ const AddressTab = ({
   const {
     register,
     formState: { errors },
-    watch,
+    control,
+    setValue,
+    trigger,
   } = useFormContext<CustomerType>();
 
-  return (
-   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
+  const billingCountryId = useWatch({
+    control,
+    name: "contact_details.billing_address_country_id",
+  });
 
+  const shippingCountryId = useWatch({
+    control,
+    name: "contact_details.shipping_address_country_id",
+  });
+
+  const [billingStateOptions, setBillingStateOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
+  const [shippingStateOptions, setShippingStateOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
+  const [countryOptions, setCountryOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
+  useEffect(() => {
+    if (countriesData?.data) {
+      setCountryOptions(
+        countriesData.data.map((country) => ({
+          value: country.id.toString(),
+          label: country.name_en,
+        }))
+      );
+    }
+  }, [countriesData]);
+
+  useEffect(() => {
+    if (billingCountryId && countriesData?.data) {
+      const selectedCountry = countriesData.data.find(
+        (c) => c.id.toString() === billingCountryId
+      );
+      if (selectedCountry) {
+        setBillingStateOptions(
+          selectedCountry.country_states.map((state) => ({
+            value: state.id.toString(),
+            label: state.name_en,
+          }))
+        );
+      } else {
+        setBillingStateOptions([]);
+      }
+    }
+  }, [billingCountryId, countriesData]);
+
+  useEffect(() => {
+    if (shippingCountryId && countriesData?.data) {
+      const selectedCountry = countriesData.data.find(
+        (c) => c.id.toString() === shippingCountryId
+      );
+      if (selectedCountry) {
+        setShippingStateOptions(
+          selectedCountry.country_states.map((state) => ({
+            value: state.id.toString(),
+            label: state.name_en,
+          }))
+        );
+      } else {
+        setShippingStateOptions([]);
+      }
+    }
+  }, [shippingCountryId, countriesData]);
+
+  const handleSelectChange = async (name: string, value: any) => {
+    setValue(name as any, value, { shouldValidate: true });
+    await trigger(name as any);
+  };
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
       <div className="space-y-4">
-        
         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           <Wallet className="w-4 h-4 text-gray-600" />
           Billing Address
         </h3>
+        
         <div className="space-y-2">
           <Label>Billing Address Attention</Label>
-
           <Input
             {...register("contact_details.billing_address_attention")}
             error={!!errors.contact_details?.billing_address_attention}
@@ -52,25 +124,19 @@ const AddressTab = ({
             placeholder="Please enter your shipping address attention"
           />
         </div>
+
         <div className="space-y-2">
           <Label>Billing Address Country</Label>
-          <select
-            {...register("contact_details.billing_address_country_id")}
-            className={selectStyles}
-
-            // disabled={countriesLoading}
-          >
-            <option value="" disabled>
-              Select Country
-            </option>
-
-            {countriesData?.data?.map((country) => (
-              <option key={country.id} value={country.id}>
-                {country.name_en}{" "}
-              </option>
-            ))}
-          </select>
+          <CustomSelect
+            name="contact_details.billing_address_country_id"
+            options={countryOptions}
+            placeholder="Select Country"
+            error={errors.contact_details?.billing_address_country_id?.message}
+            onChange={(value) => handleSelectChange("contact_details.billing_address_country_id", value)}
+            icon={<Globe className="w-4 h-4" />}
+          />
         </div>
+
         <div className="space-y-2">
           <Label>Street Address 1</Label>
           <Input
@@ -81,6 +147,7 @@ const AddressTab = ({
             placeholder="Please Enter Your street address 1"
           />
         </div>
+
         <div className="space-y-2">
           <Label>Street Address 2</Label>
           <Input
@@ -91,6 +158,7 @@ const AddressTab = ({
             placeholder="Please Enter Your street address 1"
           />
         </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>City</Label>
@@ -98,34 +166,23 @@ const AddressTab = ({
               {...register("contact_details.billing_address_city")}
               error={!!errors.contact_details?.billing_address_city}
               hint={errors.contact_details?.billing_address_city?.message}
-              icon={<MapPin className="w-4 h-4" />}
+              icon={<Home className="w-4 h-4" />}
               placeholder="Please Enter Your City"
             />
           </div>
-          <div>
-            <Label>State</Label>
-            <select
-              {...register("contact_details.shipping_address_country_state_id")}
-              className={selectStyles}
 
-              // disabled={countriesLoading}
-            >
-              <option value="" disabled>
-                Select State
-              </option>
-              {countriesData?.data
-                .find(
-                  (country) =>
-                    country.id.toString() ==
-                    watch("contact_details.billing_address_country_id")
-                )
-                ?.country_states.map((state) => (
-                  <option key={state.id} value={state.id}>
-                    {state.name_en} {/* أو nationality_ar حسب اللغة */}
-                  </option>
-                ))}
-            </select>
+          <div className="space-y-2">
+            <Label>State</Label>
+            <CustomSelect
+              name="contact_details.billing_address_country_state_id"
+              options={billingStateOptions}
+              placeholder="Select State"
+              error={errors.contact_details?.billing_address_country_state_id?.message}
+              onChange={(value) => handleSelectChange("contact_details.billing_address_country_state_id", value)}
+              icon={<Flag className="w-4 h-4" />}
+            />
           </div>
+
           <div className="space-y-2">
             <Label>Postal Code</Label>
             <Input
@@ -136,6 +193,7 @@ const AddressTab = ({
               placeholder="Please Enter Postal Code"
             />
           </div>
+
           <div className="space-y-2">
             <Label>Address Phone</Label>
             <Input
@@ -146,6 +204,7 @@ const AddressTab = ({
               placeholder="Please Enter Address Phone"
             />
           </div>
+
           <div className="space-y-2">
             <Label>Fax Number</Label>
             <Input
@@ -158,11 +217,13 @@ const AddressTab = ({
           </div>
         </div>
       </div>
+
       <div className="space-y-4">
-         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           <Truck className="w-4 h-4 text-gray-600" />
           Shipping Address
         </h3>
+
         <div className="space-y-2">
           <Label>Shipping Address Attention</Label>
           <Input
@@ -173,25 +234,19 @@ const AddressTab = ({
             placeholder="Please enter your shipping address attention"
           />
         </div>
+
         <div className="space-y-2">
-          <Label>shipping Address Country</Label>
-          <select
-            {...register("contact_details.shipping_address_country_id")}
-            className={selectStyles}
-
-            // disabled={countriesLoading}
-          >
-            <option value="" disabled>
-              Select Country
-            </option>
-
-            {countriesData?.data?.map((country) => (
-              <option key={country.id} value={country.id}>
-                {country.name_en}{" "}
-              </option>
-            ))}
-          </select>
+          <Label>Shipping Address Country</Label>
+          <CustomSelect
+            name="contact_details.shipping_address_country_id"
+            options={countryOptions}
+            placeholder="Select Country"
+            error={errors.contact_details?.shipping_address_country_id?.message}
+            onChange={(value) => handleSelectChange("contact_details.shipping_address_country_id", value)}
+            icon={<Globe className="w-4 h-4" />}
+          />
         </div>
+
         <div className="space-y-2">
           <Label>Street Address 1</Label>
           <Input
@@ -202,6 +257,7 @@ const AddressTab = ({
             placeholder="Please Enter Your street address 1"
           />
         </div>
+
         <div className="space-y-2">
           <Label>Street Address 2</Label>
           <Input
@@ -212,6 +268,7 @@ const AddressTab = ({
             placeholder="Please Enter Your street address 2"
           />
         </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>City</Label>
@@ -219,34 +276,23 @@ const AddressTab = ({
               {...register("contact_details.shipping_address_city")}
               error={!!errors.contact_details?.shipping_address_city}
               hint={errors.contact_details?.shipping_address_city?.message}
-              icon={<MapPin className="w-4 h-4" />}
+              icon={<Home className="w-4 h-4" />}
               placeholder="Please Enter Your City"
             />
           </div>
-          <div>
-            <Label>State</Label>
-            <select
-              {...register("contact_details.billing_address_country_state_id")}
-              className={selectStyles}
 
-              // disabled={countriesLoading}
-            >
-              <option value="" disabled>
-                Select State
-              </option>
-              {countriesData?.data
-                .find(
-                  (country) =>
-                    country.id.toString() ==
-                    watch("contact_details.shipping_address_country_id")
-                )
-                ?.country_states.map((state) => (
-                  <option key={state.id} value={state.id}>
-                    {state.name_en}{" "}
-                  </option>
-                ))}
-            </select>
+          <div className="space-y-2">
+            <Label>State</Label>
+            <CustomSelect
+              name="contact_details.shipping_address_country_state_id"
+              options={shippingStateOptions}
+              placeholder="Select State"
+              error={errors.contact_details?.shipping_address_country_state_id?.message}
+              onChange={(value) => handleSelectChange("contact_details.shipping_address_country_state_id", value)}
+              icon={<Flag className="w-4 h-4" />}
+            />
           </div>
+
           <div className="space-y-2">
             <Label>Postal Code</Label>
             <Input
@@ -257,14 +303,13 @@ const AddressTab = ({
               placeholder="Please Enter Postal Code"
             />
           </div>
+
           <div className="space-y-2">
             <Label>Fax Number</Label>
             <Input
               {...register("contact_details.shipping_address_fax_number")}
               error={!!errors.contact_details?.shipping_address_fax_number}
-              hint={
-                errors.contact_details?.shipping_address_fax_number?.message
-              }
+              hint={errors.contact_details?.shipping_address_fax_number?.message}
               icon={<FaXRay className="w-4 h-4" />}
               placeholder="Please Enter Fax Number"
             />

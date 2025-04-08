@@ -71,7 +71,7 @@ export default function UnitForm() {
   }, [unitData, setValue]);
 
   const onSubmit = async (formData: UnitType) => {
-    const payload = {
+    const payload: any = {
       organization_id: organizationId,
       ...formData,
     };

@@ -53,7 +53,6 @@
 
 // export default AppLayout;
 
-import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { Outlet, useLocation } from "react-router";
 import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import AppHeader from "./AppHeader";

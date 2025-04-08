@@ -3,15 +3,15 @@ export interface ITax {
   tax_name_ar?: string | null;
   tax_name_en: string;
   amount: number;
-  is_active?: boolean
+  is_active?: boolean;
 }
 
 export interface TaxForm {
   organization_id: number | null;
   tax_name_ar?: string | null;
-tax_name_en: string;
+  tax_name_en: string;
   amount: number;
-  is_active?: boolean | number 
+  is_active?: boolean | number;
 }
 
 export interface TaxUpdateForm {
