@@ -104,7 +104,7 @@ _axios.interceptors.response.use(
         break;
 
       case 401:
-        // _AuthApi.destroyToken();
+        _AuthApi.destroyToken();
         toast.error(error.response?.data?.message || "Unauthorized", {
           position: "top-right",
           autoClose: 3000,
@@ -115,7 +115,7 @@ _axios.interceptors.response.use(
           progress: undefined,
           theme: "light",
         });
-        // window.location.pathname = "/";
+        window.location.pathname = "/";
         break;
       case 403:
         toast.error(error.response?.data?.message || "Forbidden", {
