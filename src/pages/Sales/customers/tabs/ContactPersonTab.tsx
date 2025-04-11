@@ -55,6 +55,7 @@ const ContactPersonTab = () => {
     name: "contact_persons",
   });
 
+  console.log('fieeee: ', fields)
   const [socialMenuOpen, setSocialMenuOpen] = useState<number | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -188,53 +189,6 @@ const ContactPersonTab = () => {
             {/* Left Side Fields */}
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Salutation (Ar)</Label>
-                <Input
-                  {...register(`contact_persons.${index}.salutation_ar`)}
-                  placeholder="Enter salutation in Arabic"
-                  icon={<MessageSquareText className="w-4 h-4" />}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Salutation (En)</Label>
-                <Input
-                  {...register(`contact_persons.${index}.salutation_en`)}
-                  placeholder="Enter salutation in English"
-                  icon={<MessageSquareText className="w-4 h-4" />}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Full Name (Ar)</Label>
-                <Input
-                  {...register(`contact_persons.${index}.full_name_ar`)}
-                  placeholder="Enter full name in Arabic"
-                  icon={<User className="w-4 h-4" />}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Full Name (En)</Label>
-                <Input
-                  {...register(`contact_persons.${index}.full_name_en`)}
-                  error={!!fieldErrors?.full_name_en}
-                  hint={fieldErrors?.full_name_en?.message}
-                  placeholder="Enter full name in English"
-                  icon={<User className="w-4 h-4" />}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>First Name (Ar)</Label>
-                <Input
-                  {...register(`contact_persons.${index}.first_name_ar`)}
-                  placeholder="Enter first name in Arabic"
-                  icon={<UserCircle className="w-4 h-4" />}
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label>First Name (En)</Label>
                 <Input
                   {...register(`contact_persons.${index}.first_name_en`)}
@@ -246,40 +200,41 @@ const ContactPersonTab = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>Last Name (Ar)</Label>
+                <Label>First Name (Ar)</Label>
                 <Input
-                  {...register(`contact_persons.${index}.last_name_ar`)}
-                  placeholder="Enter last name in Arabic"
-                  icon={<UserCheck className="w-4 h-4" />}
+                  {...register(`contact_persons.${index}.first_name_ar`)}
+                  placeholder="Enter first name in Arabic"
+                  icon={<UserCircle className="w-4 h-4" />}
                 />
               </div>
-            </div>
-
-            {/* Right Side Fields */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Last Name (En)</Label>
+              {/* <div className="space-y-2">
+                <Label>Full Name (Ar)</Label>
                 <Input
-                  {...register(`contact_persons.${index}.last_name_en`)}
-                  error={!!fieldErrors?.last_name_en}
-                  hint={fieldErrors?.last_name_en?.message}
-                  placeholder="Enter last name in English"
+                  {...register(`contact_persons.${index}.full_name_ar`)}
+                  placeholder="Enter full name in Arabic"
                   icon={<User className="w-4 h-4" />}
                 />
-              </div>
+              </div> */}
 
-              <div className="space-y-2">
-                <Label>Email</Label>
+              {/* <div className="space-y-2">
+                <Label>Full Name (En)</Label>
                 <Input
-                  type="email"
-                  {...register(`contact_persons.${index}.email`)}
-                  placeholder="Enter email"
-                  icon={<Mail className="w-4 h-4" />}
-                  error={!!fieldErrors?.email}
-                  hint={fieldErrors?.email?.message}
+                  {...register(`contact_persons.${index}.full_name_en`)}
+                  error={!!fieldErrors?.full_name_en}
+                  hint={fieldErrors?.full_name_en?.message}
+                  placeholder="Enter full name in English"
+                  icon={<User className="w-4 h-4" />}
                 />
-              </div>
+              </div> */}
 
+              {/* <div className="space-y-2">
+                <Label>First Name (Ar)</Label>
+                <Input
+                  {...register(`contact_persons.${index}.first_name_ar`)}
+                  placeholder="Enter first name in Arabic"
+                  icon={<UserCircle className="w-4 h-4" />}
+                />
+              </div> */}
               <div className="space-y-2">
                 <Label>Phone</Label>
                 <Input
@@ -289,13 +244,12 @@ const ContactPersonTab = () => {
                   icon={<Phone className="w-4 h-4" />}
                 />
               </div>
-
               <div className="space-y-2">
-                <Label>Designation</Label>
+                <Label>Salutation (En)</Label>
                 <Input
-                  {...register(`contact_persons.${index}.designation`)}
-                  placeholder="Enter designation"
-                  icon={<Briefcase className="w-4 h-4" />}
+                  {...register(`contact_persons.${index}.salutation_en`)}
+                  placeholder="Enter salutation in English"
+                  icon={<MessageSquareText className="w-4 h-4" />}
                 />
               </div>
 
@@ -321,7 +275,7 @@ const ContactPersonTab = () => {
                         )
                       }
                       className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200"
-                                 >
+                    >
                       <Plus className="w-3 h-3" />
                     </button>
 
@@ -386,6 +340,56 @@ const ContactPersonTab = () => {
                     </div>
                   ))
                 )}
+              </div>
+            </div>
+
+            {/* Right Side Fields */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Last Name (En)</Label>
+                <Input
+                  {...register(`contact_persons.${index}.last_name_en`)}
+                  error={!!fieldErrors?.last_name_en}
+                  hint={fieldErrors?.last_name_en?.message}
+                  placeholder="Enter last name in English"
+                  icon={<User className="w-4 h-4" />}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Last Name (Ar)</Label>
+                <Input
+                  {...register(`contact_persons.${index}.last_name_ar`)}
+                  placeholder="Enter last name in Arabic"
+                  icon={<UserCheck className="w-4 h-4" />}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  {...register(`contact_persons.${index}.email`)}
+                  placeholder="Enter email"
+                  icon={<Mail className="w-4 h-4" />}
+                  error={!!fieldErrors?.email}
+                  hint={fieldErrors?.email?.message}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Salutation (Ar)</Label>
+                <Input
+                  {...register(`contact_persons.${index}.salutation_ar`)}
+                  placeholder="Enter salutation in Arabic"
+                  icon={<MessageSquareText className="w-4 h-4" />}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Designation</Label>
+                <Input
+                  {...register(`contact_persons.${index}.designation`)}
+                  placeholder="Enter designation"
+                  icon={<Briefcase className="w-4 h-4" />}
+                />
               </div>
             </div>
           </div>

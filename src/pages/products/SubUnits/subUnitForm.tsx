@@ -1,13 +1,14 @@
-import {
-  subUnitSchema,
-  type SubUnitType,
-} from "@/components/lib/validations/subUnit";
+import Switch from "@/components/form/switch/Switch";
+import { subUnitSchema, type SubUnitType } from "@/components/lib/validations/subUnit";
+import { CustomSelect } from "@/components/ui/select/customSelect";
 import {
   useAddSubUnit,
   useFetchSubUnit,
   useUpdateSubUnit,
 } from "@/hooks/prouducts/useSubUnits";
+import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Folder, Hash, ShoppingBag, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -16,21 +17,6 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
-import { useFetchUnits } from "@/hooks/prouducts/useUnits";
-import { Folder, ShoppingBag, Type, Hash } from "lucide-react";
-import Switch from "@/components/form/switch/Switch";
-import { CustomSelect } from "@/components/ui/select/customSelect";
-
-const isFieldRequired = (fieldName: keyof SubUnitType): boolean => {
-  const schemaShape = subUnitSchema.shape;
-  const fieldSchema = schemaShape[fieldName];
-
-  if (fieldSchema._def.typeName === "ZodOptional") {
-    return false;
-  }
-
-  return true;
-};
 
 export default function SubUnitForm() {
   const { id } = useParams();
@@ -53,16 +39,17 @@ export default function SubUnitForm() {
     formState: { errors, isSubmitting },
     trigger,
     watch,
+    reset,
   } = useForm<SubUnitType>({
     resolver: zodResolver(subUnitSchema),
     defaultValues: {
-      related_to: subUnitData?.related_to?.toString() ?? "",
-      unit_name_en: subUnitData?.unit_name_en ?? "",
-      unit_name_ar: subUnitData?.unit_name_ar ?? "",
-      short_name_en: subUnitData?.short_name_en ?? "",
-      short_name_ar: subUnitData?.short_name_ar ?? "",
-      allow_decimal: subUnitData?.allow_decimal ?? 0,
-      multiplier: subUnitData?.multiplier ?? null,
+      related_to: "",
+      unit_name_en: "",
+      unit_name_ar: "",
+      short_name_en: "",
+      short_name_ar: "",
+      allow_decimal: subUnitData?.allow_decimal,
+      multiplier: null,
     },
   });
 
@@ -80,45 +67,45 @@ export default function SubUnitForm() {
         label: unit.unit_name_en || "Unnamed Unit",
       }));
       setUnitOptions(options);
-
-      if (subUnitData?.related_to && options.length > 0) {
-        const selectedUnit = options.find(
-          (opt) => opt.value === subUnitData.related_to?.toString()
-        );
-        if (selectedUnit) {
-          setValue("related_to", selectedUnit.value);
-        }
-      }
     }
-  }, [units, subUnitData, setValue]);
+  }, [units]);
 
   useEffect(() => {
     if (subUnitData) {
-      setTimeout(() => {
-        setValue("related_to", subUnitData.related_to?.toString() ?? "");
-        setValue("unit_name_en", subUnitData.unit_name_en ?? "");
-        setValue("unit_name_ar", subUnitData.unit_name_ar ?? "");
-        setValue("short_name_en", subUnitData.short_name_en ?? "");
-        setValue("short_name_ar", subUnitData.short_name_ar ?? "");
-        setValue("allow_decimal", subUnitData.allow_decimal ?? 0);
-        setValue("multiplier", subUnitData.multiplier ?? null);
-      }, 100);
+      let relatedToValue = "";
+
+   if (subUnitData.related_to) {
+     relatedToValue =
+       typeof subUnitData.related_to === "object" &&
+       subUnitData.related_to !== null
+         ? (subUnitData.related_to as { id: number }).id.toString() // Cast to the expected type
+         : subUnitData.related_to.toString();
+   }
+      reset({
+        related_to: relatedToValue || "", 
+        unit_name_en: subUnitData.unit_name_en ?? "", 
+        unit_name_ar: subUnitData.unit_name_ar ?? "",
+        short_name_en: subUnitData.short_name_en ?? "", 
+        short_name_ar: subUnitData.short_name_ar ?? "",
+        allow_decimal: subUnitData.allow_decimal === 1 ? 1 : 0,
+        multiplier: subUnitData.multiplier ? Number(subUnitData.multiplier) : 0,
+      });
     }
-  }, [subUnitData, setValue]);
+  }, [subUnitData, reset]);
 
   const onSubmit = async (formData: SubUnitType) => {
-    const payload: any = {
-      ...formData,
-      related_to: formData.related_to ? Number(formData.related_to) : null,
-    };
-
-    if (isUpdate && id) {
-      await updateSubUnit.mutateAsync({ id: id, data: payload });
-    } else {
-      await addSubUnit.mutateAsync(payload);
-    }
+  const payload: any = {
+    ...formData,
+    related_to: formData.related_to ? Number(formData.related_to) : null,
   };
 
+  if (isUpdate && id) {
+    await updateSubUnit.mutateAsync({ id: id, data: payload });
+  } else {
+    await addSubUnit.mutateAsync(payload);
+  }
+  };
+  
   return (
     <>
       <PageBreadcrumb
@@ -147,7 +134,6 @@ export default function SubUnitForm() {
                   searchPlaceholder="Search units..."
                   error={errors.related_to?.message}
                   onChange={(value) => handleSelectChange("related_to", value)}
-                  isRequired={isFieldRequired("related_to")}
                   icon={<Folder className="w-4 h-4" />}
                   value={relatedToValue}
                 />
@@ -215,10 +201,10 @@ export default function SubUnitForm() {
                   <Label>Allow Decimal</Label>
                   <Switch
                     label=""
-                    defaultChecked={subUnitData?.allow_decimal === 1}
+                    defaultChecked={watch("allow_decimal") === 1}
                     onChange={(checked) =>
                       setValue("allow_decimal", checked ? 1 : 0)
-                    }
+                    } // تعيين القيمة كـ 1 أو 0
                   />
                 </div>
               </div>

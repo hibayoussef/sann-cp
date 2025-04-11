@@ -2,12 +2,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { _AccountsApi } from "../../services/settings/accounts.service";
 import { QueryKeys } from "../../utils/queryKeys";
+import type { AccountTypeGroup } from "@/types/settings/accounts";
 
 // FETCH ACCOUNTS
 export const useFetchAccounts = () => {
   return useQuery({
     queryKey: [QueryKeys.ACCOUNTS],
     queryFn: _AccountsApi.getAccounts,
+  });
+};
+
+// FETCH ACCOUNT TYPES
+export const useFetchAccountTypes = () => {
+  return useQuery<AccountTypeGroup>({
+    queryKey: [QueryKeys.ACCOUNT_TYPES],
+    queryFn: _AccountsApi.getAccountTypes,
   });
 };
 

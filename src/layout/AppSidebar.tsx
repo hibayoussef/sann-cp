@@ -391,7 +391,7 @@ import {
   MonitorIcon,
   ShoppingBag,
   ShoppingCart,
-  UserRoundCog
+  UserRoundCog,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -415,7 +415,8 @@ type NavItem = {
 };
 
 const AppSidebar: React.FC = () => {
-  const { isExpanded, isMobileOpen, isHovered,toggleMobileSidebar } = useSidebar();
+  const { isExpanded, isMobileOpen, isHovered, toggleMobileSidebar } =
+    useSidebar();
   const { direction } = useLocaliztionStore();
   const { t } = useTranslation("items");
   const { permissions } = useAuthStore();
@@ -479,10 +480,15 @@ const AppSidebar: React.FC = () => {
         },
       ].filter((item) => hasPermission(item.permissionKey)),
     },
-     {
+    {
       name: "Accountant",
       icon: <UserRoundCog size={iconSize} />,
       subItems: [
+        {
+          name: "Chart of accounts",
+          path: "/accounts",
+          permissionKey: "accounts.view",
+        },
         {
           name: "Map Settings",
           path: "/map-settings",
@@ -535,9 +541,9 @@ const AppSidebar: React.FC = () => {
         hasPermission(item.permissionKey) ||
         (item.subItems && item.subItems.length > 0)
     );
-const handleLinkClick = (path: string) => {
+  const handleLinkClick = (path: string) => {
     if (isMobileOpen) {
-      toggleMobileSidebar(); // إغلاق الشريط الجانبي في الشاشات الصغيرة
+      toggleMobileSidebar();
     }
     navigate(path);
   };
@@ -548,19 +554,19 @@ const handleLinkClick = (path: string) => {
   };
 
   return (
-<aside
-    className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
+    <aside
+      className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
         isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"
-    } ${direction === "rtl" ? "right-0" : "left-0"} ${
+      } ${direction === "rtl" ? "right-0" : "left-0"} ${
         isMobileOpen
-            ? "translate-x-0"
-            : direction === "rtl"
-            ? "translate-x-full"
-            : "-translate-x-full"
-    } lg:translate-x-0  `} // إضافة lg:translate-x-0
+          ? "translate-x-0"
+          : direction === "rtl"
+          ? "translate-x-full"
+          : "-translate-x-full"
+      } lg:translate-x-0  `} // إضافة lg:translate-x-0
     >
-       {/* ${direction === "rtl" ? "lg:translate-x-0" : "lg:-translate-x-0"} */}
-     
+      {/* ${direction === "rtl" ? "lg:translate-x-0" : "lg:-translate-x-0"} */}
+
       <div
         className={`lg:py-3 px-6 w-full flex ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
@@ -630,7 +636,7 @@ const handleLinkClick = (path: string) => {
                                 key={subItem.name}
                                 className="relative group hover:bg-gray-400 dark:hover:hover:bg-gray-700 "
                               >
-                                  <button
+                                <button
                                   onClick={() => handleLinkClick(subItem.path)} // استخدم handleLinkClick هنا
                                   className={`menu-dropdown-item text-[13px] hover:bg-gray-400 dark:hover:hover:bg-gray-700 ${
                                     isActive(subItem.path)
@@ -651,7 +657,6 @@ const handleLinkClick = (path: string) => {
                           try {
                             await _AuthApi.logout();
                             navigate("/signin");
-                            
                           } catch (error) {
                             console.error("Logout failed:", error);
                           }

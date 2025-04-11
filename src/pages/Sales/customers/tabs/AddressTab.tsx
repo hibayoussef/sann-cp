@@ -105,6 +105,7 @@ export const AddressTab = ({
     setValue(name as any, value, { shouldValidate: true });
     await trigger(name as any);
   };
+  console.log('eeeee:', errors)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">

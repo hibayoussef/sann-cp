@@ -8,7 +8,7 @@ export const unitSchema = z.object({
   short_name_ar: z.string().optional(),
   allow_decimal: z.number(),
   multiplier: z.number().optional(),
-  related_to: z.coerce.number().min(1, "Unit is required").nullable(),
+  // related_to: z.coerce.number().min(1, "Unit is required").nullable(),
   sub_units: z
     .array(
       z.object({

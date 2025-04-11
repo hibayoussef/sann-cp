@@ -17,10 +17,12 @@ import autoTable from "jspdf-autotable";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
+  tableName?: string;
 }
 
 export function DataTableViewOptions<TData>({
   table,
+  tableName,
 }: DataTableViewOptionsProps<TData>) {
   const excludedExportColumns = ["Actions"];
 
@@ -35,7 +37,7 @@ export function DataTableViewOptions<TData>({
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "table_export.csv";
+    link.download = `${tableName}.csv`;
     link.click();
   };
 
@@ -44,7 +46,7 @@ export function DataTableViewOptions<TData>({
       const rowData: any = {};
       row
         .getVisibleCells()
-        .filter((cell) => !excludedExportColumns.includes(cell.column.id)) // استثناء عمود actions
+        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
         .forEach((cell) => {
           rowData[cell.column.id] = cell.getValue();
         });
@@ -53,7 +55,7 @@ export function DataTableViewOptions<TData>({
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "table_export.xlsx");
+    XLSX.writeFile(wb, `${tableName}.xlsx`);
   };
 
   const handleExportPDF = () => {
@@ -75,7 +77,7 @@ export function DataTableViewOptions<TData>({
         })
     );
 
-    doc.text("Table Export", 14, 16);
+     doc.text(tableName ? tableName: "Table Export", 14, 16);
 
     autoTable(doc, {
       head: [headers],
@@ -93,7 +95,7 @@ export function DataTableViewOptions<TData>({
       },
     });
 
-    doc.save("table_export.pdf");
+    doc.save(`${tableName}.pdf`);
   };
 
   const handlePrint = () => {

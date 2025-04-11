@@ -24,10 +24,11 @@ export default function PaymentTerm() {
         <PageBreadcrumb
           baseTitle={t("settings")}
           pageTitle="Payment Term"
-          icon={<GitBranch className="w-5 h-5 "  />}
+          icon={<GitBranch className="w-5 h-5 " />}
         />
         <div className="space-y-4 pt-1">
           <DataTable
+            tableName="Payment Terms"
             columns={paymentTermColumns({
               update: hasPermission("update", "payment_terms"),
               delete: hasPermission("delete", "payment_terms"),

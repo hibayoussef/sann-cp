@@ -26,6 +26,7 @@ export default function SubCategories() {
 
         <div className="space-y-4">
           <DataTable
+            tableName="Sub Categories"
             columns={subCategoryColumns({
               update: hasPermission("update", "sub_categories"),
               delete: hasPermission("delete", "sub_categories"),

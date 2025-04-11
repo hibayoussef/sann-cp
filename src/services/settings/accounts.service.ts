@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { _axios } from "../../interceptor/http-config";
 import type {
   AccountForm,
+  AccountTypeGroup,
   AccountUpdateForm,
   IAccount,
 } from "@/types/settings/accounts";
@@ -15,8 +16,16 @@ export const _AccountsApi = {
     return response?.data?.data;
   },
 
+  // GET ACCOUNT TYPES
+  getAccountTypes: async () => {
+    const response = await _axios.get<{ data: AccountTypeGroup }>(
+      "/settings/account-types"
+    );
+    return response.data.data;
+  },
+
   // GET ACCOUNT BY ID
-  getAccount: async (id: number): Promise<IAccount> => {
+  getAccount: async (id: number) => {
     const response = await _axios.get<AxiosResponse<IAccount>>(
       `/settings/accounts/${id}`
     );

@@ -3,7 +3,7 @@ export interface ITax {
   tax_name_ar?: string | null;
   tax_name_en: string;
   amount: number;
-  is_active?: boolean;
+  is_active?: boolean | number | undefined;
 }
 
 export interface TaxForm {
@@ -11,7 +11,7 @@ export interface TaxForm {
   tax_name_ar?: string | null;
   tax_name_en: string;
   amount: number;
-  is_active?: boolean | number;
+  is_active?: boolean | number | undefined;
 }
 
 export interface TaxUpdateForm {

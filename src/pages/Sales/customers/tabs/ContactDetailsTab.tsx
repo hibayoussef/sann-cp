@@ -133,13 +133,20 @@ const ContactDetailsTab = ({
     setValue(`contact_details.social_media`, currentSocials);
   };
 
+  // دالة لتحويل القيم null إلى strings فارغة
+  const handleNullValues = (value: any) => {
+    return value === null ? "" : value;
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 dark:bg-gray-900">
         <div className="space-y-2">
           <Label>Passport Number</Label>
           <Input
-            {...register("contact_details.passport_number")}
+            {...register("contact_details.passport_number", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.passport_number}
             hint={errors.contact_details?.passport_number?.message}
             placeholder="Enter passport number"
@@ -150,7 +157,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Work Phone</Label>
           <Input
-            {...register("contact_details.work_phone")}
+            {...register("contact_details.work_phone", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.work_phone}
             hint={errors.contact_details?.work_phone?.message}
             type="tel"
@@ -162,7 +171,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Website URL</Label>
           <Input
-            {...register("contact_details.website_url")}
+            {...register("contact_details.website_url", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.website_url}
             hint={errors.contact_details?.website_url?.message}
             type="url"
@@ -174,7 +185,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Department</Label>
           <Input
-            {...register("contact_details.department")}
+            {...register("contact_details.department", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.department}
             hint={errors.contact_details?.department?.message}
             placeholder="Enter department name"
@@ -185,23 +198,29 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Profession</Label>
           <Input
-            {...register("contact_details.profession")}
+            {...register("contact_details.profession", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.profession}
             hint={errors.contact_details?.profession?.message}
             placeholder="Enter profession"
             icon={<Briefcase className="w-4 h-4" />}
           />
         </div>
+
         <div className="space-y-2">
           <Label>Designation</Label>
           <Input
-            {...register("contact_details.designation")}
+            {...register("contact_details.designation", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.designation}
             hint={errors.contact_details?.designation?.message}
             placeholder="Enter designation"
             icon={<Badge className="w-4 h-4" />}
           />
         </div>
+
         {/* Social Media Section */}
         <div className="space-y-2 md:col-span-1">
           <div className="flex items-center gap-2">
@@ -246,7 +265,8 @@ const ContactDetailsTab = ({
                 <div className="relative w-1/3">
                   <Input
                     {...register(
-                      `contact_details.social_media.${socialIndex}.platform`
+                      `contact_details.social_media.${socialIndex}.platform`,
+                      { setValueAs: (v) => handleNullValues(v) }
                     )}
                     readOnly
                     icon={getSocialMediaIcon(socialField.platform)}
@@ -256,7 +276,8 @@ const ContactDetailsTab = ({
                 <div className="flex-1">
                   <Input
                     {...register(
-                      `contact_details.social_media.${socialIndex}.url`
+                      `contact_details.social_media.${socialIndex}.url`,
+                      { setValueAs: (v) => handleNullValues(v) }
                     )}
                     placeholder="Enter URL"
                     type="url"
@@ -277,25 +298,33 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Issued Date</Label>
           <Input
-            {...register("contact_details.id_issued_date")}
+            {...register("contact_details.id_issued_date", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.id_issued_date}
             hint={errors.contact_details?.id_issued_date?.message}
             type="date"
           />
         </div>
+
         <div className="space-y-2">
           <Label>Expiry Date</Label>
           <Input
-            {...register("contact_details.id_expiry_date")}
+            {...register("contact_details.id_expiry_date", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.id_expiry_date}
             hint={errors.contact_details?.id_expiry_date?.message}
             type="date"
           />
         </div>
+
         <div className="space-y-2">
           <Label>Unified Number</Label>
           <Input
-            {...register("contact_details.unified_number")}
+            {...register("contact_details.unified_number", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.unified_number}
             hint={errors.contact_details?.unified_number?.message}
             type="number"
@@ -303,30 +332,37 @@ const ContactDetailsTab = ({
             icon={<IdCard className="w-4 h-4" />}
           />
         </div>
+
         <div className="space-y-2">
           <Label>Date of birth</Label>
           <Input
-            {...register("contact_details.date_of_birth")}
+            {...register("contact_details.date_of_birth", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.date_of_birth}
             hint={errors.contact_details?.date_of_birth?.message}
             type="date"
           />
         </div>
+
         <div className="space-y-2">
           <Label>Place of birth</Label>
           <Input
-            {...register("contact_details.place_of_birth")}
+            {...register("contact_details.place_of_birth", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.place_of_birth}
             hint={errors.contact_details?.place_of_birth?.message}
-            type="date"
+            placeholder="Enter place of birth"
           />
         </div>
+
         <div className="space-y-2">
-          <Label> Visa Number</Label>
+          <Label>Visa Number</Label>
           <div className="relative group">
             <Input
               {...register("contact_details.visit_visa_number", {
-                setValueAs: (v) => (v === "" ? undefined : Number(v)),
+                setValueAs: (v) => (v === "" || v === null ? undefined : Number(v)),
               })}
               error={!!errors.contact_details?.visit_visa_number}
               hint={errors.contact_details?.visit_visa_number?.message}
@@ -355,13 +391,14 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Driving License Number</Label>
           <Input
-            {...register("contact_details.driving_license_number")}
+            {...register("contact_details.driving_license_number", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.driving_license_number}
             hint={errors.contact_details?.driving_license_number?.message}
             type="number"
             placeholder="Enter driving license number"
             icon={<CreditCard className="w-4 h-4" />}
-            
           />
         </div>
 
@@ -382,7 +419,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Driving License Issued Date</Label>
           <Input
-            {...register("contact_details.driving_license_issued_date")}
+            {...register("contact_details.driving_license_issued_date", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.driving_license_issued_date}
             hint={errors.contact_details?.driving_license_issued_date?.message}
             type="date"
@@ -393,7 +432,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Driving License Expiry Date</Label>
           <Input
-            {...register("contact_details.driving_license_expiry_date")}
+            {...register("contact_details.driving_license_expiry_date", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.driving_license_expiry_date}
             hint={errors.contact_details?.driving_license_expiry_date?.message}
             type="date"
@@ -404,7 +445,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Home Address</Label>
           <Input
-            {...register("contact_details.home_address")}
+            {...register("contact_details.home_address", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.home_address}
             hint={errors.contact_details?.home_address?.message}
             placeholder="Enter home address"
@@ -415,7 +458,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Work Address</Label>
           <Input
-            {...register("contact_details.work_address")}
+            {...register("contact_details.work_address", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.work_address}
             hint={errors.contact_details?.work_address?.message}
             placeholder="Enter work address"
@@ -426,7 +471,9 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>P.O. Box</Label>
           <Input
-            {...register("contact_details.p_o_box")}
+            {...register("contact_details.p_o_box", {
+              setValueAs: (v) => handleNullValues(v),
+            })}
             error={!!errors.contact_details?.p_o_box}
             hint={errors.contact_details?.p_o_box?.message}
             placeholder="Enter P.O. Box number"

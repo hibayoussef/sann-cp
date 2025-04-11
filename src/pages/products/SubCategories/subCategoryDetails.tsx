@@ -39,6 +39,7 @@ export default function CategoryDetails() {
             Sub Categories
           </h4>
           <DataTable
+            tableName="Sub Categories"
             columns={subCategoryColumns({
               update: hasPermission("update", "sub_categories"),
               delete: hasPermission("delete", "sub_categories"),

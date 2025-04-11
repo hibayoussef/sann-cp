@@ -18,10 +18,11 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import AddressTab from "./tabs/AddressTab";
-import ContactDetailsTab from "./tabs/ContactDetailsTab";
-import ContactPersonTab from "./tabs/ContactPersonTab";
-import { OtherDetailsTab } from "./tabs/OtherDetailsTab";
+import AddressTab from "../customers/tabs/AddressTab";
+import ContactDetailsTab from "../customers/tabs/ContactDetailsTab";
+import ContactPersonTab from "../customers/tabs/ContactPersonTab";
+import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
+
 
 const TABS = [
   { id: 1, name: "Other Details" },
@@ -45,7 +46,7 @@ function cleanContactDetails(contactDetails: any): any {
   return Object.keys(cleaned).length > 0 ? cleaned : null;
 }
 
-export default function CustomerForm() {
+export default function CreateVendor() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
   const isUpdate = Boolean(id);
@@ -93,7 +94,7 @@ const onSubmit = async (formData: CustomerType) => {
       full_name_en: `${person?.first_name_en} ${person?.last_name_en}`,
     })),
     contact_details: contactDetails,
-    type: "customer",
+    type: "vendor",
   };
 
   await addCustomer.mutateAsync(payload);
@@ -101,22 +102,22 @@ const onSubmit = async (formData: CustomerType) => {
   return (
     <>
       <PageBreadcrumb
-        baseLink="/customers"
-        baseTitle="Customers"
-        pageTitle={isUpdate ? "Update Customer" : "Create Customer"}
+        baseLink="/vendors"
+        baseTitle="Vendors"
+        pageTitle={isUpdate ? "Update Vendor" : "Create Vendor"}
         icon={
           <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-900 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
       />
-      <ComponentCard title={isUpdate ? "Update Customer" : "Create Customer"}>
+      <ComponentCard title={isUpdate ? "Update Vendor" : "Create Vendor"}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-4">
-                  <Label className="mb-0">Customer Type</Label>
+                  <Label className="mb-0">Vendor Type</Label>
                   <div className="flex items-center gap-6">
                     <Radio
                       id="individual"
@@ -277,7 +278,7 @@ const onSubmit = async (formData: CustomerType) => {
                 className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
                 disabled={addCustomer.isPending}
               >
-                {isUpdate ? "Update Customer" : "Create Customer"}
+                {isUpdate ? "Update Vendor" : "Create Vendor"}
               </button>
             </div>
           </form>

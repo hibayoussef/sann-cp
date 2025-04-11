@@ -7,7 +7,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
- import { Clock} from "lucide-react";
+import { Clock } from "lucide-react";
 import {
   useAddTax,
   useFetchTax,
@@ -62,7 +62,8 @@ export default function TaxForm() {
       tax_name_ar: "",
       tax_name_en: "",
       amount: 0.0,
-      is_active: true,
+      is_active:
+      taxData?.is_active !== undefined ? Number(taxData.is_active) : 0,
     },
   });
 
@@ -72,7 +73,7 @@ export default function TaxForm() {
       setValue("tax_name_ar", taxData?.tax_name_ar ?? "");
       setValue("tax_name_en", taxData?.tax_name_en ?? "");
       setValue("amount", taxData?.amount ?? 0.0);
-      setValue("is_active", taxData?.is_active ?? true);
+      setValue("is_active", taxData?.is_active === true ? 1 : 0);
     }
   }, [taxData, setValue]);
 
@@ -81,7 +82,7 @@ export default function TaxForm() {
     const payload = {
       organization_id: organizationId,
       ...formData,
-      is_active: formData.is_active ? 1 : 0,
+      is_active: formData.is_active,
     };
 
     if (isUpdate && id) {
@@ -125,8 +126,8 @@ export default function TaxForm() {
                     {...register("tax_name_en")}
                     error={!!errors.tax_name_en}
                     hint={errors.tax_name_en?.message}
-                      className="w-full p-2 border rounded-md mt-1"
-                       icon={<ShoppingBag className="w-4 h-4" />}
+                    className="w-full p-2 border rounded-md mt-1"
+                    icon={<ShoppingBag className="w-4 h-4" />}
                   />
                 </div>
                 <div className="py-2">
@@ -137,37 +138,40 @@ export default function TaxForm() {
                     placeholder="Please enter tax name (Ar)"
                     {...register("tax_name_ar")}
                     error={!!errors.tax_name_ar}
-                      hint={errors.tax_name_ar?.message}
-                       icon={<ShoppingBag className="w-4 h-4" />}
+                    hint={errors.tax_name_ar?.message}
+                    icon={<ShoppingBag className="w-4 h-4" />}
                     className="w-full p-2 border rounded-md mt-1"
                   />
                 </div>
               </div>
-<div className="grid grid-cols-1 md:grid-cols-2">
-              {/* Amount Field (Full Width) */}
-              <div className="py-2">
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                  type="number"
-                  id="amount"
-                  placeholder="Please enter amount"
-                  {...register("amount", { valueAsNumber: true })}
-                  error={!!errors.amount}
-                  hint={errors.amount?.message}
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                {/* Amount Field (Full Width) */}
+                <div className="py-2">
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
+                    type="number"
+                    id="amount"
+                    placeholder="Please enter amount"
+                    {...register("amount", { valueAsNumber: true })}
+                    error={!!errors.amount}
+                    hint={errors.amount?.message}
                     className="w-full p-2 border rounded-md"
-                     icon={<Clock className="w-4 h-4" />}
-                />
-              </div>
+                    icon={<Clock className="w-4 h-4" />}
+                  />
+                </div>
 
-              {/* Is Active Switch */}
-              <div className="pl-6 mt-3">
-                <Label htmlFor="is-active">Is This Tax Actived ?</Label>
-                <Switch
-                  checked={watch("is_active") as boolean}
-                  onChange={(checked) => setValue("is_active", checked)}
-                />
+                {/* Is Active Switch */}
+                <div className="pl-6 mt-3">
+                  <Label htmlFor="is-active">Is This Tax Actived ?</Label>
+                  <Switch
+                    checked={!!(watch("is_active") as number)}
+                    onChange={(checked) =>
+                      setValue("is_active", checked ? 1 : 0)
+                    }
+                  />
+                </div>
               </div>
-            </div></div>
+            </div>
 
             {/* Submit Button */}
             <div className="flex justify-end mt-12">

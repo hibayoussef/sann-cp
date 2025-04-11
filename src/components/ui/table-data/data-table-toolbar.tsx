@@ -7,6 +7,7 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  tableName?: string;
   createPath: string;
   permissions?: {
     create: boolean;
@@ -19,6 +20,7 @@ export function DataTableToolbar<TData>({
   table,
   createPath,
   permissions,
+  tableName,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const navigate = useNavigate();
@@ -62,7 +64,7 @@ export function DataTableToolbar<TData>({
         )}
       </div>
 
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions table={table} tableName={tableName} />
       <div>
         {permissions?.create && (
           <Button

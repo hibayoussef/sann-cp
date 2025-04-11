@@ -27,6 +27,7 @@ export default function Units() {
 
         <div className="space-y-4 pt-1">
           <DataTable
+            tableName="Units"
             columns={unitColumns({
               update: hasPermission("update", "categories"),
               delete: hasPermission("delete", "categories"),

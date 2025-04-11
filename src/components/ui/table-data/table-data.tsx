@@ -31,6 +31,7 @@ import { DataTableToolbar } from "./data-table-toolbar";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  tableName?: string;
   createPath: string;
   hasDetails?: boolean;
   detailsLink?: string;
@@ -48,6 +49,7 @@ export function DataTable<TData, TValue>({
   hasDetails,
   detailsLink,
   permissions,
+  tableName,
 }: DataTableProps<TData, TValue>) {
   const [tableColumns, setTableColumns] = React.useState<any>(columns);
 
@@ -89,6 +91,7 @@ export function DataTable<TData, TValue>({
         table={table}
         createPath={createPath}
         permissions={permissions}
+        tableName={tableName}
       />
       <div className="rounded-md border  border-gray-100 shadow-md bg-white dark:border-gray-700 dark:bg-gray-900">
         <Table id="table-container">

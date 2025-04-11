@@ -8,9 +8,14 @@ import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
 import SignOtp from "@/pages/AuthPages/SignOtp";
 import CreateCustomer from "@/pages/Sales/customers/createCustomer";
 import Customers from "@/pages/Sales/customers/customers";
-import VendorForm from "@/pages/Sales/vendors/vendorForm";
+import UpdateCustomer from "@/pages/Sales/customers/updateCustomer";
+import CreateVendor from "@/pages/Sales/vendors/createVendor";
+import UpdateVendor from "@/pages/Sales/vendors/updateVendor";
 import Vendors from "@/pages/Sales/vendors/vendors";
 import Settings from "@/pages/Settings/Settings";
+import AccountForm from "@/pages/Settings/accounts/accountForm";
+import AccountLayout from "@/pages/Settings/accounts/accountLayout";
+import Accounts from "@/pages/Settings/accounts/accounts";
 import Branches from "@/pages/Settings/branches/branches";
 import CreateBranch from "@/pages/Settings/branches/createBranch";
 import { OrganizationForm } from "@/pages/Settings/organizations/organizationForm";
@@ -113,10 +118,19 @@ const RoutesComponent = () => {
           <Route path="/customers" element={<Customers />} />
           <Route path="/customers/:id" element={<CategoriesLayout />} />
           <Route path="/customers/create" element={<CreateCustomer />} />
-          <Route path="/customers/update/:id" element={<CreateCustomer />} />
+          <Route path="/customers/update/:id" element={<UpdateCustomer />} />
           {/* Purchases */}
           <Route path="/vendors" element={<Vendors />} />
-          <Route path="/vendors/create" element={<VendorForm />} />
+          <Route path="/vendors/create" element={<CreateVendor />} />
+          <Route path="/vendors/update/:id" element={<UpdateVendor />} />
+          
+
+          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/accounts/:id" element={<AccountLayout />} />
+          <Route path="/accounts/create" element={<AccountForm />} />
+          <Route path="/accounts/update/:id" element={<AccountForm />} />
+
+
           {/* end sales */}
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/avatars" element={<Avatars />} />
@@ -146,7 +160,10 @@ const RoutesComponent = () => {
           <Route path="security" element={<SecuritySettings />} />
           <Route path="payment_terms" element={<PaymentTerm />} />
           <Route path="payment_terms/create" element={<PaymentTermForm />} />
-          <Route path="payment_terms/update/:id" element={<PaymentTermForm />} />
+          <Route
+            path="payment_terms/update/:id"
+            element={<PaymentTermForm />}
+          />
         </Route>
       </Route>
 

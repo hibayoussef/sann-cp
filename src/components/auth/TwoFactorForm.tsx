@@ -14,9 +14,9 @@ export default function TwoFactorForm() {
       newCode[index] = value;
       setCode(newCode);
       // Auto-focus next input
-      if (value && index < 5) {
-        document.getElementById(`code-${index + 1}`).focus();
-      }
+      // if (value && index < 5) {
+      //   document.getElementById(`code-${index + 1}`).focus();
+      // }
     }
   };
 

@@ -1,7 +1,7 @@
 export interface IAccount {
   id: number;
-  account_name_ar: string;
-  account_name_en: string;
+  account_name_ar: string | undefined;
+  account_name_en: string | undefined;
   account_code: string;
   description_ar: string;
   description_en: string;
@@ -21,6 +21,7 @@ export interface IAccount {
   currency_name?: string | null;
   currency_code?: string | null;
   currency_symbol?: string | null;
+  parent_account_id?: number | null;
 }
 
 export interface AccountForm {
@@ -37,6 +38,21 @@ export interface AccountForm {
   currency_id?: number | null;
   balance?: string | null;
   branches?: number[];
+}
+
+export interface AccountTypeItem {
+  id: number;
+  type_ar: string;
+  type_en: string;
+  description_ar: string;
+  description_en: string;
+  prefix_code: number;
+}
+
+export interface AccountTypeGroup {
+  primary_type_ar: string;
+  primary_type_en: string;
+  items: AccountTypeItem[];
 }
 
 export interface AccountUpdateForm {

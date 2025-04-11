@@ -15,10 +15,10 @@ export const _ContactsApi = {
 
   // GET CONTACT BY ID
   getContact: async (id: number) => {
-    const response = await _axios.get<AxiosResponse<{ contact: IContact }>>(
+    const response = await _axios.get<AxiosResponse<IContact>>(
       `/settings/contacts/${id}`
     );
-    return response.data.data.contact;
+    return response.data.data;
   },
 
   // ADD CONTACT
@@ -32,7 +32,7 @@ export const _ContactsApi = {
 
   // UPDATE CONTACT
   updateContact: async (id: number | undefined, data: Partial<IContact>) => {
-    const response = await _axios.put<AxiosResponse<{ contact: IContact }>>(
+    const response = await _axios.post<AxiosResponse<{ contact: IContact }>>(
       `/settings/contacts/${id}`,
       data
     );

@@ -2,9 +2,17 @@ import { Check, ChevronDown, Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
+interface OptionType<T = string> {
+  value: T;
+  label: string;
+  prefix_code?: string;
+  isParent?: boolean;
+  children?: OptionType<T>[];
+}
+
 interface DynamicSelectProps<T = string> {
   name: string;
-  options: Array<{ value: T; label: string }>;
+  options: OptionType<T>[];
   placeholder?: string;
   searchPlaceholder?: string;
   error?: string;
@@ -14,6 +22,7 @@ interface DynamicSelectProps<T = string> {
   isRequired?: boolean;
   icon?: React.ReactNode;
   value?: T;
+  hint?: string;
 }
 
 export const CustomSelect = <T = string,>({
@@ -25,24 +34,33 @@ export const CustomSelect = <T = string,>({
   className = "",
   disabled = false,
   onChange,
-  // isRequired = false,
   icon,
   value,
 }: DynamicSelectProps<T>) => {
   const formContext = useFormContext();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOption, setSelectedOption] = useState<{
-    value: T;
-    label: string;
-  } | null>(null);
+  const [selectedOption, setSelectedOption] = useState<OptionType<T> | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const formValue = formContext ? formContext.watch(name) : value;
 
   useEffect(() => {
     if (formValue && options.length > 0) {
-      const option = options.find(opt => String(opt.value) === String(formValue));
+      const findOption = (opts: OptionType<T>[]): OptionType<T> | undefined => {
+        for (const opt of opts) {
+          if (String(opt.value) === String(formValue)) {
+            return opt;
+          }
+          if (opt.children) {
+            const found = findOption(opt.children);
+            if (found) return found;
+          }
+        }
+        return undefined;
+      };
+
+      const option = findOption(options);
       if (option) {
         setSelectedOption(option);
       }
@@ -51,11 +69,21 @@ export const CustomSelect = <T = string,>({
     }
   }, [formValue, options]);
 
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOptions = options.filter((option) => {
+    if (option.isParent) {
+      return (
+        option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        option.children?.some((child) =>
+          child.label.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+    return option.label.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
-  const handleSelect = async (option: { value: T; label: string }) => {
+  const handleSelect = async (option: OptionType<T>) => {
+    if (option.isParent) return;
+
     setSelectedOption(option);
     if (formContext) {
       formContext.setValue(name, option.value, { shouldValidate: true });
@@ -70,7 +98,7 @@ export const CustomSelect = <T = string,>({
   const handleClear = async () => {
     setSelectedOption(null);
     if (formContext) {
-      formContext.setValue(name, "", { shouldValidate: true });
+      formContext.setValue(name, "" as T, { shouldValidate: true });
       await formContext.trigger(name);
       formContext.clearErrors(name);
     }
@@ -93,17 +121,54 @@ export const CustomSelect = <T = string,>({
     };
   }, []);
 
+  const renderOptions = (opts: OptionType<T>[]) => {
+    return opts.map((option) => (
+      <div key={String(option.value)}>
+        {option.isParent ? (
+          <div className="px-3 py-2 text-sm font-medium text-gray-500 bg-gray-50">
+            {option.label}
+          </div>
+        ) : (
+          <button
+            type="button"
+            className={`w-full text-left px-3 py-2 text-sm flex items-center justify-between hover:bg-blue-50 transition-colors ${
+              selectedOption?.value === option.value
+                ? "bg-blue-50 text-blue-600"
+                : "text-gray-700"
+            }`}
+            onClick={() => handleSelect(option)}
+          >
+            <div className="flex flex-col">
+              <span>{option.label}</span>
+              {option.prefix_code && (
+                <span className="text-xs text-gray-500">
+                  Code: {option.prefix_code}
+                </span>
+              )}
+            </div>
+            {selectedOption?.value === option.value && (
+              <Check className="w-4 h-4 text-blue-500" />
+            )}
+          </button>
+        )}
+        {option.children && (
+          <div className="pl-4">{renderOptions(option.children)}</div>
+        )}
+      </div>
+    ));
+  };
+
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`w-full text-left pl-3 pr-2 py-1 border rounded-[8px] flex items-center justify-between transition-all duration-200 ${
+        className={`w-full text-left pl-3 pr-2 py-2 border rounded-[8px] flex items-center justify-between transition-all duration-200 ${
           error
             ? "border-red-400 focus:border-red-500"
             : "border-gray-200 hover:border-gray-300 focus:border-blue-400"
         } ${
           disabled
-            ? "bg-gray-50 cursor-not-allowed  text-gray-400"
+            ? "bg-gray-50 cursor-not-allowed text-gray-400"
             : "bg-white text-gray-700"
         } shadow-sm text-sm`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -154,23 +219,7 @@ export const CustomSelect = <T = string,>({
 
           <div className="max-h-60 overflow-y-auto">
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => (
-                <button
-                  key={String(option.value)}
-                  type="button"
-                  className={`w-full text-left px-3 py-1 text-sm flex items-center justify-between hover:bg-blue-50 transition-colors ${
-                    selectedOption?.value === option.value
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => handleSelect(option)}
-                >
-                  <span>{option.label}</span>
-                  {selectedOption?.value === option.value && (
-                    <Check className="w-4 h-4 text-blue-500" />
-                  )}
-                </button>
-              ))
+              renderOptions(filteredOptions)
             ) : (
               <div className="px-3 py-3 text-sm text-gray-500 text-center">
                 No options found
@@ -182,7 +231,6 @@ export const CustomSelect = <T = string,>({
 
       {error && (
         <p className="mt-1.5 text-xs text-red-500 flex items-center">
-          <span className="mr-1">•</span>
           {error}
         </p>
       )}

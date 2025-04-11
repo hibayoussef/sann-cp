@@ -3,6 +3,7 @@ export enum FileType {
   STORE = "Store",
   PRODUCT = "Product",
   ORGANIZATION = "Organization",
+  ACCOUNT = "Account",
 }
 
 export enum StorageDisk {

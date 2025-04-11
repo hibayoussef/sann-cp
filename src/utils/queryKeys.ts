@@ -33,4 +33,5 @@ export enum QueryKeys {
   PRODUCT = "product",
   ACCOUNTS = "accounts",
   ACCOUNT = "account",
+  ACCOUNT_TYPES = "account-types"
 }
