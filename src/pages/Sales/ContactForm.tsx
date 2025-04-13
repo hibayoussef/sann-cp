@@ -3,7 +3,7 @@ import { Info, Mail, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // Components
@@ -21,7 +21,7 @@ import {
 } from "@/components/lib/validations/customer";
 
 // Hooks
-import { useFetchContact, useUpdateContact } from "@/hooks/sales/contacts";
+import { useAddContact, useFetchContact } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
@@ -31,10 +31,10 @@ import { useMeStore } from "@/store/useMeStore";
 
 // Tabs
 import type { ISocialMedia } from "@/types/sales/contact";
-import AddressTab from "./tabs/AddressTab";
-import ContactDetailsTab from "./tabs/ContactDetailsTab";
-import ContactPersonTab from "./tabs/ContactPersonTab";
-import { OtherDetailsTab } from "./tabs/OtherDetailsTab";
+import { OtherDetailsTab } from "./customers/tabs/OtherDetailsTab";
+import ContactDetailsTab from "./customers/tabs/ContactDetailsTab";
+import ContactPersonTab from "./customers/tabs/ContactPersonTab";
+import AddressTab from "./customers/tabs/AddressTab";
 
 const TABS = [
   { id: 1, name: "Other Details" },
@@ -44,10 +44,15 @@ const TABS = [
 ];
 
 function cleanContactObject(obj: any): any {
-  if (!obj) return null;
+  if (!obj) return {}; // إرجاع كائن فارغ بدلاً من null
 
   const cleaned = Object.entries(obj).reduce((acc, [key, value]) => {
-    if (value === null || value === undefined || value === "" || value === "undefined") {
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      value === "undefined"
+    ) {
       return acc;
     }
     if (Array.isArray(value) && value.length === 0) {
@@ -56,19 +61,22 @@ function cleanContactObject(obj: any): any {
     return { ...acc, [key]: value };
   }, {});
 
-  return Object.keys(cleaned).length > 0 ? cleaned : null;
+  return cleaned;
 }
 
-export default function UpdateCustomer() {
+export default function ContactForm() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(1);
   const organizationId = useMeStore((state) => state.organizationId);
+  const type =
+    (searchParams.get("type") as "customer" | "vendor") || "customer";
 
   // API Hooks
-  const { data: customerData, isLoading } = useFetchContact(Number(id), {
+  const { data: contactData, isLoading } = useFetchContact(Number(id), {
     enabled: !!id,
   });
-  const updateCustomer = useUpdateContact();
+  const addContact = useAddContact();
   const { data: branches } = useFetchBranches();
   const { data: paymentsTerm } = useFetchPaymentTerms();
   const { data: currencies } = useFetchCurrencies();
@@ -106,10 +114,10 @@ export default function UpdateCustomer() {
     return sm;
   };
 
-  // Load customer data into form
+  // Load contact data into form for update/clone
   useEffect(() => {
-    if (customerData) {
-      const { details, persons, ...mainData } = customerData;
+    if (contactData) {
+      const { details, persons, ...mainData } = contactData;
 
       const formattedData: any = {
         ...mainData,
@@ -135,7 +143,7 @@ export default function UpdateCustomer() {
 
       methods.reset(formattedData);
     }
-  }, [customerData, methods]);
+  }, [contactData, methods]);
 
   // Stringify social media for API payload
   const stringifySocialMedia = (
@@ -159,11 +167,11 @@ export default function UpdateCustomer() {
       const full_name_ar = `${formData.first_name_ar} ${formData.last_name_ar}`;
       const full_name_en = `${formData.first_name_en} ${formData.last_name_en}`;
 
-      // Clean contact details object
-      let contactDetails = cleanContactObject(formData.contact_details);
-      
-      // Process social media if contact details exist
-      if (contactDetails) {
+      // تنظيف كائن contact_details مع ضمان إرجاع كائن حتى لو كان فارغاً
+      let contactDetails = cleanContactObject(formData.contact_details || {});
+
+      // معالجة وسائل التواصل الاجتماعي إذا كانت موجودة
+      if (contactDetails.social_media) {
         contactDetails = {
           ...contactDetails,
           social_media: stringifySocialMedia(contactDetails.social_media),
@@ -172,7 +180,6 @@ export default function UpdateCustomer() {
 
       const payload: any = {
         ...formData,
-        id: Number(id),
         organization_id: organizationId?.toString()!,
         full_name_ar,
         full_name_en,
@@ -183,48 +190,43 @@ export default function UpdateCustomer() {
         nationality_id: Number(formData.nationality_id),
         exchange_rate: formData.exchange_rate.toString(),
         balance: formData.balance.toString(),
-        contact_details: contactDetails,
-        contact_persons: formData?.contact_persons?.map((person:any) => ({
-          ...person,
-          social_media: stringifySocialMedia(person?.social_media),
-          full_name_ar: `${person.first_name_ar} ${person.last_name_ar}`,
-          full_name_en: `${person.first_name_en} ${person.last_name_en}`,
-        })) || [],
+        contact_details: contactDetails, // سيتم إرسال كائن حتى لو كان فارغاً
+        contact_persons:
+          formData?.contact_persons?.map((person: any) => ({
+            id: person.id || null,
+            ...person,
+            social_media: stringifySocialMedia(person?.social_media),
+            full_name_ar: `${person.first_name_ar} ${person.last_name_ar}`,
+            full_name_en: `${person.first_name_en} ${person.last_name_en}`,
+          })) || [],
+        type: type,
       };
 
-      const updatedPayload = {
-        ...payload,
-        _method: "PUT",
-      };
+      console.log("Payload being sent:", payload); // للتأكد من البيانات المرسلة
 
-      await updateCustomer.mutateAsync({
-        id: Number(id),
-        data: updatedPayload,
-      });
-
-      toast.success("Customer updated successfully");
+      await addContact.mutateAsync(payload);
     } catch (error) {
-      console.error("Error updating customer:", error);
-      toast.error("Failed to update customer");
+      console.error("Submission error:", error);
     }
   };
 
-  if (isLoading) {
+  if (isLoading && id) {
     return <Loader />;
   }
 
-  if (!id) {
-    return (
-      <div className="text-center py-10">No customer selected for update</div>
-    );
-  }
+  const isUpdate = !!id;
+  const pageTitle = id
+    ? searchParams.get("type")
+      ? `Clone as ${type}`
+      : "Update Customer"
+    : `Create ${type.charAt(0).toUpperCase() + type.slice(1)}`;
 
   return (
     <>
       <PageBreadcrumb
-        baseLink="/customers"
-        baseTitle="Customers"
-        pageTitle="Update Customer"
+        baseLink={`/${type}s`}
+        baseTitle={`${type.charAt(0).toUpperCase() + type.slice(1)}s`}
+        pageTitle={pageTitle}
         icon={
           <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-900 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
@@ -232,14 +234,16 @@ export default function UpdateCustomer() {
         }
       />
 
-      <ComponentCard title="Update Customer Details">
+      <ComponentCard title={pageTitle}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Customer Type Selection */}
+            {/* Contact Type Selection */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-4">
-                  <Label className="mb-0">Customer Type</Label>
+                  <Label className="mb-0">
+                    {type.charAt(0).toUpperCase() + type.slice(1)} Type
+                  </Label>
                   <div className="flex items-center gap-6">
                     <Radio
                       id="individual"
@@ -354,6 +358,37 @@ export default function UpdateCustomer() {
               </div>
             </div>
 
+            {/* Other Details - Exchange Rate and Balance */}
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label>Exchange Rate</Label>
+                <Input
+                  type="number"
+                  step={0.01}
+                  {...methods.register("exchange_rate", {
+                    valueAsNumber: true,
+                  })}
+                  error={!!methods.formState.errors.exchange_rate}
+                  hint={methods.formState.errors.exchange_rate?.message}
+                  placeholder="1.00"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Balance</Label>
+                <Input
+                  type="number"
+                  step={0.01}
+                  {...methods.register("balance", {
+                    valueAsNumber: true,
+                  })}
+                  error={!!methods.formState.errors.balance}
+                  hint={methods.formState.errors.balance?.message}
+                  placeholder="0.00"
+                />
+              </div>
+            </div> */}
+
             {/* Tabs Navigation */}
             <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
               <div className="border-b border-gray-200 mb-6">
@@ -403,9 +438,36 @@ export default function UpdateCustomer() {
               <button
                 type="submit"
                 className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
-                disabled={updateCustomer.isPending}
+                disabled={addContact.isPending}
               >
-                {updateCustomer.isPending ? "Updating..." : "Save Changes"}
+                {addContact.isPending ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    {id ? "Processing..." : "Creating..."}
+                  </span>
+                ) : id ? (
+                  searchParams.get("type") ? (
+                    "Clone"
+                  ) : (
+                    "Save Changes"
+                  )
+                ) : (
+                  `Create ${type.charAt(0).toUpperCase() + type.slice(1)}`
+                )}
               </button>
             </div>
           </form>

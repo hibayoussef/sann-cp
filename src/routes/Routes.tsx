@@ -8,10 +8,12 @@ import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
 import SignOtp from "@/pages/AuthPages/SignOtp";
 import CreateCustomer from "@/pages/Sales/customers/createCustomer";
 import Customers from "@/pages/Sales/customers/customers";
+import CustomersLayout from "@/pages/Sales/customers/customersLayout";
 import UpdateCustomer from "@/pages/Sales/customers/updateCustomer";
 import CreateVendor from "@/pages/Sales/vendors/createVendor";
 import UpdateVendor from "@/pages/Sales/vendors/updateVendor";
 import Vendors from "@/pages/Sales/vendors/vendors";
+import VendorsLayout from "@/pages/Sales/vendors/vendorsLayout";
 import Settings from "@/pages/Settings/Settings";
 import AccountForm from "@/pages/Settings/accounts/accountForm";
 import AccountLayout from "@/pages/Settings/accounts/accountLayout";
@@ -55,6 +57,9 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import UnitForm from "../pages/products/Units/unitForm";
+import MapSettings from "@/pages/Accountant/MapSettings/MapSettings";
+import CreateMapSettings from "@/pages/Accountant/MapSettings/createMapSettings";
+import ContactForm from "@/pages/Sales/ContactForm";
 
 const RoutesComponent = () => {
   return (
@@ -116,20 +121,27 @@ const RoutesComponent = () => {
 
           {/* Sales */}
           <Route path="/customers" element={<Customers />} />
-          <Route path="/customers/:id" element={<CategoriesLayout />} />
+          <Route path="/customers/:id" element={<CustomersLayout />} />
           <Route path="/customers/create" element={<CreateCustomer />} />
           <Route path="/customers/update/:id" element={<UpdateCustomer />} />
+          <Route path="/contacts/clone/:id" element={<ContactForm />} />
           {/* Purchases */}
           <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendors/:id" element={<VendorsLayout />} />
           <Route path="/vendors/create" element={<CreateVendor />} />
           <Route path="/vendors/update/:id" element={<UpdateVendor />} />
-          
+          {/* Accountant */}
+          <Route path="/map-settings" element={<MapSettings />} />
+          <Route path="/map-settings/create" element={<CreateMapSettings />} />
+          <Route
+            path="/map-settings/update/:id"
+            element={<CreateMapSettings />}
+          />
 
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/accounts/:id" element={<AccountLayout />} />
           <Route path="/accounts/create" element={<AccountForm />} />
           <Route path="/accounts/update/:id" element={<AccountForm />} />
-
 
           {/* end sales */}
           <Route path="/alerts" element={<Alerts />} />

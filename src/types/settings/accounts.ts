@@ -1,3 +1,5 @@
+import type { IAttachment } from "../morphables/attatchement";
+
 export interface IAccount {
   id: number;
   account_name_ar: string | undefined;
@@ -22,6 +24,7 @@ export interface IAccount {
   currency_code?: string | null;
   currency_symbol?: string | null;
   parent_account_id?: number | null;
+  attachments: IAttachment;
 }
 
 export interface AccountForm {

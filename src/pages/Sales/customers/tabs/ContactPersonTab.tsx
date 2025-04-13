@@ -53,6 +53,7 @@ const ContactPersonTab = () => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "contact_persons",
+      keyName: "keyId"
   });
 
   console.log('fieeee: ', fields)
@@ -107,6 +108,7 @@ const ContactPersonTab = () => {
 
   const handleAddNewContact = () => {
     const newContact = {
+           id: null,
       salutation_ar: "",
       salutation_en: "",
       full_name_ar: "",
@@ -155,7 +157,7 @@ const ContactPersonTab = () => {
 
         return (
           <div
-            key={field.id}
+            key={field?.id}
             className={`grid grid-cols-1 md:grid-cols-2 gap-6 border p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm relative ${
               isPendingContact ? "border-2 border-blue-500" : ""
             }`}

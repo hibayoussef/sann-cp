@@ -29,15 +29,15 @@ export default function Customers() {
         />
         <div className="space-y-4 pt-1">
           <DataTable
-            tableName="Customer"
+            tableName="Customers"
             columns={customerColumns({
               update: hasPermission("update", "customers"),
               delete: hasPermission("delete", "customers"),
             })}
             data={contacts}
             createPath="/customers/create"
-            // hasDetails={true}
-            // detailsLink="/customers"
+            hasDetails={true}
+            detailsLink="/customers"
             permissions={{
               create: hasPermission("create", "customers"),
               update: hasPermission("update", "customers"),

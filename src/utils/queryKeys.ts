@@ -33,5 +33,8 @@ export enum QueryKeys {
   PRODUCT = "product",
   ACCOUNTS = "accounts",
   ACCOUNT = "account",
-  ACCOUNT_TYPES = "account-types"
+  ACCOUNT_TYPES = "account-types",
+  MAPSETTINGS = "mapSettings",
+  MAPSETTING = "mapSetting",
+  ALLOWED_BRANCHES = "allowedBranches",
 }

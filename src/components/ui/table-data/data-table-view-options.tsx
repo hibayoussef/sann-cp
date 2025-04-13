@@ -98,29 +98,96 @@ export function DataTableViewOptions<TData>({
     doc.save(`${tableName}.pdf`);
   };
 
-  const handlePrint = () => {
-    const printContent = document.getElementById("table-container")?.innerHTML;
-    const newWindow = window.open("", "", "width=800,height=600");
-    newWindow?.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-          <style>
-            body { font-family: Arial, sans-serif; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          </style>
-        </head>
-        <body>
-          <h2>Table Print</h2>
-          ${printContent}
-        </body>
-      </html>
-    `);
-    newWindow?.document.close();
-    newWindow?.print();
-  };
+  // const handlePrint = () => {
+  //   const printContent = document.getElementById("table-container")?.innerHTML;
+  //   const newWindow = window.open("", "", "width=800,height=600");
+  //   newWindow?.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>Print</title>
+  //         <style>
+  //           body { font-family: Arial, sans-serif; }
+  //           table { width: 100%; border-collapse: collapse; }
+  //           th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <h2>Table Print</h2>
+  //         ${printContent}
+  //       </body>
+  //     </html>
+  //   `);
+  //   newWindow?.document.close();
+  //   newWindow?.print();
+  // };
+  
+ const handlePrint = () => {
+  const headers = table
+    .getVisibleLeafColumns()
+    .filter((column) => !excludedExportColumns.includes(column.id))
+    .map((column) => column.id);
 
+  const data = table.getRowModel().rows.map((row) =>
+    row
+      .getVisibleCells()
+      .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+      .map((cell) => {
+        const value = cell.getValue();
+        return typeof value === "string" || typeof value === "number"
+          ? value
+          : JSON.stringify(value);
+      })
+  );
+
+  const printContent = `
+    <html>
+      <head>
+        <title>Print</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          h1 { color: #333; text-align: center; margin-bottom: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th { background-color: #f8f9fa; text-align: left; padding: 10px; border: 1px solid #ddd; }
+          td { padding: 8px; border: 1px solid #ddd; }
+          @media print {
+            body { margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${tableName || "Table Print"}</h1>
+        <table>
+          <thead>
+            <tr>
+              ${headers.map((header) => `<th>${header}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${data
+              .map(
+                (row) => `
+              <tr>
+                ${row.map((cell) => `<td>${cell}</td>`).join("")}
+              </tr>`
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  const printWindow = window.open("", "_blank");
+  if (printWindow) {
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  }
+};
   return (
     <div className="flex space-x-4">
       <Button

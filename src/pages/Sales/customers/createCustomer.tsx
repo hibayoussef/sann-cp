@@ -62,8 +62,9 @@ export default function CustomerForm() {
       exchange_rate: 1,
       balance: 1,
       contact_type: "individual",
-      portal_access: "1",
-      portal_language: "ar"
+      portal_access: "0",
+      portal_language: "en", 
+
     },
   });
 

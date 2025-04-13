@@ -18,17 +18,16 @@ interface DynamicSelectProps<T = string> {
   error?: string;
   className?: string;
   disabled?: boolean;
-  onChange?: (value: T) => void;
+  onChange?: (value: T[]) => void;
   isRequired?: boolean;
   icon?: React.ReactNode;
-  value?: T;
-  hint?: string;
+  value?: T[];
 }
 
-export const CustomSelect = <T = string,>({
+export const CustomSelectMulti = <T = string,>({
   name,
   options,
-  placeholder = "Select an option",
+  placeholder = "Select options",
   searchPlaceholder = "Search...",
   error,
   className = "",
@@ -40,32 +39,31 @@ export const CustomSelect = <T = string,>({
   const formContext = useFormContext();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOption, setSelectedOption] = useState<OptionType<T> | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<OptionType<T>[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const formValue = formContext ? formContext.watch(name) : value;
 
   useEffect(() => {
     if (formValue && options.length > 0) {
-      const findOption = (opts: OptionType<T>[]): OptionType<T> | undefined => {
-        for (const opt of opts) {
-          if (String(opt.value) === String(formValue)) {
-            return opt;
+      const findOptions = (opts: OptionType<T>[], values: T[]): OptionType<T>[] => {
+        const found: OptionType<T>[] = [];
+        
+        opts.forEach(option => {
+          if (option.isParent && option.children) {
+            found.push(...findOptions(option.children, values));
+          } else if (values.includes(option.value)) {
+            found.push(option);
           }
-          if (opt.children) {
-            const found = findOption(opt.children);
-            if (found) return found;
-          }
-        }
-        return undefined;
+        });
+        
+        return found;
       };
 
-      const option = findOption(options);
-      if (option) {
-        setSelectedOption(option);
-      }
+      const selected = findOptions(options, formValue);
+      setSelectedOptions(selected);
     } else {
-      setSelectedOption(null);
+      setSelectedOptions([]);
     }
   }, [formValue, options]);
 
@@ -81,28 +79,60 @@ export const CustomSelect = <T = string,>({
     return option.label.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const handleSelect = async (option: OptionType<T>) => {
-    if (option.isParent) return;
+//   const handleSelect = async (option: OptionType<T>) => {
+//     if (option.isParent) return;
 
-    setSelectedOption(option);
-    if (formContext) {
-      formContext.setValue(name, option.value, { shouldValidate: true });
-      await formContext.trigger(name);
-      formContext.clearErrors(name);
-    }
-    onChange?.(option.value);
-    setIsOpen(false);
+//     const isSelected = selectedOptions.some(opt => String(opt.value) === String(option.value));
+//     let newSelectedOptions;
+
+//     if (isSelected) {
+//       newSelectedOptions = selectedOptions.filter(opt => String(opt.value) !== String(option.value));
+//     } else {
+//       newSelectedOptions = [...selectedOptions, option];
+//     }
+
+//     setSelectedOptions(newSelectedOptions);
+    
+//     if (formContext) {
+//       const values = newSelectedOptions.map(opt => opt.value);
+//       formContext.setValue(name, values, { shouldValidate: true });
+//       await formContext.trigger(name);
+//     }
+//     onChange?.(newSelectedOptions.map(opt => opt.value));
+//     setSearchTerm("");
+  
+//   };
+const handleSelect = async (option: OptionType<T>) => {
+  if (option.isParent) return;
+
+  const isSelected = selectedOptions.some(opt => String(opt.value) === String(option.value));
+  let newSelectedOptions;
+
+  if (isSelected) {
+    newSelectedOptions = selectedOptions.filter(opt => String(opt.value) !== String(option.value));
+  } else {
+    newSelectedOptions = [...selectedOptions, option];
+  }
+
+  setSelectedOptions(newSelectedOptions);
+  console.log('Selected values:', newSelectedOptions.map(opt => opt.value));
+  if (formContext) {
+    // إرجاع مصفوفة من القيم فقط (IDs)
+    const values = newSelectedOptions.map(opt => opt.value);
+    formContext.setValue(name, values, { shouldValidate: true });
+    await formContext.trigger(name);
+  }
+  onChange?.(newSelectedOptions.map(opt => opt.value));
     setSearchTerm("");
-  };
-
+    
+};
   const handleClear = async () => {
-    setSelectedOption(null);
+    setSelectedOptions([]);
     if (formContext) {
-      formContext.setValue(name, "" as T, { shouldValidate: true });
+      formContext.setValue(name, [], { shouldValidate: true });
       await formContext.trigger(name);
-      formContext.clearErrors(name);
     }
-    onChange?.("" as T);
+    onChange?.([]);
   };
 
   useEffect(() => {
@@ -121,6 +151,35 @@ export const CustomSelect = <T = string,>({
     };
   }, []);
 
+  const renderSelectedOptions = () => {
+    if (selectedOptions.length === 0) {
+      return <span className="text-gray-400">{placeholder}</span>;
+    }
+    
+    return (
+      <div className="flex flex-wrap gap-1">
+        {selectedOptions.map(option => (
+          <span 
+            key={String(option.value)} 
+            className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs flex items-center"
+          >
+            {option.label}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSelect(option);
+              }}
+              className="ml-1 text-blue-400 hover:text-blue-600"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   const renderOptions = (opts: OptionType<T>[]) => {
     return opts.map((option) => (
       <div key={String(option.value)}>
@@ -132,7 +191,7 @@ export const CustomSelect = <T = string,>({
           <button
             type="button"
             className={`w-full text-left px-3 py-2 text-sm flex items-center justify-between hover:bg-blue-50 transition-colors ${
-              selectedOption?.value === option.value
+              selectedOptions.some(opt => String(opt.value) === String(option.value))
                 ? "bg-blue-50 text-blue-600"
                 : "text-gray-700"
             }`}
@@ -146,7 +205,7 @@ export const CustomSelect = <T = string,>({
                 </span>
               )}
             </div>
-            {selectedOption?.value === option.value && (
+            {selectedOptions.some(opt => String(opt.value) === String(option.value)) && (
               <Check className="w-4 h-4 text-blue-500" />
             )}
           </button>
@@ -162,7 +221,7 @@ export const CustomSelect = <T = string,>({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`w-full text-left pl-3 pr-2 py-[3px] border rounded-[8px] flex items-center justify-between transition-all duration-200 ${
+        className={`w-full text-left pl-3 pr-2 py-2 border rounded-[8px] flex items-center justify-between transition-all duration-200 ${
           error
             ? "border-red-400 focus:border-red-500"
             : "border-gray-200 hover:border-gray-300 focus:border-blue-400"
@@ -174,14 +233,14 @@ export const CustomSelect = <T = string,>({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <div className="flex items-center">
+        <div className="flex items-center flex-1 min-w-0">
           {icon && <span className="mr-2 text-gray-400">{icon}</span>}
-          <span className={`truncate ${!selectedOption ? "text-gray-400" : ""}`}>
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
+          <div className="truncate">
+            {renderSelectedOptions()}
+          </div>
         </div>
-        <div className="flex items-center space-x-1">
-          {selectedOption && (
+        <div className="flex items-center space-x-1 ml-2">
+          {selectedOptions.length > 0 && (
             <button
               type="button"
               onClick={(e) => {

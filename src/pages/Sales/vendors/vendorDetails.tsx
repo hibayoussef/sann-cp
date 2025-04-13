@@ -1,6 +1,10 @@
 import { subCategoryColumns } from "@/columns/products/subCategory";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog, DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,9 +37,9 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-export default function CustomerDetails({ customerId }: { customerId: number }) {
+export default function VendorDetails({ vendorId }: { vendorId: number }) {
   const [activeTab, setActiveTab] = useState("overview");
-  const { data: customerData, refetch }: any = useFetchContact(customerId);
+  const { data: customerData, refetch }: any = useFetchContact(vendorId);
   const [isLoadingPortal, setIsLoadingPortal] = useState(false);
   const [showCloneDialog, setShowCloneDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -48,11 +52,11 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
   const handleTogglePortal = () => {
     setIsLoadingPortal(true);
     const newPortalAccess = customerData.portal_access ? 0 : 1;
-    
+
     enablePortal(
       {
         contactId: customerData.id,
-        portalAccess: newPortalAccess
+        portalAccess: newPortalAccess,
       },
       {
         onSuccess: () => {
@@ -61,7 +65,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
         },
         onError: () => {
           setIsLoadingPortal(false);
-        }
+        },
       }
     );
   };
@@ -71,19 +75,19 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
   //   setShowCloneDialog(false);
   // };
 
-  const handleClone = (type: 'customer' | 'vendor') => {
-  navigate(`/contacts/clone/${customerData.id}?type=${type}`);
+  const handleClone = (type: "customer" | "vendor") => {
+    navigate(`/contacts/clone/${customerData.id}?type=${type}`);
   };
-  
+
   const handleDelete = () => {
     // TODO: Implement delete logic
-    console.log('Deleting customer:', customerData.id);
+    console.log("Deleting customer:", customerData.id);
     setShowDeleteDialog(false);
   };
 
   const handleMarkInactive = () => {
     // TODO: Implement mark as inactive logic
-    console.log('Marking customer as inactive:', customerData.id);
+    console.log("Marking customer as inactive:", customerData.id);
     setShowInactiveDialog(false);
   };
 
@@ -92,7 +96,9 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-3 text-sm text-gray-500">Loading customer details...</p>
+          <p className="mt-3 text-sm text-gray-500">
+            Loading customer details...
+          </p>
         </div>
       </div>
     );
@@ -105,22 +111,26 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
         <div>
           <h1 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             {customerData?.organization_name_en || customerData?.full_name_en}
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-              customerData?.contact_type === 'business' 
-                ? 'bg-purple-50 text-purple-700' 
-                : 'bg-blue-50 text-blue-700'
-            }`}>
-              {customerData?.contact_type === 'business' ? 'BUSINESS' : 'INDIVIDUAL'}
+            <span
+              className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                customerData?.contact_type === "business"
+                  ? "bg-purple-50 text-purple-700"
+                  : "bg-blue-50 text-blue-700"
+              }`}
+            >
+              {customerData?.contact_type === "business"
+                ? "BUSINESS"
+                : "INDIVIDUAL"}
             </span>
           </h1>
           <p className="text-xs text-gray-500 mt-1">
-            {customerData?.branch_name_en} • ID: {customerData?.id}
+            {customerData?.branch_name_en} • ID: {customerData.id}
           </p>
         </div>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="border-gray-300"
             onClick={() => navigate(`/customers/update/${customerData?.id}`)}
           >
@@ -138,14 +148,14 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 <Copy className="w-3 h-3 mr-2" />
                 Clone
               </DropdownMenuItem>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => setShowDeleteDialog(true)}
                 className="text-red-600"
               >
                 <Trash2 className="w-3 h-3 mr-2" />
                 Delete
               </DropdownMenuItem>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => setShowInactiveDialog(true)}
                 className="text-amber-600"
               >
@@ -165,11 +175,12 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-gray-600">
-              Select the contact type under which you want to create the new cloned contact.
+              Select the contact type under which you want to create the new
+              cloned contact.
             </p>
             <div className="space-y-2">
               <button
-                onClick={() => handleClone('customer')}
+                onClick={() => handleClone("customer")}
                 className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
               >
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
@@ -177,11 +188,13 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 </div>
                 <div>
                   <p className="font-medium">Customer</p>
-                  <p className="text-xs text-gray-500">Create as a new customer</p>
+                  <p className="text-xs text-gray-500">
+                    Create as a new customer
+                  </p>
                 </div>
               </button>
               <button
-                onClick={() => handleClone('vendor')}
+                onClick={() => handleClone("vendor")}
                 className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
               >
                 <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
@@ -189,7 +202,9 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 </div>
                 <div>
                   <p className="font-medium">Vendor</p>
-                  <p className="text-xs text-gray-500">Create as a new vendor</p>
+                  <p className="text-xs text-gray-500">
+                    Create as a new vendor
+                  </p>
                 </div>
               </button>
             </div>
@@ -205,19 +220,17 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-gray-600">
-              Are you sure you want to delete this customer? This action cannot be undone.
+              Are you sure you want to delete this customer? This action cannot
+              be undone.
             </p>
             <div className="flex justify-end gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowDeleteDialog(false)}
               >
                 Cancel
               </Button>
-              <Button 
-                variant="destructive"
-                onClick={handleDelete}
-              >
+              <Button variant="destructive" onClick={handleDelete}>
                 Delete
               </Button>
             </div>
@@ -233,19 +246,17 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-gray-600">
-              Are you sure you want to mark this customer as inactive? They will no longer appear in active lists.
+              Are you sure you want to mark this customer as inactive? They will
+              no longer appear in active lists.
             </p>
             <div className="flex justify-end gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowInactiveDialog(false)}
               >
                 Cancel
               </Button>
-              <Button 
-                variant="default"
-                onClick={handleMarkInactive}
-              >
+              <Button variant="default" onClick={handleMarkInactive}>
                 Confirm
               </Button>
             </div>
@@ -332,21 +343,31 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Customer Portal Card */}
-          <div className={`rounded-xl p-4 transition-all duration-200 ${
-            customerData?.portal_access
-              ? "bg-green-50 border border-green-100"
-              : "bg-blue-50 border border-blue-100"
-          }`}>
+          <div
+            className={`rounded-xl p-4 transition-all duration-200 ${
+              customerData?.portal_access
+                ? "bg-green-50 border border-green-100"
+                : "bg-blue-50 border border-blue-100"
+            }`}
+          >
             <div className="flex items-start gap-3 mb-3">
-              <div className={`p-2 rounded-lg ${
-                customerData?.portal_access ? "bg-green-100" : "bg-blue-100"
-              }`}>
-                <Lock className={`w-5 h-5 ${
-                  customerData?.portal_access ? "text-green-600" : "text-blue-600"
-                }`} />
+              <div
+                className={`p-2 rounded-lg ${
+                  customerData?.portal_access ? "bg-green-100" : "bg-blue-100"
+                }`}
+              >
+                <Lock
+                  className={`w-5 h-5 ${
+                    customerData?.portal_access
+                      ? "text-green-600"
+                      : "text-blue-600"
+                  }`}
+                />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-800">Customer Portal</h3>
+                <h3 className="text-sm font-semibold text-gray-800">
+                  Customer Portal
+                </h3>
                 <p className="text-xs text-gray-600 mt-1">
                   {customerData?.portal_access
                     ? "Portal is currently active"
@@ -536,18 +557,18 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
               <div className="flex flex-wrap gap-2">
                 {customerData?.details?.social_media.map((social: any) => (
                   <a
-                    key={social?.platform}
-                    href={social?.url}
+                    key={social.platform}
+                    href={social.url}
                     target="_blank"
                     className="text-xs px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center gap-1"
                   >
-                    {social?.platform === "Facebook" && (
+                    {social.platform === "Facebook" && (
                       <Facebook className="w-3 h-3" />
                     )}
-                    {social?.platform === "Twitter" && (
+                    {social.platform === "Twitter" && (
                       <Twitter className="w-3 h-3" />
                     )}
-                    {social?.platform === "Instagram" && (
+                    {social.platform === "Instagram" && (
                       <Instagram className="w-3 h-3" />
                     )}
                     {social?.platform}
@@ -567,7 +588,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 TOTAL SPEND (6M)
               </h3>
               <p className="text-lg font-semibold text-gray-900">
-                {parseFloat(customerData.balance).toLocaleString()} AED
+                {parseFloat(customerData?.balance).toLocaleString()} AED
               </p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 +12% from last period
@@ -624,7 +645,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
-                CONTACT PERSONS ({customerData?.persons?.length || 0})
+                CONTACT PERSONS ({customerData.persons?.length || 0})
               </h3>
               <Button size="sm" variant="outline" className="h-7">
                 <Plus className="w-3 h-3 mr-1" />
@@ -664,23 +685,23 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                       <div className="flex items-center gap-2 text-xs">
                         <Phone className="w-3 h-3 text-gray-400 flex-shrink-0" />
                         <a
-                          href={`tel:${person?.mobile}`}
+                          href={`tel:${person.mobile}`}
                           className="text-blue-600 hover:underline"
                         >
-                          {person?.mobile}
+                          {person.mobile}
                         </a>
                       </div>
 
-                      {person?.social_media?.length > 0 && (
+                      {person.social_media?.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {person?.social_media.map((social: any) => (
+                          {person.social_media.map((social: any) => (
                             <a
-                              key={`${person?.id}-${social?.platform}`}
-                              href={social?.url}
+                              key={`${person.id}-${social.platform}`}
+                              href={social.url}
                               target="_blank"
                               className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-0.5"
                             >
-                              {social?.platform}
+                              {social.platform}
                             </a>
                           ))}
                         </div>

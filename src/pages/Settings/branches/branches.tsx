@@ -17,8 +17,8 @@ export default function Branches() {
   return (
     <>
       <PageMeta
-        title="Categories Management | Dashboard"
-        description="Manage your product categories in the system."
+        title="Branches Management | Dashboard"
+        description="Manage your product branches in the system."
       />
       <div className="space-y-4 px-1 py-1 ">
         <PageBreadcrumb
@@ -28,6 +28,7 @@ export default function Branches() {
         />
         <div className="space-y-4 pt-1">
           <DataTable
+           tableName="Branches"
             columns={branchColumns({
               update: hasPermission("update", "branches"),
               delete: hasPermission("delete", "branches"),

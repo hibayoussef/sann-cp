@@ -1,3 +1,4 @@
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,121 +8,129 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useFetchCategories } from "@/hooks/prouducts/useCategories";
-import { Home, MoreVertical, Plus } from "lucide-react";
+import { useFetchContacts } from "@/hooks/sales/contacts";
+import { ContactType } from "@/types/enums/contactType";
+import { Home, MoreVertical, Plus, User } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import CategoryDetails from "./customerDetails";
-import ComponentCardDetails from "@/components/common/ComponentCardDetails";
-import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import { useNavigate, useParams } from "react-router";
+import VendorDetails from "./vendorDetails";
 
 export default function VendorsLayout() {
-  const { data } = useFetchCategories();
-  const categories: any = data || [];
+  const { data } = useFetchContacts(ContactType.VENDOR);
+  const customers = data || [];
   const navigate = useNavigate();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
+  const { id } = useParams();
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(
+    +id! || null
   );
-
-  // Export handlers
   const handleExportCSV = () => {
     console.log("Exporting to CSV...");
-    // Add CSV export logic here
   };
 
   const handleExportExcel = () => {
     console.log("Exporting to Excel...");
-    // Add Excel export logic here
   };
 
   return (
-    <>
-      <div className="py-4">
+    <div className="bg-gray-50 min-h-screen">
         <PageBreadcrumb
           baseTitle="Dashboard"
-          pageTitle="Categories"
+          pageTitle="Vendors"
           icon={<Home className="w-5 h-5" />}
         />
-        <div className="py-4">
-          <ComponentCardDetails
-            title="Categories Management"
-            className="h-full"
-          >
-            <div className="grid grid-cols-5 gap-4 h-[calc(100vh-180px)]">
-              {/* Categories List Section */}
-              <div className="col-span-1 overflow-y-auto  border-r border-gray-100 flex flex-col">
-                {/* Header Section */}
-                <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                  <h3 className="text-sm px-4 font-semibold">All</h3>
-                  <div className="flex items-center  gap-2">
-                    <Button
-                      variant="outline"
-                      className="h-8 px-2 bg-[#465FFF] text-white hover:bg-[#465FFF]/90"
-                      onClick={() => navigate("/categories/create")}
-                    >
-                      <Plus className="h-4 w-4 mr-1" />
-                      <span className="text-xs">New</span>
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="h-8 w-8 p-0 hover:bg-gray-100"
-                        >
-                          <MoreVertical className="h-4 w-4 text-gray-600" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-[200px] bg-white shadow-md border border-gray-200"
+        
+        <div className="mt-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="flex h-[calc(100vh-120px)]">
+            {/* Sidebar */}
+            <div className="w-60 border-r border-gray-100 flex flex-col">
+              <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 className="font-medium text-gray-800 text-[15px]">Vendors</h3>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="h-8 bg-[#465FFF] hover:bg-[#465FFF]/90 text-white"
+                    onClick={() => navigate("/vendors/create")}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    New
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="h-8 w-8 p-0 hover:bg-gray-100"
                       >
-                        <DropdownMenuLabel>Export Options</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleExportCSV}>
-                          Export by CSV
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleExportExcel}>
-                          Export by Excel
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
-
-                {/* Categories List */}
-                <div className="flex-1">
-                  {categories?.map((category: any) => (
-                    <div key={category.id} className="relative">
-                      <div
-                        onClick={() => setSelectedCategoryId(category.id)}
-                        className={`px-7 py-2 cursor-pointer text-[13px] transition-colors
-                        ${
-                          selectedCategoryId === category.id
-                            ? "bg-blue-100 text-blue-600 font-medium"
-                            : "hover:bg-gray-50"
-                        }`}
-                      >
-                        {category.category_name_en}
-                      </div>
-                      {/* <span className={`px-7 py-2 cursor-pointer text-[13px] transition-colors`} style={{color: "green"}}>{category?.code}</span> */}
-                      <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-200 shadow-md" />
-                    </div>
-                  ))}
+                        <MoreVertical className="h-4 w-4 text-gray-600" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[200px]">
+                      <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleExportCSV}>
+                        Export as CSV
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleExportExcel}>
+                        Export as Excel
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
-              {/* Category Details Section */}
-              <div className="col-span-4 py-5 px-4 overflow-y-auto">
-                {selectedCategoryId ? (
-                  <CategoryDetails categoryId={selectedCategoryId} />
-                ) : (
-                   <CategoryDetails categoryId={Number(selectedCategoryId)} />
-                )}
+              <div className="flex-1 overflow-y-auto">
+                {customers?.map((customer: any) => (
+                  <div 
+                    key={customer.id}
+                    onClick={() => {
+                      setSelectedCustomerId(customer.id);
+                      navigate(`/vendors/${customer.id}`);
+                    }}
+                    className={`p-3 border-b border-gray-100 cursor-pointer transition-colors ${
+                      selectedCustomerId === customer.id 
+                        ? 'bg-blue-50 border-l-4 border-l-blue-500' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        customer.contact_type === 'business' 
+                          ? 'bg-purple-100 text-purple-600' 
+                          : 'bg-blue-100 text-blue-600'
+                      }`}>
+                        <User className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 text-[14px]">
+                          {customer.full_name_en || customer.organization_name_en}
+                        </h4>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {customer.contact_type === 'business' ? 'Business' : 'Individual'} • {customer.balance} AED
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </ComponentCardDetails>
-        </div>{" "}
-      </div>
-    </>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-auto">
+              {selectedCustomerId ? (
+                <VendorDetails vendorId={selectedCustomerId} />
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center p-8">
+                  <div className="bg-gray-100 p-6 rounded-full mb-4">
+                    <User className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-medium text-gray-900">No customer selected</h3>
+                  <p className="text-gray-500 mt-2 max-w-md">
+                    Select a customer from the list to view detailed information
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+    </div>
   );
 }

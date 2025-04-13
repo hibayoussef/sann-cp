@@ -1,7 +1,5 @@
 import Switch from "@/components/form/switch/Switch";
-import {
-  productSchema,
-} from "@/components/lib/validations/product";
+import { productSchema } from "@/components/lib/validations/product";
 import { CustomSelect } from "@/components/ui/select/customSelect";
 import { useFetchBrands } from "@/hooks/prouducts/useBrands";
 import { useFetchCategories } from "@/hooks/prouducts/useCategories";
@@ -39,6 +37,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
+import Select from 'react-select';
 
 interface ProductType {
   for_selling: number;
@@ -53,7 +52,7 @@ interface ProductType {
   sub_category_id: number | null;
   unit_id: number;
   sub_unit_id: number | null;
-  sub_units: any[];
+  sub_units: {id: number}[];
   warranty_id: number | null;
   alert_quantity: number;
   description: string;
@@ -75,19 +74,15 @@ export default function ProductForm() {
   const isUpdate = Boolean(id);
   const addProduct = useAddProduct();
   const updateProduct = useUpdateProduct();
-  const organizationId = 
-  useMeStore((state) => state.organizationId);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
-  );
+  const organizationId = useMeStore((state) => state.organizationId);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  
   const { data: productData, isLoading } = useFetchProduct(Number(id), {
     enabled: isUpdate,
   });
   const { data: accounts } = useFetchAccounts();
-
   const { data: taxes } = useFetchTaxes();
   const { data: categories } = useFetchCategories();
-
   const { data: subCategories, isLoading: subCategoriesLoading } =
     useFetchSubCategoryById(selectedCategoryId);
   const { data: warranties } = useFetchWarranties();
@@ -129,7 +124,7 @@ export default function ProductForm() {
         : [{ branch_id: 0, is_active: true }],
       default_sale_unit: productData?.default_sale_unit ?? 0,
       default_purchase_unit: productData?.default_purchase_unit ?? 0,
-      sub_units: productData?.sub_units ?? [],
+      sub_units: productData?.sub_units?.map(su => ({ id: Number(su.id) })) || [],
     },
   });
 
@@ -165,7 +160,7 @@ export default function ProductForm() {
     if (productData) {
       setValue(
         "sub_units",
-        productData.sub_units?.map((su) => ({ id: su.id })) || []
+        productData?.sub_units?.map((su) => ({ id: Number(su.id) })) || []
       );
     }
   }, [productData, setValue]);
@@ -180,22 +175,15 @@ export default function ProductForm() {
 
   useEffect(() => {
     if (productData) {
-      // Basic Information
       setValue("product_name_en", productData.product_name_en ?? "");
       setValue("product_name_ar", productData.product_name_ar ?? "");
       setValue("sku", productData.sku ?? "");
       setValue("color", productData.color ?? "blue");
       setValue("type", productData.type ?? "Goods");
-
-      // Pricing
       setValue("purchase_price", Number(productData.purchase_price) ?? 0);
       setValue("sale_price", Number(productData.sale_price) ?? 0);
-      setValue("expiry_date", productData.expiry_date?.split("T")[0] ?? ""); // Format date for input[type=date]
-
-      // Inventory
+      setValue("expiry_date", productData.expiry_date?.split("T")[0] ?? "");
       setValue("alert_quantity", productData.alert_quantity ?? 1);
-
-      // Accounts
       setValue("sale_account", productData.sale_account ?? 0);
       setValue("purchase_account", productData.purchase_account ?? 0);
       setValue("sale_return_account", productData.sale_return_account ?? 0);
@@ -203,26 +191,18 @@ export default function ProductForm() {
         "purchase_return_account",
         productData.purchase_return_account ?? 0
       );
-
-      // Relationships
       setValue("tax_id", productData.tax_id ?? null);
       setValue("brand_id", productData.brand_id ?? null);
       setValue("category_id", productData.category_id ?? 0);
       setValue("sub_category_id", productData.sub_category_id ?? 0);
       setValue("unit_id", productData.unit_id ?? 0);
       setValue("warranty_id", productData.warranty_id ?? null);
-
-      // Units
       setValue(
         "sub_units",
-        productData.sub_units?.map((su) => ({ id: su.id })) || []
+        productData?.sub_units?.map((su) => ({ id: Number(su.id) })) || []
       );
-
-      // Statuses
       setValue("is_active", productData?.is_active);
       setValue("for_selling", productData.for_selling ?? 1);
-
-      // Branches
       setValue(
         "branches",
         productData.branches?.map((b) => ({
@@ -230,8 +210,6 @@ export default function ProductForm() {
           is_active: Boolean(b.is_active),
         })) || [{ branch_id: 0, is_active: true }]
       );
-
-      // Default Units
       setValue("default_sale_unit", productData.default_sale_unit ?? 0);
       setValue("default_purchase_unit", productData.default_purchase_unit ?? 0);
     }
@@ -245,46 +223,6 @@ export default function ProductForm() {
       );
     }
   }, [subunits?.data, setValue]);
-
-  console.log("error r:", errors);
-  const onSubmit = async (formData: any) => {
-    const payload = {
-      ...formData,
-      organization_id: organizationId,
-      branches: formData.branches.map((b: any) => ({
-        branch_id: Number(b.branch_id),
-        is_active: b.is_active ? 1 : 0,
-      })),
-      // sub_units:
-      //   formData?.sub_units.map((su: any) => ({
-      //     id: su.id ? Number(su.id) : null,
-      //   })) || [],
-      sub_unit: formData.sub_units.map((suId: number) => ({
-        id: Number(suId),
-      })),
-      is_active: formData.is_active ? 1 : 0,
-      sale_account: formData.sale_account ? Number(formData.sale_account) : 0,
-      purchase_account: formData.purchase_account
-        ? Number(formData.purchase_account)
-        : 0,
-      sale_return_account: formData.sale_return_account
-        ? Number(formData.sale_return_account)
-        : 0,
-      purchase_return_account: formData.purchase_return_account
-        ? Number(formData.purchase_return_account)
-        : 0,
-      ...(isUpdate && id ? { _method: "PUT" } : {}),
-    };
-
-    if (isUpdate && id) {
-      await updateProduct.mutateAsync({
-        id: Number(id),
-        data: payload,
-      });
-    } else {
-      await addProduct.mutateAsync(payload);
-    }
-  };
 
   const [categoryOptions, setCategoryOptions] = useState<Array<{ value: string; label: string }>>([]);
   const [subCategoryOptions, setSubCategoryOptions] = useState<Array<{ value: string; label: string }>>([]);
@@ -435,6 +373,41 @@ export default function ProductForm() {
     }
   ] : [];
 
+  const onSubmit = async (formData: any) => {
+    const payload = {
+      ...formData,
+      organization_id: organizationId,
+      branches: formData.branches.map((b: any) => ({
+        branch_id: Number(b.branch_id),
+        is_active: b.is_active ? 1 : 0,
+      })),
+      sub_units: formData.sub_units.map((su: any) => ({
+        id: Number(su.id),
+      })),
+      is_active: formData.is_active ? 1 : 0,
+      sale_account: formData.sale_account ? Number(formData.sale_account) : 0,
+      purchase_account: formData.purchase_account
+        ? Number(formData.purchase_account)
+        : 0,
+      sale_return_account: formData.sale_return_account
+        ? Number(formData.sale_return_account)
+        : 0,
+      purchase_return_account: formData.purchase_return_account
+        ? Number(formData.purchase_return_account)
+        : 0,
+      ...(isUpdate && id ? { _method: "PUT" } : {}),
+    };
+
+    if (isUpdate && id) {
+      await updateProduct.mutateAsync({
+        id: Number(id),
+        data: payload,
+      });
+    } else {
+      await addProduct.mutateAsync(payload);
+    }
+  };
+
   return (
     <>
       <PageBreadcrumb
@@ -507,7 +480,6 @@ export default function ProductForm() {
                       icon={<IoColorPalette className="w-4 h-4" />}
                     />
                   </div>
-                  {/* Product Type Section */}
                   <div>
                     <Label htmlFor="type">Product Type*</Label>
                     <CustomSelect
@@ -797,14 +769,25 @@ export default function ProductForm() {
                         subunits?.data && subunits.data.length > 0 && (
                           <div>
                             <Label htmlFor="sub_units">Available Sub Units</Label>
-                            <CustomSelect
-                              name="sub_units"
+                            <Select
+                              isMulti
                               options={subUnitOptions}
-                              placeholder="Select Sub Units"
-                              error={errors.sub_units?.message}
-                              onChange={(value) => handleSelectChange("sub_units", value)}
-                              icon={<Layers className="w-4 h-4" />}
+                              value={watch("sub_units")?.map(su => ({
+                                value: su.id.toString(),
+                                label: subUnitOptions.find(opt => opt.value === su.id.toString())?.label || ''
+                              }))}
+                              onChange={(selectedOptions) => {
+                                const selectedValues = selectedOptions.map(option => ({
+                                  id: Number(option.value)
+                                }));
+                                setValue("sub_units", selectedValues);
+                              }}
+                              className="basic-multi-select"
+                              classNamePrefix="select"
                             />
+                            {errors.sub_units && (
+                              <p className="text-red-500 text-xs mt-1">{errors.sub_units.message}</p>
+                            )}
                           </div>
                         )
                       )}

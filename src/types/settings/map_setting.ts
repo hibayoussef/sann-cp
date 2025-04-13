@@ -27,7 +27,7 @@ export interface IMapSetting {
   jobcard_account_id: number;
   jobcard_account_name_ar?: string | null;
   jobcard_account_name_en: string;
-}//store -show in table
+} //store -show in table..... result of store
 
 export interface MapSettingForm {
   organization_id: number | null | undefined;
@@ -40,8 +40,8 @@ export interface MapSettingForm {
   purchase: number | null | undefined;
   purchase_return: number | null | undefined;
   jobcard: number | null | undefined;
-}//body in submit
+} //body in submit
 export interface MapSettingUpdateForm {
   id?: number | null;
   data?: MapSettingForm;
-}//update
+} //update

@@ -69,6 +69,7 @@ const contactDetailsSchema = z.object({
 });
 
 const contactPersonSchema = z.object({
+  id: z.number().nullable(),
   salutation_ar: z.string().optional().nullable(),
   salutation_en: z.string().optional().nullable(),
   full_name_ar: z.string().optional().nullable(),
@@ -133,6 +134,7 @@ export const customerSchema = z.object({
   portal_language: z.enum(["en", "ar"]).default("en").optional().nullable(),
   first_name_ar: z.string().optional().nullable(),
   last_name_ar: z.string().optional().nullable(),
+  // contact_details: z.object({}).optional(),
   contact_details: contactDetailsSchema.optional(),
   contact_persons: z.array(contactPersonSchema).optional().nullable(),
 });
