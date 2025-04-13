@@ -89,6 +89,7 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> =
             disabled={disabled}
             className={`${inputClasses} ${icon ? "pl-10" : ""}`}
             readOnly={readOnly}
+            autoComplete="new-password"
           />
 
           {hint && (

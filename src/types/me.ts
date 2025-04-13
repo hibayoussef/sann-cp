@@ -26,6 +26,7 @@ export interface IOrganization {
 }
 
 export interface IMeResponse {
+  mfa: boolean;
   user: IUser;
   role: string[];
   permissions: string[];

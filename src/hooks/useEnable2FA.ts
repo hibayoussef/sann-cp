@@ -1,6 +1,7 @@
 import { _TwoFactorApi } from "@/services/mfa.service";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useMutation } from "@tanstack/react-query";
+import { QueryKeys } from "@/utils/queryKeys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 interface AuthPayload {
@@ -14,19 +15,31 @@ interface CodePayload extends AuthPayload {
 
 // Enable 2FA
 export const useEnable2FA = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: AuthPayload) => {
       return _TwoFactorApi.enable2FA(data);
-    }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.ME],
+      });
+    },
   });
 };
 
 // Disable 2FA
 export const useDisable2FA = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: AuthPayload) => {
       return _TwoFactorApi.disable2FA(data);
-    }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.ME],
+      });
+    },
   });
 };
 
@@ -35,7 +48,7 @@ export const useGet2FAQRCode = () => {
   return useMutation({
     mutationFn: async (data: AuthPayload) => {
       return _TwoFactorApi.get2FAQRCode(data);
-    }
+    },
   });
 };
 
@@ -44,7 +57,7 @@ export const useGetRecoveryCodes = () => {
   return useMutation({
     mutationFn: async (data: AuthPayload) => {
       return _TwoFactorApi.getRecoveryCodes(data);
-    }
+    },
   });
 };
 
@@ -53,7 +66,7 @@ export const useRegenerateRecoveryCodes = () => {
   return useMutation({
     mutationFn: async (data: AuthPayload) => {
       return _TwoFactorApi.regenerateRecoveryCodes(data);
-    }
+    },
   });
 };
 
@@ -69,6 +82,6 @@ export const useVerify2FACode = () => {
     onSuccess: (data: any) => {
       login(data?.data, data?.data?.token);
       navigate("/home");
-    }
+    },
   });
 };
