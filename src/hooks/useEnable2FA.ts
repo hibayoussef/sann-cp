@@ -1,7 +1,7 @@
 import { _TwoFactorApi } from "@/services/mfa.service";
 import { useAuthStore } from "@/store/useAuthStore";
 import { QueryKeys } from "@/utils/queryKeys";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 interface AuthPayload {
@@ -44,18 +44,20 @@ export const useDisable2FA = () => {
 };
 
 // Get QR Code
-export const useGet2FAQRCode = () => {
-  return useMutation({
-    mutationFn: async (data: AuthPayload) => {
+export const useGet2FAQRCode = (data: AuthPayload) => {
+  return useQuery({
+    queryKey: [QueryKeys.QR_CODE, data],
+    queryFn: async () => {
       return _TwoFactorApi.get2FAQRCode(data);
     },
   });
 };
 
 // Get Recovery Codes
-export const useGetRecoveryCodes = () => {
-  return useMutation({
-    mutationFn: async (data: AuthPayload) => {
+export const useGetRecoveryCodes = (data: AuthPayload) => {
+  return useQuery({
+    queryKey: [QueryKeys.RECOVERY_CODES, data],
+    queryFn: async () => {
       return _TwoFactorApi.getRecoveryCodes(data);
     },
   });

@@ -38,11 +38,16 @@ export const useLogin = () => {
       return res;
     },
     onSuccess: (data: any) => {
+      console.log("dataa", data);
       login(data?.data, data?.data?.token);
       navigate("/home");
     },
-    onError: (error) => {
-      console.error("Error logging in:", error);
+    onError: (error: any) => {
+      console.log("errorrrrr", error.response.data.message);
+      if (error.response.data.message == "2FA Required.") {
+        console.log("hiiiiiiiiiiiiiiiiiii", error.response.data.message);
+      }
+      // console.error("Error logging in:", error);
     },
   });
 

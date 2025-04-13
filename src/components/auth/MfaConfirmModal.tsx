@@ -4,9 +4,6 @@ import Input from "../form/input/InputField";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetchMe } from "@/hooks/useMe";
-import Loader from "../ui/loader/loader";
-import { useEffect } from "react";
 
 const schema = z.object({
   email: z.string().email().nonempty("Email is required"),
@@ -30,7 +27,6 @@ export default function MfaConfirmModal({
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -38,15 +34,6 @@ export default function MfaConfirmModal({
       password: "",
     },
   });
-
-  // useEffect(() => {
-  //   if (me) {
-  //     reset({
-  //       email: me.user.email,
-  //       password: "",
-  //     });
-  //   }
-  // }, [me, reset]);
 
   const onFormSubmit = (values: z.infer<typeof schema>) => {
     onSubmit(values.email, values.password);
@@ -96,6 +83,7 @@ export default function MfaConfirmModal({
               <button
                 onClick={onClose}
                 className="text-sm text-gray-600 dark:text-gray-300"
+                type="button"
               >
                 Cancel
               </button>

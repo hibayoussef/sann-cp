@@ -55,6 +55,7 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import UnitForm from "../pages/products/Units/unitForm";
+import MfaVerification from "@/pages/AuthPages/2FaVerification";
 
 const RoutesComponent = () => {
   return (
@@ -69,6 +70,7 @@ const RoutesComponent = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
+        <Route path="/2fa-verification" element={<MfaVerification />} />
       </Route>
 
       <Route element={<ShouldBeLogged />}>
@@ -123,13 +125,11 @@ const RoutesComponent = () => {
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/vendors/create" element={<CreateVendor />} />
           <Route path="/vendors/update/:id" element={<UpdateVendor />} />
-          
 
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/accounts/:id" element={<AccountLayout />} />
           <Route path="/accounts/create" element={<AccountForm />} />
           <Route path="/accounts/update/:id" element={<AccountForm />} />
-
 
           {/* end sales */}
           <Route path="/alerts" element={<Alerts />} />
