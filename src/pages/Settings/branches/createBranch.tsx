@@ -1,3 +1,4 @@
+import DropzoneComponent from "@/components/form/form-elements/DropZone";
 import { branchSchema, BranchType } from "@/components/lib/validations/branch";
 import Loader from "@/components/ui/loader/loader";
 import {
@@ -5,6 +6,7 @@ import {
   useFetchBranch,
   useUpdateBranch,
 } from "@/hooks/settings/useBranches";
+import { useFetchOrganizations } from "@/hooks/settings/useOrganizations";
 import { useFetchCountries } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,7 +17,7 @@ import {
   Mail,
   MapPin,
   Phone,
-  Tag
+  Tag,
 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -27,6 +29,7 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Switch from "../../../components/form/switch/Switch";
 import { useMeStore } from "../../../store/useMeStore";
+import { FileType } from "@/types/enums/attatchementType";
 
 export default function CreateBranch() {
   const { id } = useParams();
@@ -40,6 +43,7 @@ export default function CreateBranch() {
   const { data: branchData, isLoading }: any = useFetchBranch(Number(id), {
     enabled: isUpdate,
   });
+  const { data: organizationData } = useFetchOrganizations();
 
   const {
     register,
@@ -79,7 +83,7 @@ export default function CreateBranch() {
       setValue("street2", branchData.street2 ?? "");
       setValue("city", branchData.city ?? "");
       setValue("postal_code", branchData.postal_code ?? "");
-      setValue("registered_for_vat", branchData.registered_for_vat ?? 0)
+      setValue("registered_for_vat", branchData.registered_for_vat ?? 0);
       setValue(
         "tax_registration_number_label",
         branchData.tax_registration_number_label ?? ""
@@ -110,20 +114,32 @@ export default function CreateBranch() {
     }
   };
 
-  console.log("eror: ", errors);
-
   return (
-    <div className="py-4 px-1">
+    <div className="px-1">
       <PageBreadcrumb
         baseLink="/branches"
         baseTitle="Branches"
         pageTitle={isUpdate ? "Update Branch" : "Create Branch"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-800 bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
       />
+      <div className="mb-3">
+        <DropzoneComponent
+          id={organizationData?.id}
+          initialImage={
+            organizationData?.attachments?.file_path
+              ? organizationData?.attachments?.file_path
+              : ""
+          }
+          type={FileType.BRANCH}
+          onUpload={(fileData) => {
+            console.log("Uploaded file data:", fileData);
+          }}
+        />
+      </div>
       <ComponentCard title={isUpdate ? "Update Branch" : "Create Branch"}>
         {isUpdate && isLoading ? (
           <Loader />
@@ -198,7 +214,7 @@ export default function CreateBranch() {
                 <div className="relative">
                   <select
                     {...register("country_state_id", { valueAsNumber: true })}
-                    className="text-sm rounded-lg border dark:bg-gray-900 dark:text-gray-400 border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
+                    className="text-sm rounded-lg border dark:bg-gray-900 border-gray-300 shadow-sm w-full pl-10 pr-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 ease-in-out"
                   >
                     <option value="" disabled selected>
                       Select a location
@@ -301,13 +317,13 @@ export default function CreateBranch() {
               </div>
               <div key="registered_for_vat">
                 <Label htmlFor="registered_for_vat">Registered for VAT</Label>
-                  <Switch
-                    label=""
-                    defaultChecked={branchData?.registered_for_vat === 1}
-                    onChange={(checked) =>
-                      setValue("registered_for_vat", checked ? 1 : 0)
-                    }
-                  />
+                <Switch
+                  label=""
+                  defaultChecked={branchData?.registered_for_vat === 1}
+                  onChange={(checked) =>
+                    setValue("registered_for_vat", checked ? 1 : 0)
+                  }
+                />
               </div>
             </div>
 

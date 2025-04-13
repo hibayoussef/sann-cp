@@ -1,7 +1,7 @@
+import { _PaymentTermsApi } from "@/services/settings/paymentTerms.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { QueryKeys } from "../../utils/queryKeys";
-import { _PaymentTermsApi } from "@/services/settings/paymentTerms.service";
 
 // FETCH PAYMENT TERMS
 export const useFetchPaymentTerms = () => {
@@ -27,7 +27,7 @@ export const useAddPaymentTerm = () => {
   return useMutation({
     mutationFn: _PaymentTermsApi.addPaymentTerm,
     onSuccess: () => {
-      navigate("/payment-terms");
+      navigate("/settings/payment_terms");
     },
   });
 };
@@ -39,7 +39,7 @@ export const useUpdatePaymentTerm = () => {
     mutationFn: ({ id, data }: { id: number | undefined; data: any }) =>
       _PaymentTermsApi.updatePaymentTerm(id, data),
     onSuccess: () => {
-      navigate("/payment-terms");
+      navigate("/settings/payment_terms");
     },
   });
 };

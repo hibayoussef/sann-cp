@@ -1,6 +1,6 @@
 export interface ISubCategory {
   id: number;
-  category_id?: number | null | undefined;
+  category_id?: string;
   category_name_ar?: string;
   category_name_en?: string;
   sub_category_name_ar: string;

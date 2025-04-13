@@ -2,21 +2,13 @@ import { z } from "zod";
 
 export const subUnitSchema = z.object({
   id: z.number().optional(),
-  unit_name_en: z
-    .string()
-    .min(2, "Sub Unit name (EN) must be at least 2 characters"),
-  unit_name_ar: z
-    .string()
-    .min(2, "Sub Unit name (AR) must be at least 2 characters"),
-  short_name_en: z
-    .string()
-    .min(1, "Short name (EN) must be at least 1 character"),
-  short_name_ar: z
-    .string()
-    .min(1, "Short name (AR) must be at least 1 character"),
+  unit_name_en: z.string().min(1, "Unit Name (EN) is required"),
+  unit_name_ar: z.string().optional(),
+  short_name_en: z.string().min(1, "Short Name (EN) is required"),
+  short_name_ar: z.string().optional(),
   allow_decimal: z.number(),
-  multiplier: z.number().min(1, "Multiplier must be provided"),
-  related_to: z.coerce.number().min(1, "Related to is required").nullable(),
+  multiplier: z.number().optional().nullable(),
+  related_to: z.string().min(1, "Unit is required"),
 });
 
 export type SubUnitType = z.infer<typeof subUnitSchema>;

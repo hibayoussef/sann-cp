@@ -29,6 +29,7 @@ export default function Vendors() {
         />
         <div className="space-y-4 pt-1">
           <DataTable
+            tableName="Vendors"
             columns={customerColumns({
               update: hasPermission("update", "vendors"),
               delete: hasPermission("delete", "vendors"),

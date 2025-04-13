@@ -3,7 +3,7 @@ import {
   customerSchema,
   type CustomerType,
 } from "@/components/lib/validations/customer";
-import { useAddContact, useUpdateContact } from "@/hooks/sales/contacts";
+import { useAddContact } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
@@ -29,35 +29,33 @@ const TABS = [
   { id: 3, name: "Contact Person" },
   { id: 4, name: "Address" },
 ];
+function cleanContactDetails(contactDetails: any): any {
+  if (!contactDetails) return null;
 
-const getErrorMessages = (errors: any, parentKey = ""): string[] => {
-  return Object.entries(errors).flatMap(([key, value]: [string, any]) => {
-    if (value?.message) {
-      return [`${parentKey ? `${parentKey} > ` : ""}${key}: ${value.message}`];
+  const cleaned = Object.entries(contactDetails).reduce((acc, [key, value]) => {
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      value === "undefined"
+    ) {
+      return acc;
     }
-    if (Array.isArray(value)) {
-      return value.flatMap((item, index) =>
-        getErrorMessages(item, `Person Details[${index}]`)
-      );
+    if (Array.isArray(value) && value.length === 0) {
+      return acc;
     }
-    if (typeof value === "object") {
-      return getErrorMessages(value, key);
-    }
-    return [];
-  });
-};
+    return { ...acc, [key]: value };
+  }, {});
+
+  return Object.keys(cleaned).length > 0 ? cleaned : null;
+}
 
 export default function CustomerForm() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
   const isUpdate = Boolean(id);
   const addCustomer = useAddContact();
-  const updateCustomer = useUpdateContact();
   const organizationId = useMeStore((state) => state.organizationId);
-
-  // const { data: customerData, isLoading } = useFetchContact(Number(id), {
-  //   enabled: isUpdate,
-  // });
   const { data: branches } = useFetchBranches();
   const { data: paymentsTerm } = useFetchPaymentTerms();
   const { data: currencies } = useFetchCurrencies();
@@ -65,88 +63,48 @@ export default function CustomerForm() {
 
   const methods = useForm<CustomerType>({
     resolver: zodResolver(customerSchema),
-    // defaultValues: customerData ?? {},
     defaultValues: {
-      contact_details: {
-        social_media: [
-          {
-            platform: "Facebook",
-            url: "",
-          },
-          {
-            platform: "Instagram",
-            url: "",
-          },
-          {
-            platform: "Twitter",
-            url: "",
-          },
-        ],
-      },
-      contact_persons: [
-        {
-          salutation_ar: "",
-          salutation_en: "",
-          full_name_ar: "",
-          full_name_en: "",
-          first_name_ar: "",
-          first_name_en: "",
-          last_name_ar: "",
-          last_name_en: "",
-          email: "",
-          mobile: "",
-          designation: "",
-          department: "",
-          social_media: [
-            {
-              platform: "Facebook",
-              url: "",
-            },
-            {
-              platform: "Instagram",
-              url: "",
-            },
-            {
-              platform: "Twitter",
-              url: "",
-            },
-          ],
-        },
-      ],
+      exchange_rate: 1,
+      balance: 1,
+      contact_type: "individual",
+      portal_access: "1",
+      portal_language: "ar",
     },
   });
 
   const contactType = methods.watch("contact_type");
+  const onSubmit = async (formData: CustomerType) => {
+    const full_name_ar = `${formData?.first_name_ar} ${formData?.last_name_ar}`;
+    const full_name_en = `${formData?.first_name_en} ${formData?.last_name_en}`;
 
-  // useEffect(() => {
-  //   if (customerData) {
-  //     Object.keys(customerData).forEach((key) => {
-  //       setValue(key, customerData[key]);
-  //     });
-  //   }
-  // }, [customerData, setValue]);
-  const onSubmit = (formData: CustomerType) => {
+    let contactDetails = cleanContactDetails(formData.contact_details);
+
+    if (contactDetails && contactDetails.social_media) {
+      contactDetails = {
+        ...contactDetails,
+        social_media: JSON.stringify(contactDetails.social_media),
+      };
+    }
+
     const payload: any = {
       ...formData,
       organization_id: organizationId?.toString()!,
-      contact_persons: formData?.contact_persons?.map((item) => ({
-        ...item,
-        social_media: JSON.stringify(item.social_media),
+      full_name_ar: full_name_ar,
+      full_name_en: full_name_en,
+      contact_persons: formData?.contact_persons?.map((person) => ({
+        ...person,
+        social_media: person.social_media
+          ? JSON.stringify(person.social_media)
+          : null,
+        full_name_ar: `${person?.first_name_ar} ${person?.last_name_ar}`,
+        full_name_en: `${person?.first_name_en} ${person?.last_name_en}`,
       })),
-      contact_details: {
-        ...formData.contact_details,
-        social_media: JSON.stringify(formData.contact_details?.social_media),
-      },
+      contact_details: contactDetails,
       type: "customer",
     };
 
-    if (isUpdate && id) {
-      updateCustomer.mutateAsync({ id: Number(id), data: payload });
-    } else {
-      addCustomer.mutateAsync(payload);
-    }
+    await addCustomer.mutateAsync(payload);
   };
-
   return (
     <>
       <PageBreadcrumb
@@ -154,238 +112,183 @@ export default function CustomerForm() {
         baseTitle="Customers"
         pageTitle={isUpdate ? "Update Customer" : "Create Customer"}
         icon={
-          <div className="w-6 h-6 flex items-center justify-center   bg-gray-200 rounded-full">
+          <div className="w-6 h-6 flex items-center justify-center dark:bg-gray-900 bg-gray-200 rounded-full">
             <IoAdd className="w-5 h-5" />
           </div>
         }
       />
       <ComponentCard title={isUpdate ? "Update Customer" : "Create Customer"}>
-        {isUpdate ? (
-          <p>Loading customer data...</p>
-        ) : (
-          <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              className="space-y-8"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Contact Type */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-4">
-                    <Label className="mb-0">Customer Type</Label>{" "}
-                    <div className="flex items-center gap-6">
-                      <Radio
-                        id="individual"
-                        name="contact_type"
-                        value="individual"
-                        checked={contactType === "individual"}
-                        onChange={(value) =>
-                          methods.setValue(
-                            "contact_type",
-                            value as "business" | "individual"
-                          )
-                        }
-                        label="Individual"
-                        className="flex items-center gap-2"
-                      />
-                      <Radio
-                        id="business"
-                        name="contact_type"
-                        value="business"
-                        checked={contactType === "business"}
-                        onChange={(value) =>
-                          methods.setValue(
-                            "contact_type",
-                            value as "business" | "individual"
-                          )
-                        }
-                        label="Business"
-                        className="flex items-center gap-2"
-                      />
-                    </div>
-                  </div>
-                  {methods.formState.errors.contact_type && (
-                    <p className="text-red-500 text-sm">
-                      {methods.formState.errors.contact_type.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {/* Primary Contact */}
-                <div className="space-y-2">
-                  <div className="space-y-2">
-                    <Label>Full Name (En)</Label>
-                    <Input
-                      {...methods.register("full_name_en")}
-                      error={!!methods.formState.errors.full_name_en}
-                      hint={methods.formState.errors.full_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Full Name (En)"
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <div className="flex items-center gap-4">
+                  <Label className="mb-0">Customer Type</Label>
+                  <div className="flex items-center gap-6">
+                    <Radio
+                      id="individual"
+                      name="contact_type"
+                      value="individual"
+                      checked={contactType === "individual"}
+                      onChange={(value) =>
+                        methods.setValue(
+                          "contact_type",
+                          value as "business" | "individual"
+                        )
+                      }
+                      label="Individual"
+                      className="flex items-center gap-2"
                     />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Full Name (Ar)</Label>
-                    <Input
-                      {...methods.register("full_name_ar")}
-                      error={!!methods.formState.errors.full_name_ar}
-                      hint={methods.formState.errors.full_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Full Name (Ar)"
+                    <Radio
+                      id="business"
+                      name="contact_type"
+                      value="business"
+                      checked={contactType === "business"}
+                      onChange={(value) =>
+                        methods.setValue(
+                          "contact_type",
+                          value as "business" | "individual"
+                        )
+                      }
+                      label="Business"
+                      className="flex items-center gap-2"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="space-y-2">
-                    <Label>First Name (En)</Label>
-                    <Input
-                      {...methods.register("first_name_en")}
-                      error={!!methods.formState.errors.first_name_en}
-                      hint={methods.formState.errors.first_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your First Name (En)"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>First Name (Ar)</Label>
-                    <Input
-                      {...methods.register("first_name_ar")}
-                      error={!!methods.formState.errors.first_name_ar}
-                      hint={methods.formState.errors.first_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your First Name (Ar)"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="space-y-2">
-                    <Label>Last Name (En)</Label>
-                    <Input
-                      {...methods.register("last_name_en")}
-                      error={!!methods.formState.errors.last_name_en}
-                      hint={methods.formState.errors.last_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Last Name (En)"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Last Name (Ar)</Label>
-                    <Input
-                      {...methods.register("last_name_ar")}
-                      error={!!methods.formState.errors.last_name_ar}
-                      hint={methods.formState.errors.last_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
-                      placeholder="Please Enter Your Last Name (Ar)"
-                    />
-                  </div>
-                </div>
-
-                {/* Contact Info */}
-
-                <div className="space-y-2">
-                  <Label>Email Address</Label>
-                  <Input
-                    type="email"
-                    {...methods.register("email")}
-                    error={!!methods.formState.errors.email}
-                    hint={methods.formState.errors.email?.message}
-                    placeholder="contact@example.com"
-                    icon={<Mail className="w-4 h-4" />}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Phone Number</Label>
-                  <Input
-                    type="tel"
-                    {...methods.register("mobile")}
-                    error={!!methods.formState.errors.mobile}
-                    hint={methods.formState.errors.mobile?.message}
-                    placeholder="+966 123 456 789"
-                    icon={<Phone className="w-4 h-4" />}
-                  />
-                </div>
-              </div>
-              {/* </div> */}
-
-              {/* Tabs Section */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
-                <div className="border-b border-gray-200 mb-6">
-                  <nav className="flex space-x-4">
-                    {TABS.map((tab) => (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${
-                          activeTab === tab.id
-                            ? "text-blue-600 border-b-2 border-blue-600"
-                            : "text-gray-500 hover:text-gray-700"
-                        }`}
-                      >
-                        {tab.name}
-                      </button>
-                    ))}
-                  </nav>
-                </div>
-
-                {/* Always render all tabs but toggle visibility */}
-                <div className={activeTab === 1 ? "block" : "hidden"}>
-                  <OtherDetailsTab
-                    countriesData={countriesData}
-                    currencies={currencies}
-                    paymentsTerm={paymentsTerm}
-                    branches={branches}
-                  />
-                </div>
-
-                <div className={activeTab === 2 ? "block" : "hidden"}>
-                  <ContactDetailsTab countriesData={countriesData} />
-                </div>
-
-                <div className={activeTab === 3 ? "block" : "hidden"}>
-                  <ContactPersonTab />
-                </div>
-
-                <div className={activeTab === 4 ? "block" : "hidden"}>
-                  <AddressTab countriesData={countriesData} />
-                </div>
-              </div>
-
-              {Object.keys(methods.formState.errors).length > 0 && (
-                <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-                  <p className="font-semibold">
-                    Please fix the following errors:
+                {methods.formState.errors.contact_type && (
+                  <p className="text-red-500 text-sm">
+                    {methods.formState.errors.contact_type.message}
                   </p>
-                  <ul className="list-disc list-inside">
-                    {getErrorMessages(methods.formState.errors).map(
-                      (errorMessage, index) => (
-                        <li key={index} className="text-sm">
-                          {errorMessage}
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
-                  disabled={addCustomer.isPending || updateCustomer.isPending}
-                >
-                  {isUpdate ? "Update Customer" : "Create Customer"}
-                </button>
+                )}
               </div>
-            </form>
-          </FormProvider>
-        )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div className="space-y-2">
+                <div className="space-y-2">
+                  <Label>First Name (En)</Label>
+                  <Input
+                    {...methods.register("first_name_en")}
+                    error={!!methods.formState.errors.first_name_en}
+                    hint={methods.formState.errors.first_name_en?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your First Name (En)"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>First Name (Ar)</Label>
+                  <Input
+                    {...methods.register("first_name_ar")}
+                    error={!!methods.formState.errors.first_name_ar}
+                    hint={methods.formState.errors.first_name_ar?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your First Name (Ar)"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="space-y-2">
+                  <Label>Last Name (En)</Label>
+                  <Input
+                    {...methods.register("last_name_en")}
+                    error={!!methods.formState.errors.last_name_en}
+                    hint={methods.formState.errors.last_name_en?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your Last Name (En)"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Last Name (Ar)</Label>
+                  <Input
+                    {...methods.register("last_name_ar")}
+                    error={!!methods.formState.errors.last_name_ar}
+                    hint={methods.formState.errors.last_name_ar?.message}
+                    icon={<Info className="w-4 h-4" />}
+                    placeholder="Please Enter Your Last Name (Ar)"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Email Address</Label>
+                <Input
+                  type="email"
+                  {...methods.register("email")}
+                  error={!!methods.formState.errors.email}
+                  hint={methods.formState.errors.email?.message}
+                  placeholder="contact@example.com"
+                  icon={<Mail className="w-4 h-4" />}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Phone Number</Label>
+                <Input
+                  type="tel"
+                  {...methods.register("mobile")}
+                  error={!!methods.formState.errors.mobile}
+                  hint={methods.formState.errors.mobile?.message}
+                  placeholder="Enter Your phone number"
+                  icon={<Phone className="w-4 h-4" />}
+                />
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
+              <div className="border-b border-gray-200 mb-6">
+                <nav className="flex flex-col justify-start items-center md:flex-row space-x-4">
+                  {TABS.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`px-4 py-2 text-sm font-medium transition-colors ${
+                        activeTab === tab.id
+                          ? "text-blue-600 border-b-2 border-blue-600"
+                          : "text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      {tab.name}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
+              <div className={activeTab === 1 ? "block" : "hidden"}>
+                <OtherDetailsTab
+                  countriesData={countriesData}
+                  currencies={currencies}
+                  paymentsTerm={paymentsTerm}
+                  branches={branches}
+                />
+              </div>
+
+              <div className={activeTab === 2 ? "block" : "hidden"}>
+                <ContactDetailsTab countriesData={countriesData} />
+              </div>
+
+              <div className={activeTab === 3 ? "block" : "hidden"}>
+                <ContactPersonTab />
+              </div>
+
+              <div className={activeTab === 4 ? "block" : "hidden"}>
+                <AddressTab countriesData={countriesData} />
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
+                disabled={addCustomer.isPending}
+              >
+                {isUpdate ? "Update Customer" : "Create Customer"}
+              </button>
+            </div>
+          </form>
+        </FormProvider>
       </ComponentCard>
     </>
   );

@@ -29,7 +29,7 @@ export default function Step5() {
 
       {/* Billing Toggle */}
       <div className="flex justify-center mb-12">
-        <div className="bg-gray-100 p-1 rounded-full">
+        <div className="bg-gray-100 p-1 rounded-full ">
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -78,11 +78,11 @@ export default function Step5() {
               >
                 <div
                   key={plan.id}
-                  className={`border border-slate-200 rounded-xl ${
+                  className={`border border-slate-200 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 rounded-xl ${
                     plan.plan_name_en.toLowerCase() === "standard"
                       ? "bg-slate-800"
                       : ""
-                  } shadow-sm divide-y divide-slate-200 overflow-hidden ${
+                  } shadow-sm divide-y divide-slate-200 overflow-hidden dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 ${
                     plan.plan_name_en.toLowerCase() === "standard"
                       ? "border-2 border-state-800 shadow-lg"
                       : ""
@@ -90,7 +90,7 @@ export default function Step5() {
                 >
                   <div className="p-6">
                     <h2
-                      className={`text-xl leading-6 font-bold text-slate-700 ${
+                      className={`text-xl leading-6 font-bold text-slate-700 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 ${
                         plan.plan_name_en.toLowerCase() === "standard"
                           ? "text-white"
                           : ""
@@ -99,7 +99,7 @@ export default function Step5() {
                       {plan.plan_name_en}
                     </h2>
                     <p
-                      className={`mt-2 text-base text-slate-700 leading-tight ${
+                      className={`mt-2 text-base text-slate-700 leading-tight dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 ${
                         plan.plan_name_en.toLowerCase() === "standard"
                           ? "text-white"
                           : ""
@@ -109,7 +109,7 @@ export default function Step5() {
                     </p>
                     <p className="mt-8">
                       <span
-                        className={`text-3xl font-bold text-slate-900 ${
+                        className={`text-3xl font-bold text-slate-900 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 ${
                           plan.plan_name_en.toLowerCase() === "standard"
                             ? "text-white"
                             : ""
@@ -120,7 +120,7 @@ export default function Step5() {
                           : price?.yearly_price_en}
                       </span>
                       <span
-                        className={`text-base font-medium text-slate-500 ${
+                        className={`text-base font-medium text-slate-500 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 ${
                           plan.plan_name_en.toLowerCase() === "standard"
                             ? "text-white"
                             : ""
@@ -155,7 +155,7 @@ export default function Step5() {
                             <path d="M5 12l5 5l10 -10"></path>
                           </svg>
                           <span
-                            className={`text-base text-slate-700 ${
+                            className={`text-base text-slate-700 dark:text-gray-400 dark:bg-gray-900 dark:border-gray-400 ${
                               plan.plan_name_en.toLowerCase() === "standard"
                                 ? "text-white"
                                 : ""

@@ -5,10 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
 import { useLocaliztionStore } from "@/store/useLocaliztionStore";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import SettingsDropdown from "../components/header/SettingsDropDown";
@@ -17,13 +16,13 @@ import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();
-  // const location = useLocation();
+  const location = useLocation();
+
+  const isSettingsPage = location.pathname.startsWith("/settings");
 
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { setLanguage } = useLocaliztionStore();
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
-
-  // const isSettingsPage = location.pathname.startsWith("/settings");
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {
@@ -55,33 +54,42 @@ const AppHeader: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 flex w-full bg-whiteborder-b border-gray-200 z-50 dark:border-gray-800 dark:bg-gray-900 lg:border-b h-12 shadow-md">
+    <header className="sticky top-0 flex w-full bg-whiteborder-b bg-white border-gray-200 z-50 dark:border-gray-800 dark:bg-gray-900 lg:border-b h-12 shadow-md">
       {" "}
-      <div className="flex flex-col items-center justify-between flex-grow lg:flex-row lg:px-6">
-        <div className="flex items-center justify-between w-full gap-1 px-3 py-1 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0">
-          <Link to="/" className="flex items-center gap-2">
-            <img
-              className=""
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={26}
-              height={26}
-            />
-            <span
-              className="text-xl font-bold text-[#465FFF] hidden sm:block"
-              style={{ fontFamily: "sans-serif" }}
-            >
-              Nexaoma
-            </span>
-          </Link>
-          <Separator orientation="vertical" className="mx-5 mr-0 h-13" />
-          <button
-            className="w-8 h-8 flex items-center justify-center text-gray-500 rounded-lg hover:bg-gray-100"
-            onClick={handleToggle}
-            aria-label="Toggle Sidebar"
-          >
-            {isMobileOpen ? "✖" : "☰"}
-          </button>
+      <div className="flex flex-col items-center justify-between flex-grow lg:flex-row lg:px-6 ">
+        <div className="flex items-center justify-between w-full gap-1  px-3 py-1 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
+          {isSettingsPage && (
+            <>
+              <Link to="/" className="flex items-center justify-center gap-2">
+                <img
+                  className="lg:mr-4"
+                  src="/images/logo/logo-icon.svg"
+                  alt="Logo"
+                  width={26}
+                  height={26}
+                />
+                <span
+                  className="text-xl font-bold text-[#465FFF] hidden sm:block"
+                  style={{ fontFamily: "sans-serif" }}
+                >
+                  Nexaoma
+                </span>
+              </Link>
+            </>
+          )}
+
+          {!isSettingsPage && (
+            <>
+              <button
+                className="w-8 h-8 flex items-center justify-center text-gray-500 rounded-lg hover:bg-gray-100 z-99999"
+                onClick={handleToggle}
+                aria-label="Toggle Sidebar"
+              >
+                {isMobileOpen ? "✖" : "☰"}
+              </button>
+            </>
+          )}
+
           <button
             onClick={toggleApplicationMenu}
             className="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
@@ -101,7 +109,7 @@ const AppHeader: React.FC = () => {
               />
             </svg>
           </button>
-          
+
           <div className="hidden lg:block">
             <form>
               <div className="relative">
@@ -158,9 +166,9 @@ const AppHeader: React.FC = () => {
         <div
           className={`${
             isApplicationMenuOpen ? "flex" : "hidden"
-          } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
+          } items-center justify-between w-full gap-4 px-5  lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none bg-white dark:bg-gray-900`}
         >
-        <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger className="text-sm">
               {/* {language} */}
               <button
@@ -228,15 +236,19 @@ const AppHeader: React.FC = () => {
                 </svg>
                 العربية
               </DropdownMenuItem>
-            </DropdownMenuContent >
+            </DropdownMenuContent>
           </DropdownMenu>
-          <div className="flex items-end gap-1 2xsm:gap-3">
+          <div className="flex items-center gap-1 2xsm:gap-3">
             {/* <!-- Dark Mode Toggler --> */}
             {/* <LanguageSwitcher /> */}
-            <ThemeToggleButton />
+            {/* <ThemeToggleButton /> */}
             {/* <!-- Dark Mode Toggler --> */}
             <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}
+          </div>
+          <div className="flex items-center gap-1 2xsm:gap-3">
+            {" "}
+            <ThemeToggleButton />
           </div>
           <button
             onClick={() => navigate("/settings")}

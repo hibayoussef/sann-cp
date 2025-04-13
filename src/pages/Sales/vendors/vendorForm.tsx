@@ -3,10 +3,7 @@ import {
   customerSchema,
   type CustomerType,
 } from "@/components/lib/validations/customer";
-import {
-  useAddContact,
-  useUpdateContact
-} from "@/hooks/sales/contacts";
+import { useAddContact, useUpdateContact } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
@@ -21,11 +18,10 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import AddressTab from "../customers/tabs/AddressTab";
+import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
 import ContactDetailsTab from "../customers/tabs/ContactDetailsTab";
 import ContactPersonTab from "../customers/tabs/ContactPersonTab";
-import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
-
+import AddressTab from "../customers/tabs/AddressTab";
 
 const TABS = [
   { id: 1, name: "Other Details" },
@@ -34,29 +30,25 @@ const TABS = [
   { id: 4, name: "Address" },
 ];
 
-const getErrorMessages = (errors: any, parentKey = ""): string[] => {
-  return Object.entries(errors).flatMap(([key, value]: [string, any]) => {
-    if (value?.message) {
-      return [`${parentKey ? `${parentKey} > ` : ""}${key}: ${value.message}`];
-    }
+const getErrorMessages = (errors: any): string[] => {
+  return Object.values(errors).flatMap((value: any) => {
+    if (value?.message) return [value.message];
     if (Array.isArray(value)) {
-      return value.flatMap((item, index) =>
-        getErrorMessages(item, `Person Details[${index}]`)
-      );
+      return value.flatMap((item) => getErrorMessages(item));
     }
     if (typeof value === "object") {
-      return getErrorMessages(value, key);
+      return getErrorMessages(value);
     }
     return [];
   });
 };
 
-export default function CustomerForm() {
+export default function VendorForm() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
   const isUpdate = Boolean(id);
-  const addCustomer = useAddContact();
-  const updateCustomer = useUpdateContact();
+  const addVendor = useAddContact();
+  const updateVendor = useUpdateContact();
   const organizationId = useMeStore((state) => state.organizationId);
 
   // const { data: customerData, isLoading } = useFetchContact(Number(id), {
@@ -71,6 +63,9 @@ export default function CustomerForm() {
     resolver: zodResolver(customerSchema),
     // defaultValues: customerData ?? {},
     defaultValues: {
+      contact_details: {
+        social_media: [],
+      },
       contact_persons: [
         {
           salutation_ar: "",
@@ -85,7 +80,7 @@ export default function CustomerForm() {
           mobile: "",
           designation: "",
           department: "",
-          social_media: "",
+          social_media: [],
         },
       ],
     },
@@ -100,19 +95,25 @@ export default function CustomerForm() {
   //     });
   //   }
   // }, [customerData, setValue]);
-  console.log(methods.formState.errors);
   const onSubmit = (formData: CustomerType) => {
     const payload: any = {
       ...formData,
       organization_id: organizationId?.toString()!,
+      contact_persons: formData?.contact_persons?.map((item) => ({
+        ...item,
+        social_media: JSON.stringify(item.social_media),
+      })),
+      contact_details: {
+        ...formData.contact_details,
+        social_media: JSON.stringify(formData.contact_details?.social_media),
+      },
       type: "vendor",
     };
 
-    console.log(payload);
     if (isUpdate && id) {
-      updateCustomer.mutateAsync({ id: Number(id), data: payload });
+      updateVendor.mutateAsync({ id: Number(id), data: payload });
     } else {
-      addCustomer.mutateAsync(payload);
+      addVendor.mutateAsync(payload);
     }
   };
 
@@ -128,9 +129,9 @@ export default function CustomerForm() {
           </div>
         }
       />
-      <ComponentCard title={isUpdate ? "Update Vendor" : "Create Vendor"}>
+      <ComponentCard title={isUpdate ? "Update Vendor" : "Create Vendors"}>
         {isUpdate ? (
-          <p>Loading Vendor data...</p>
+          <p>Loading vendor data...</p>
         ) : (
           <FormProvider {...methods}>
             <form
@@ -274,7 +275,7 @@ export default function CustomerForm() {
                     {...methods.register("mobile")}
                     error={!!methods.formState.errors.mobile}
                     hint={methods.formState.errors.mobile?.message}
-                    placeholder="+966 123 456 789"
+                    placeholder="Enter Your phone number"
                     icon={<Phone className="w-4 h-4" />}
                   />
                 </div>
@@ -329,7 +330,12 @@ export default function CustomerForm() {
                 <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
                   <p className="font-semibold">
                     Please fix the following errors:
-                  </p>
+                    </p>
+                    {
+                      <>{
+                       console.log('methods.formState.errors:', methods.formState.errors) 
+                      }</>
+                    }
                   <ul className="list-disc list-inside">
                     {getErrorMessages(methods.formState.errors).map(
                       (errorMessage, index) => (
@@ -347,9 +353,9 @@ export default function CustomerForm() {
                 <button
                   type="submit"
                   className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-sm font-medium"
-                  disabled={addCustomer.isPending || updateCustomer.isPending}
+                  disabled={addVendor.isPending || updateVendor.isPending}
                 >
-                  {isUpdate ? "Update Customer" : "Create Customer"}
+                  {isUpdate ? "Update Vendor" : "Create Vendor"}
                 </button>
               </div>
             </form>

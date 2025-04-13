@@ -9,11 +9,12 @@ const categories = [
       "Profile",
       "Branding",
       "Custom Domain",
-      "Branches", // Branches هنا
+      "Branches",
       "Currencies",
       "Approvals",
       "Opening Balances",
       "Manage Subscription",
+      "Payment Term"
     ],
   },
   {
@@ -135,19 +136,30 @@ export default function Settings() {
     if (link === "Branches") {
       navigate("/settings/branches"); 
     }
-    if (link === "profile") {
+    if (link === "Profile") {
       navigate("/settings/orgProfile"); 
+    }
+    if (link === "Payment Term") {
+      navigate("/settings/payment_terms"); 
     }
   };
 
   return (
-    <div className="p-6 bg-gray-50  min-h-screen px-6 sm:px-16 md:px-24 lg:px-32 text-xs dark:bg-gray-900">
+    <div className=" p-6   bg-gray-50  min-h-screen px-6 sm:px-16 md:px-12 lg:px-32  text-xs dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900  p-4 shadow-md mb-6 flex justify-between items-center w-full fixed top-12 left-0 right-0 z-10 px-6 sm:px-16 md:px-24 lg:px-32">
-        <h2 className="text-lg font-semibold dark:text-gray-400 ">
-          All Settings
-        </h2>
-        <div className="relative w-full max-w-md mx-auto  ">
+      <div className="bg-white flex flex-col md:flex-row dark:bg-gray-900 p-4 shadow-md mb-6 w-full fixed top-12 left-0 right-0 z-10 px-6 sm:px-16 md:px-24 lg:px-32">
+        <div className="flex justify-between  items-center w-full md:items-center">
+          <h2 className="block text-sm md:text-lg font-semibold  dark:text-gray-400">
+            All Settings
+          </h2>
+          <button
+            onClick={() => navigate("/home")}
+            className="flex items-center  dark:text-gray-400 text-gray-600 hover:text-red-500 text-xs md:absolute  md:right-15"
+          >
+            Close Settings <X className="w-4 h-4 ml-2" />
+          </button>
+        </div>
+        <div className="relative w-full max-w-md mx-auto mt-2  md:mr-48 lg:mr-96  md:mt-0 flex justify-center">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
@@ -155,12 +167,6 @@ export default function Settings() {
             className="dark:bg-gray-800 dark:text-gray-400 pl-10 border rounded-md w-full p-2 text-xs"
           />
         </div>
-        <button
-          onClick={() => navigate("/home")}
-          className="flex items-center dark:text-gray-400 text-gray-600 hover:text-red-500 text-xs"
-        >
-          Close Settings <X className="w-4 h-4 ml-2" />
-        </button>
       </div>
 
       <div className=" mt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">

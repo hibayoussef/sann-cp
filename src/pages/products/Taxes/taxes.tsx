@@ -32,6 +32,7 @@ export default function Taxes() {
 
         <div className="space-y-4 pt-1">
           <DataTable
+            tableName="Taxes"
             columns={taxColumns({
               update: hasPermission("update", "taxes"),
               delete: hasPermission("delete", "taxes"),

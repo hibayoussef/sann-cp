@@ -60,6 +60,32 @@ export const useLogin = () => {
   };
 };
 
+export const useSendOtpLogin = () => {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      return _AuthApi.sendOtpForLogin(email);
+    },
+  });
+};
+
+export const useOtpLogin = () => {
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+
+  return useMutation({
+    mutationFn: async (input: { email: string; otp?: string }) => {
+      return _AuthApi.loginUsingOtp(input);
+    },
+    onSuccess: (data: any) => {
+      login(data?.data, data?.data?.token);
+      navigate("/home");
+    },
+    onError: (error) => {
+      console.error("OTP login error:", error);
+    },
+  });
+};
+
 export const useVerifyEmail = () => {
   const navigate = useNavigate();
 

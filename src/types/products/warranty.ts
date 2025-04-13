@@ -7,7 +7,6 @@ export interface IWarranty {
 }
 
 export interface WarrantyForm {
- 
   organization_id: number | null;
   warranty_name_ar?: string | null;
   warranty_name_en: string;

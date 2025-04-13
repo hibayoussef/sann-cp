@@ -20,8 +20,8 @@ export default function VerifyEmail() {
   }, [token, mutate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-8 bg-white shadow-md rounded-lg text-center w-96">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="p-8 bg-white dark:bg-blue-300 shadow-md rounded-lg text-center w-96">
         {isPending && (
           <>
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 mx-auto"></div>

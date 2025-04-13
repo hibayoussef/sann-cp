@@ -67,6 +67,7 @@ export default function CustomerDetails({ categoryId }: CategoryDetailsProps) {
         </h4>
 
         <DataTable
+          tableName="Categories"
           columns={subCategoryColumns({
             update: hasPermission("update", "sub_categories"),
             delete: hasPermission("delete", "sub_categories"),

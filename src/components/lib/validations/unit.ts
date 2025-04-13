@@ -2,29 +2,21 @@ import { z } from "zod";
 
 export const unitSchema = z.object({
   id: z.number().optional(),
-  unit_name_en: z
-    .string()
-    .min(2, "Unit name (EN) must be at least 2 characters"),
-  unit_name_ar: z
-    .string()
-    .min(2, "Unit name (AR) must be at least 2 characters"),
-  short_name_en: z
-    .string()
-    .min(1, "Short name (EN) must be at least 1 character"),
-  short_name_ar: z
-    .string()
-    .min(1, "Short name (AR) must be at least 1 character"),
+  unit_name_en: z.string().nonempty("Unit Name (EN) is required"),
+  unit_name_ar: z.string().optional(),
+  short_name_en: z.string().nonempty("Short Name (EN) is required"),
+  short_name_ar: z.string().optional(),
   allow_decimal: z.number(),
-  multiplier: z.number().min(1, "Multiplier must be provided"),
+  multiplier: z.number().optional(),
+  // related_to: z.coerce.number().min(1, "Unit is required").nullable(),
   sub_units: z
     .array(
       z.object({
-        unit_name_en: z.string(),
+        unit_name_en: z.string().optional(),
         unit_name_ar: z.string().nullable(),
-        short_name_en: z.string(),
+        short_name_en: z.string().optional(),
         short_name_ar: z.string().nullable(),
-        // allow_decimal: z.boolean(),
-        multiplier: z.number(),
+        multiplier: z.number().optional(),
       })
     )
     .optional(),

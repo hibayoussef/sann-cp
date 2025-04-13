@@ -28,7 +28,8 @@ export default function Categories() {
         />
         <div className="space-y-4 pt-1">
           <DataTable
-           columns={categoryColumns({
+            tableName="Categories"
+            columns={categoryColumns({
               update: hasPermission("update", "categories"),
               delete: hasPermission("delete", "categories"),
             })}

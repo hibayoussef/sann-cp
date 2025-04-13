@@ -27,6 +27,7 @@ export default function SubUnits() {
 
         <div className="space-y-4 pt-1">
           <DataTable
+            tableName="Sub Units"
             columns={subUnitColumns({
               update: hasPermission("update", "sub_units"),
               delete: hasPermission("delete", "sub_units"),

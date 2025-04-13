@@ -13,7 +13,7 @@ export const _PaymentTermsApi = {
 
   // GET PAYMENT TERM
   getPaymentTerm: async (id: number) => {
-    const response = await _axios.get<AxiosResponse<{ data: IPaymentTerm }>>(
+    const response = await _axios.get<AxiosResponse<IPaymentTerm>>(
       `/settings/payment-terms/${id}`
     );
     return response.data.data;
@@ -27,7 +27,7 @@ export const _PaymentTermsApi = {
 
   // UPDATE PAYMENT TERM
   updatePaymentTerm: async (id: number | undefined, data: any) => {
-    const response = await _axios.put(`/settings/payment-terms/${id}`, data);
+    const response = await _axios.post(`/settings/payment-terms/${id}`, data);
     return response.data;
   },
 

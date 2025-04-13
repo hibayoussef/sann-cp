@@ -7,6 +7,7 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  tableName?: string;
   createPath: string;
   permissions?: {
     create: boolean;
@@ -19,12 +20,13 @@ export function DataTableToolbar<TData>({
   table,
   createPath,
   permissions,
+  tableName,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between flex-wrap space-y-2 md:space-y-0 md:flex-nowrap ">
       <div className="flex flex-1 items-center space-x-2  dark:text-gray-400">
         <Input
           placeholder="Filter tasks..."
@@ -34,7 +36,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("brand_name_en")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="h-8 w-[200px] lg:w-[250px]"
         />
         {/* {table.getColumn("status") && (
           <DataTableFacetedFilter
@@ -62,7 +64,7 @@ export function DataTableToolbar<TData>({
         )}
       </div>
 
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions table={table} tableName={tableName} />
       <div>
         {permissions?.create && (
           <Button

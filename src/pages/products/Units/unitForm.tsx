@@ -1,8 +1,5 @@
 import Switch from "@/components/form/switch/Switch";
-import {
-  subUnitSchema,
-  type SubUnitType,
-} from "@/components/lib/validations/subUnit";
+import { unitSchema, type UnitType } from "@/components/lib/validations/unit";
 import { useAddUnit, useFetchUnit, useUpdateUnit } from "@/hooks/prouducts/useUnits";
 import { useMeStore } from "@/store/useMeStore";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,8 +28,8 @@ export default function UnitForm() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<SubUnitType>({
-    resolver: zodResolver(subUnitSchema),
+  } = useForm<UnitType>({
+    resolver: zodResolver(unitSchema),
     defaultValues: {
       unit_name_en: unitData?.unit_name_en ?? "",
       unit_name_ar: unitData?.unit_name_ar ?? "",
@@ -54,8 +51,8 @@ export default function UnitForm() {
     }
   }, [unitData, setValue]);
 
-  const onSubmit = async (formData: SubUnitType) => {
-    const payload = {
+  const onSubmit = async (formData: UnitType) => {
+    const payload: any = {
       ...formData, 
       organization_id: organizationId,
      };
@@ -66,6 +63,8 @@ export default function UnitForm() {
       await addUnit.mutateAsync(payload);
     }
   };
+  
+  console.log('errororr: ', errors)
 
   return (
     <>

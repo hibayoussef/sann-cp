@@ -53,6 +53,16 @@ export const subCategoryColumns = (permissions: {
     ),
   },
   {
+    id: "code",
+    accessorKey: "code",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Code" />
+    ),
+    cell: ({ row }) => (
+      <div className="max-w-[500px] truncate">{row.getValue("code")}</div>
+    ),
+  },
+  {
     id: "Actions",
     cell: ({ row }) => (
       <DataTableRowActions

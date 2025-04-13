@@ -25,14 +25,14 @@ export function DataTablePagination<TData>({
   pageSizeOptions = [10, 20, 30, 40, 50],
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="relative flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground dark:text-gray-400">
+    <div className="relative flex flex-col space-y-2 md:space-y-0 md:flex-row items-center justify-between px-2">
+      <div className="flex-1  text-sm text-muted-foreground dark:text-gray-400">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
 
-      <div className="absolute left-1/2 transform -translate-x-1/2">
-        <div className="flex items-center justify-center space-x-2">
+      <div className="absolute  left-1/2 transform -translate-x-1/2">
+        <div className="flex  space-y-15 md:space-y-0  items-center justify-center space-x-2">
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
@@ -89,8 +89,8 @@ export function DataTablePagination<TData>({
         </div>
       </div>
 
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2 dark:text-gray-400">
+      <div className="flex flex-col space-y-11 md:space-y-0 md:flex-row justify-center items-center space-x-6 lg:space-x-8">
+        <div className="flex  items-center space-x-2 dark:text-gray-400">
           <p className="text-sm font-medium dark:text-gray-400">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
@@ -111,7 +111,7 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
 
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium dark:text-gray-400">
+        <div className="flex  w-[100px] items-center justify-center text-sm font-medium dark:text-gray-400">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
         </div>

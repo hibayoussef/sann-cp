@@ -79,20 +79,20 @@ export function CustomizeColumnsModal<T extends BaseItem>({
   return (
     <Dialog>
       <DialogTrigger>
-        <Button size="icon" variant="ghost" className="text-blue-700">
+        <Button size="icon" variant="ghost" className="text-[#465FFF] px-5">
           <Settings2 />
         </Button>
       </DialogTrigger>
-      <DialogContent className="dark:bg-gray-800  dark:text-gray-100">
+      <DialogContent className="dark:bg-[#465FFF]   dark:text-gray-900">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-100 flex flex-row items-center gap-2">
+          <DialogTitle className="dark:text-gray-900 flex flex-row items-center gap-2">
             <Settings2 />
-            <h2 className="dark:text-gray-100">{t("Customize Columns")}</h2>
+            <h2 className="dark:text-gray-900">{t("Customize Columns")}</h2>
           </DialogTitle>
         </DialogHeader>
         <Input
           placeholder={t("Search")}
-          className="my-2 dark:text-gray-100"
+          className="my-2 dark:placeholder:text-gray-900 dark:text-gray-900 dark:border-gray-900"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -104,10 +104,11 @@ export function CustomizeColumnsModal<T extends BaseItem>({
           <SortableContext
             items={filteredColumns}
             strategy={verticalListSortingStrategy}
+            
           >
             {filteredColumns.map((col) => (
-              <SortableItem key={col.id} id={col.id!}>
-                <div className="flex items-center gap-2">
+              <SortableItem  key={col.id} id={col.id!} >
+                <div className="flex items-center gap-2 ">
                   <input
                     type="checkbox"
                     onChange={(event) =>
@@ -115,8 +116,9 @@ export function CustomizeColumnsModal<T extends BaseItem>({
                     }
                     checked={col.getIsVisible()}
                     id={col.id.toString()}
+                    className="dark:border-gray-900"
                   />
-                  <label htmlFor={col.id.toString()} className=" dark:text-gray-100">
+                  <label htmlFor={col.id.toString()} className=" dark:text-gray-900 ">
                     {" "}
                     {col?.id
                       .replace(/_/g, " ")

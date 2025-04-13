@@ -6,7 +6,7 @@ import {
   Package,
   SettingsIcon,
   ShoppingCart,
-  Users
+  Users,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,10 +31,11 @@ const SettingsSidebar: React.FC = () => {
 
   const navItems: NavItem[] = [
     {
-      icon: <MonitorIcon className="w-4 h-4 text-gray-500 dark:text-gray-100 " />,
+      icon: (
+        <MonitorIcon className="w-4 h-4 text-gray-500 dark:text-gray-100 " />
+      ),
       name: "Dashboard",
       path: "/home",
-    
     },
     {
       name: "Organization",
@@ -46,6 +47,8 @@ const SettingsSidebar: React.FC = () => {
         { name: "Branches", path: "/settings/branches" },
         { name: "Currencies", path: "" },
         { name: "Approvals", path: "" },
+        { name: "security", path: "/settings/security" },
+        { name: "Payment Terms", path: "/settings/payment_terms" },
       ],
     },
     {
@@ -58,7 +61,9 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Preferences",
-      icon: <SettingsIcon className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
+      icon: (
+        <SettingsIcon className="w-4 h-4 text-gray-600 dark:text-gray-100" />
+      ),
       subItems: [
         { name: "General", path: "/preferences/general" },
         { name: "Notifications", path: "/preferences/notifications" },
@@ -66,7 +71,9 @@ const SettingsSidebar: React.FC = () => {
     },
     {
       name: "Sales",
-      icon: <ShoppingCart className="w-4 h-4 text-gray-600 dark:text-gray-100" />,
+      icon: (
+        <ShoppingCart className="w-4 h-4 text-gray-600 dark:text-gray-100" />
+      ),
       subItems: [
         { name: "Orders", path: "/sales/orders" },
         { name: "Invoices", path: "/sales/invoices" },
@@ -116,7 +123,7 @@ const SettingsSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`absolute top-0 bg-gray-100 dark:bg-gray-900    shadow-sm transition-all z-40 border-r h-screen
+      className={`absolute top-0 bg-gray-100 dark:bg-gray-900    shadow-sm transition-all z-40 dark:border-gray-700 border-r h-screen
       ${isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"}
       ${direction === "rtl" ? "right-0" : "left-0"}
       hover:bg-gray-200  `}
@@ -137,7 +144,9 @@ const SettingsSidebar: React.FC = () => {
                 >
                   {nav.icon}
                   {(isExpanded || isMobileOpen) && (
-                    <span className="text-[13px] text-gray-700   dark:text-gray-100">{nav.name}</span>
+                    <span className="text-[13px] text-gray-700   dark:text-gray-100">
+                      {nav.name}
+                    </span>
                   )}
                   <ChevronDownIcon
                     className={`ml-auto w-4 h-4 transition-transform ${
@@ -159,7 +168,10 @@ const SettingsSidebar: React.FC = () => {
                 >
                   <ul className="mt-1 ml-4 text-[13px]">
                     {nav.subItems.map((subItem) => (
-                      <li key={subItem.name} className="relative group hover:bg-gray-400 ">
+                      <li
+                        key={subItem.name}
+                        className="relative group hover:bg-gray-400 "
+                      >
                         <Link
                           to={subItem.path}
                           className={`menu-dropdown-item text-[13px] hover:bg-gray-400 ${
@@ -176,12 +188,11 @@ const SettingsSidebar: React.FC = () => {
                 </div>
               </>
             ) : nav.name === "Logout" ? (
-                <button
-                  
+              <button
                 onClick={async () => {
                   try {
                     await _AuthApi.logout();
-                    
+
                     navigate("/signin");
                   } catch (error) {
                     console.error("Logout failed:", error);
@@ -193,7 +204,9 @@ const SettingsSidebar: React.FC = () => {
               >
                 {nav.icon}
                 {(isExpanded || isMobileOpen) && (
-                  <span className="text-[13px] text-gray-700  dark:text-gray-200">{nav.name}</span>
+                  <span className="text-[13px] text-gray-700  dark:text-gray-200">
+                    {nav.name}
+                  </span>
                 )}
               </button>
             ) : (
@@ -205,7 +218,9 @@ const SettingsSidebar: React.FC = () => {
               >
                 {nav.icon}
                 {(isExpanded || isMobileOpen) && (
-                  <span className="text-gray-700 dark:text-gray-200">{nav.name}</span>
+                  <span className="text-gray-700 dark:text-gray-200">
+                    {nav.name}
+                  </span>
                 )}
               </Link>
             )}

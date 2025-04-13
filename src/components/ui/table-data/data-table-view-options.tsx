@@ -17,76 +17,85 @@ import autoTable from "jspdf-autotable";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
+  tableName?: string;
 }
 
 export function DataTableViewOptions<TData>({
   table,
+  tableName,
 }: DataTableViewOptionsProps<TData>) {
+  const excludedExportColumns = ["Actions"];
+
   const handleExportCSV = () => {
-    const rows = table
-      .getRowModel()
-      .rows.map((row) => row.getVisibleCells().map((cell) => cell.getValue()));
+    const rows = table.getRowModel().rows.map((row) =>
+      row
+        .getVisibleCells()
+        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+        .map((cell) => cell.getValue())
+    );
     const csv = Papa.unparse(rows);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "table_export.csv";
+    link.download = `${tableName}.csv`;
     link.click();
   };
 
   const handleExportExcel = () => {
     const rows = table.getRowModel().rows.map((row) => {
       const rowData: any = {};
-      row.getVisibleCells().forEach((cell) => {
-        rowData[cell?.column?.id] = cell.getValue();
-      });
+      row
+        .getVisibleCells()
+        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+        .forEach((cell) => {
+          rowData[cell.column.id] = cell.getValue();
+        });
       return rowData;
     });
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "table_export.xlsx");
+    XLSX.writeFile(wb, `${tableName}.xlsx`);
   };
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
     const headers = table
       .getVisibleLeafColumns()
-      .map((column) => column.columnDef.header?.toString() || column.id);
+      .filter((column) => !excludedExportColumns.includes(column.id))
+      .map((column) => column.id);
 
     const data = table.getRowModel().rows.map((row) =>
-      row.getVisibleCells().map((cell) => {
-        const value = cell.getValue();
-        return typeof value === "string" || typeof value === "number"
-          ? value
-          : JSON.stringify(value);
-      })
+      row
+        .getVisibleCells()
+        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+        .map((cell) => {
+          const value = cell.getValue();
+          return typeof value === "string" || typeof value === "number"
+            ? value
+            : JSON.stringify(value);
+        })
     );
 
-    doc.text("Table Export", 14, 16);
+     doc.text(tableName ? tableName: "Table Export", 14, 16);
 
     autoTable(doc, {
       head: [headers],
       body: data,
       startY: 20,
       styles: {
-        cellPadding: 2,
         fontSize: 10,
-        valign: "middle",
-        halign: "left",
       },
       headStyles: {
         fillColor: [41, 128, 185],
         textColor: 255,
-        fontSize: 11,
-        fontStyle: "bold",
       },
       alternateRowStyles: {
         fillColor: [245, 245, 245],
       },
     });
 
-    doc.save("table_export.pdf");
+    doc.save(`${tableName}.pdf`);
   };
 
   const handlePrint = () => {
@@ -117,7 +126,7 @@ export function DataTableViewOptions<TData>({
       <Button
         variant="outline"
         size="sm"
-        className="h-8 lg:flex dark:text-gray-400 "
+        className="h-8 lg:flex dark:text-gray-400"
         onClick={handlePrint}
       >
         <Printer className="ml-auto mr-2 h-4 w-4 dark:text-gray-400 dark:border-gray-400" />
@@ -126,8 +135,12 @@ export function DataTableViewOptions<TData>({
       {/* Export options dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className=" ml-auto h-8 lg:flex dark:text-gray-400 dark:border-gray-400">
-            <FileText className="mr-2 h-4 w-4" />
+          <Button
+            variant="outline"
+            size="sm"
+            className=" ml-auto h-8 lg:flex dark:text-gray-400 dark:border-gray-400"
+          >
+            <FileText className="mr-2 h-4 w-4 " />
             Export
           </Button>
         </DropdownMenuTrigger>
@@ -135,7 +148,7 @@ export function DataTableViewOptions<TData>({
           align="end"
           className="w-[200px] bg-white shadow-md border border-gray-200 dark:bg-gray-800"
         >
-          <DropdownMenuLabel className="flex items-center text-[13px] gap-2  text-gray-600 dark:text-gray-400">
+          <DropdownMenuLabel className="flex items-center text-[13px] gap-2 text-gray-600 dark:text-gray-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -143,7 +156,6 @@ export function DataTableViewOptions<TData>({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-
               className="text-blue-500"
             >
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -237,7 +249,9 @@ export function DataTableViewOptions<TData>({
           align="end"
           className="w-[250px] bg-white shadow-md border border-gray-200 dark:bg-gray-800"
         >
-          <DropdownMenuLabel className="dark:text-gray-400">Toggle columns</DropdownMenuLabel>
+          <DropdownMenuLabel className="dark:text-gray-400">
+            Toggle columns
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           {table
             .getAllColumns()
@@ -252,7 +266,9 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                  {column.id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+                {column.id
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (char) => char.toUpperCase())}
               </DropdownMenuCheckboxItem>
             ))}
         </DropdownMenuContent>

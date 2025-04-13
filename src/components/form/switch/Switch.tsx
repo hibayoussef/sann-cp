@@ -5,7 +5,7 @@ interface SwitchProps {
   defaultChecked?: boolean;
   disabled?: boolean;
   onChange?: (checked: boolean) => void;
-  color?: "blue" | "gray"; 
+  color?: "blue" | "gray";
 }
 
 const Switch: React.FC<SwitchProps> = ({
@@ -41,7 +41,7 @@ const Switch: React.FC<SwitchProps> = ({
             ? "bg-gray-800 dark:bg-white/10"
             : "bg-gray-200 dark:bg-white/10",
           knob: isChecked
-            ? "translate-x-full bg-white"
+            ? "translate-x-3.5 bg-white"
             : "translate-x-0 bg-white",
         };
 
@@ -54,15 +54,15 @@ const Switch: React.FC<SwitchProps> = ({
     >
       <div className="relative">
         <div
-          className={`block transition duration-150 ease-linear h-6 w-11 rounded-full ${
+          className={`block transition duration-150 ease-linear h-4 w-7 rounded-full ${
             disabled
               ? "bg-gray-100 pointer-events-none dark:bg-gray-800"
               : switchColors.background
           }`}
-        ></div>
+        />
         <div
-          className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full shadow-theme-sm duration-150 ease-linear transform ${switchColors.knob}`}
-        ></div>
+          className={`absolute left-[2px] top-[2px] h-3 w-3 rounded-full shadow-theme-sm duration-150 ease-linear transform ${switchColors.knob}`}
+        />
       </div>
       {label}
     </label>
