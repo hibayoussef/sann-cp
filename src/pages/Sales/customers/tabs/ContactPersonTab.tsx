@@ -14,6 +14,7 @@ import {
   Plus,
   PlusCircle,
   Trash2,
+  Type,
   User,
   UserCheck,
   UserCircle,
@@ -197,7 +198,7 @@ const ContactPersonTab = () => {
                   error={!!fieldErrors?.first_name_en}
                   hint={fieldErrors?.first_name_en?.message}
                   placeholder="Enter first name in English"
-                  icon={<UserCircle className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
 
@@ -206,7 +207,7 @@ const ContactPersonTab = () => {
                 <Input
                   {...register(`contact_persons.${index}.first_name_ar`)}
                   placeholder="Enter first name in Arabic"
-                  icon={<UserCircle className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               {/* <div className="space-y-2">
@@ -354,7 +355,7 @@ const ContactPersonTab = () => {
                   error={!!fieldErrors?.last_name_en}
                   hint={fieldErrors?.last_name_en?.message}
                   placeholder="Enter last name in English"
-                  icon={<User className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div className="space-y-2">
@@ -362,7 +363,7 @@ const ContactPersonTab = () => {
                 <Input
                   {...register(`contact_persons.${index}.last_name_ar`)}
                   placeholder="Enter last name in Arabic"
-                  icon={<UserCheck className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div className="space-y-2">

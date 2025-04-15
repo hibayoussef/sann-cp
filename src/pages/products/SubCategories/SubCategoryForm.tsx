@@ -9,7 +9,7 @@ import {
   useUpdateSubCategory,
 } from "@/hooks/prouducts/useSubCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, Folder, Tag } from "lucide-react";
+import { Code, Folder, Tag, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -196,7 +196,7 @@ export default function SubCategoryForm() {
                     {...register("sub_category_name_ar")}
                     error={!!errors.sub_category_name_ar}
                     hint={errors.sub_category_name_ar?.message}
-                    icon={<Tag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div>
@@ -221,7 +221,7 @@ export default function SubCategoryForm() {
                     {...register("sub_category_name_en")}
                     error={!!errors.sub_category_name_en}
                     hint={errors.sub_category_name_en?.message}
-                    icon={<Tag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div>

@@ -18,11 +18,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Banknote,
   BookOpen,
+  Code,
   Codesandbox,
   CreditCard,
   GitBranch,
   Hash,
   Tag,
+  Type,
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -300,7 +302,7 @@ export default function AccountForm() {
                     {...register("account_code")}
                     error={!!errors.account_code}
                     hint={errors.account_code?.message}
-                    icon={<Hash className="w-4 h-4 text-gray-500" />}
+                    icon={<Code className="w-4 h-4 text-gray-500" />}
                   />
                 </div>
 
@@ -336,7 +338,7 @@ export default function AccountForm() {
                     {...register("account_name_ar")}
                     error={!!errors.account_name_ar}
                     hint={errors.account_name_ar?.message}
-                    icon={<Tag className="w-4 h-4 text-gray-500" />}
+                    icon={<Type className="w-4 h-4 text-gray-500" />}
                   />
                 </div>
 
@@ -351,7 +353,7 @@ export default function AccountForm() {
                     {...register("account_name_en")}
                     error={!!errors.account_name_en}
                     hint={errors.account_name_en?.message}
-                    icon={<Tag className="w-4 h-4 text-gray-500" />}
+                    icon={<Type className="w-4 h-4 text-gray-500" />}
                   />
                 </div>
 

@@ -35,8 +35,8 @@ export default function MapSettings() {
             })}
             data={mapSettings}
             createPath="/map-settings/create"
-            hasDetails={true}
-            detailsLink="/"
+            // hasDetails={true}
+            // detailsLink="/"
             permissions={{
               create: hasPermission("create", "map_settings"),
               update: hasPermission("update", "map_settings"),

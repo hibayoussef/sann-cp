@@ -7,7 +7,6 @@ import { Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
-import { vendorColumns } from "@/columns/contacts/vendor";
 
 export default function Vendors() {
   const { data } = useFetchContacts(ContactType.VENDOR);
@@ -31,7 +30,7 @@ export default function Vendors() {
         <div className="space-y-4 pt-1">
           <DataTable
             tableName="Vendors"
-            columns={vendorColumns({
+            columns={customerColumns({
               update: hasPermission("update", "vendors"),
               delete: hasPermission("delete", "vendors"),
             })}

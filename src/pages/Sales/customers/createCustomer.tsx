@@ -8,7 +8,7 @@ import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Info, Mail, Phone } from "lucide-react";
+import { Info, Mail, Phone, Type } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -29,11 +29,17 @@ const TABS = [
   { id: 3, name: "Contact Person" },
   { id: 4, name: "Address" },
 ];
+
 function cleanContactDetails(contactDetails: any): any {
   if (!contactDetails) return null;
 
   const cleaned = Object.entries(contactDetails).reduce((acc, [key, value]) => {
-    if (value === null || value === undefined || value === "" || value === "undefined") {
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      value === "undefined"
+    ) {
       return acc;
     }
     if (Array.isArray(value) && value.length === 0) {
@@ -165,7 +171,7 @@ const onSubmit = async (formData: CustomerType) => {
                     {...methods.register("first_name_en")}
                     error={!!methods.formState.errors.first_name_en}
                     hint={methods.formState.errors.first_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your First Name (En)"
                   />
                 </div>
@@ -176,7 +182,7 @@ const onSubmit = async (formData: CustomerType) => {
                     {...methods.register("first_name_ar")}
                     error={!!methods.formState.errors.first_name_ar}
                     hint={methods.formState.errors.first_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your First Name (Ar)"
                   />
                 </div>
@@ -188,7 +194,7 @@ const onSubmit = async (formData: CustomerType) => {
                     {...methods.register("last_name_en")}
                     error={!!methods.formState.errors.last_name_en}
                     hint={methods.formState.errors.last_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your Last Name (En)"
                   />
                 </div>
@@ -199,7 +205,7 @@ const onSubmit = async (formData: CustomerType) => {
                     {...methods.register("last_name_ar")}
                     error={!!methods.formState.errors.last_name_ar}
                     hint={methods.formState.errors.last_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your Last Name (Ar)"
                   />
                 </div>

@@ -43,6 +43,7 @@ export default function Warranties() {
               update: hasPermission("update", "warranties"),
               delete: hasPermission("delete", "warranties"),
             }}
+            // searchColumns={['warranty_name_en']} 
           />
         </div>
       </div>

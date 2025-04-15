@@ -2,12 +2,12 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { CustomerType } from "@/components/lib/validations/customer";
 import { CustomSelect } from "@/components/ui/select/customSelect";
+import { CalenderIcon } from "@/icons";
 import { CountriesData } from "@/types/common";
 import {
   Badge,
   Briefcase,
   Building,
-  Building2,
   Calendar,
   CreditCard,
   Facebook,
@@ -20,7 +20,7 @@ import {
   MessageSquare,
   Phone,
   Plus,
-  X,
+  X
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -57,9 +57,7 @@ const ContactDetailsTab = ({
     getValues,
   } = useFormContext<CustomerType>();
 
-  const {
-    fields: socialFields
-  } = useFieldArray({
+  const { fields: socialFields } = useFieldArray({
     control,
     name: "contact_details.social_media",
   });
@@ -128,14 +126,35 @@ const ContactDetailsTab = ({
   };
 
   const handleRemoveSocialMedia = (_: any, socialIndex: number) => {
-    const currentSocials = [...(getValues(`contact_details.social_media`) || [])];
+    const currentSocials = [
+      ...(getValues(`contact_details.social_media`) || []),
+    ];
     currentSocials.splice(socialIndex, 1);
     setValue(`contact_details.social_media`, currentSocials);
   };
 
-  // دالة لتحويل القيم null إلى strings فارغة
   const handleNullValues = (value: any) => {
-    return value === null ? "" : value;
+    if (
+      value === null ||
+      value === undefined ||
+      value === "null" ||
+      value === "undefined"
+    ) {
+      return "";
+    }
+    return value;
+  };
+
+  const formatDateForInput = (dateString: string | null | undefined) => {
+    if (!dateString || dateString === "null" || dateString === "undefined")
+      return "";
+
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime()) ? "" : date.toISOString().split("T")[0];
+    } catch {
+      return "";
+    }
   };
 
   return (
@@ -298,24 +317,28 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Issued Date</Label>
           <Input
+            type="date"
             {...register("contact_details.id_issued_date", {
               setValueAs: (v) => handleNullValues(v),
             })}
+            value={formatDateForInput(watch("contact_details.id_issued_date"))}
             error={!!errors.contact_details?.id_issued_date}
             hint={errors.contact_details?.id_issued_date?.message}
-            type="date"
+            icon={<CalenderIcon className="w-4 h-4" />}
           />
         </div>
 
         <div className="space-y-2">
           <Label>Expiry Date</Label>
           <Input
+            type="date"
             {...register("contact_details.id_expiry_date", {
               setValueAs: (v) => handleNullValues(v),
             })}
+            value={formatDateForInput(watch("contact_details.id_expiry_date"))}
             error={!!errors.contact_details?.id_expiry_date}
             hint={errors.contact_details?.id_expiry_date?.message}
-            type="date"
+            icon={<CalenderIcon className="w-4 h-4" />}
           />
         </div>
 
@@ -336,24 +359,27 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Date of birth</Label>
           <Input
+            type="date"
             {...register("contact_details.date_of_birth", {
               setValueAs: (v) => handleNullValues(v),
             })}
+            value={formatDateForInput(watch("contact_details.date_of_birth"))}
             error={!!errors.contact_details?.date_of_birth}
             hint={errors.contact_details?.date_of_birth?.message}
-            type="date"
+            icon={<CalenderIcon className="w-4 h-4" />}
           />
         </div>
 
         <div className="space-y-2">
           <Label>Place of birth</Label>
           <Input
+            type="date"
             {...register("contact_details.place_of_birth", {
               setValueAs: (v) => handleNullValues(v),
             })}
             error={!!errors.contact_details?.place_of_birth}
             hint={errors.contact_details?.place_of_birth?.message}
-            placeholder="Enter place of birth"
+            icon={<CalenderIcon className="w-4 h-4" />}
           />
         </div>
 
@@ -362,7 +388,8 @@ const ContactDetailsTab = ({
           <div className="relative group">
             <Input
               {...register("contact_details.visit_visa_number", {
-                setValueAs: (v) => (v === "" || v === null ? undefined : Number(v)),
+                setValueAs: (v) =>
+                  v === "" || v === null ? undefined : Number(v),
               })}
               error={!!errors.contact_details?.visit_visa_number}
               hint={errors.contact_details?.visit_visa_number?.message}
@@ -422,6 +449,9 @@ const ContactDetailsTab = ({
             {...register("contact_details.driving_license_issued_date", {
               setValueAs: (v) => handleNullValues(v),
             })}
+            value={formatDateForInput(
+              watch("contact_details.driving_license_issued_date")
+            )}
             error={!!errors.contact_details?.driving_license_issued_date}
             hint={errors.contact_details?.driving_license_issued_date?.message}
             type="date"
@@ -435,6 +465,9 @@ const ContactDetailsTab = ({
             {...register("contact_details.driving_license_expiry_date", {
               setValueAs: (v) => handleNullValues(v),
             })}
+            value={formatDateForInput(
+              watch("contact_details.driving_license_expiry_date")
+            )}
             error={!!errors.contact_details?.driving_license_expiry_date}
             hint={errors.contact_details?.driving_license_expiry_date?.message}
             type="date"
@@ -464,7 +497,7 @@ const ContactDetailsTab = ({
             error={!!errors.contact_details?.work_address}
             hint={errors.contact_details?.work_address?.message}
             placeholder="Enter work address"
-            icon={<Building2 className="w-4 h-4" />}
+            icon={<MapPin className="w-4 h-4" />}
           />
         </div>
 

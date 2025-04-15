@@ -7,8 +7,8 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { Hash, User, ShoppingBag, Receipt, RefreshCw, Package, Clipboard, UserCog2, GitBranch } from "lucide-react";
-import { IoAdd } from "react-icons/io5";
+import { Hash, User, ShoppingBag, Receipt, RefreshCw, Package, Clipboard, UserCog2, GitBranch, Wallet } from "lucide-react";
+import { IoAdd, IoGitBranch } from "react-icons/io5";
 
 import { useFetchAccounts } from "@/hooks/settings/useAccounts";
 import { CustomSelect } from "@/components/ui/select/customSelect";
@@ -242,7 +242,7 @@ useEffect(() => {
             error={errors.branch_id?.message}
             onChange={(value) => handleSelectChange("branch_id", value)}
             isRequired={true}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<IoGitBranch className="w-4 h-4" />}
                   value={watch('branch_id')?.toString()}
           />
         </div>
@@ -282,7 +282,7 @@ useEffect(() => {
                 error={errors.vendor_account_id?.message}
                 onChange={(value) => handleSelectChange("vendor_account_id", value)}
                 isRequired={true}
-                        icon={<Hash className="w-4 h-4" />}
+                        icon={<User className="w-4 h-4" />}
                           value={watch('vendor_account_id')?.toString()}
               />
             </div>
@@ -313,7 +313,7 @@ useEffect(() => {
                 error={errors.jobcard_account_id?.message}
                 onChange={(value) => handleSelectChange("jobcard_account_id", value)}
                 isRequired={true}
-                        icon={<Clipboard className="w-4 h-4" />}
+                        icon={<User className="w-4 h-4" />}
                           value={watch('jobcard_account_id')?.toString()}
               />
             </div>
@@ -331,7 +331,7 @@ useEffect(() => {
                 error={errors.sale_account_id?.message}
                 onChange={(value) => handleSelectChange("sale_account_id", value)}
                 isRequired={true}
-                        icon={<Receipt className="w-4 h-4" />}
+                        icon={<Wallet className="w-4 h-4" />}
                          value={watch('sale_account_id')?.toString()}
               />
             </div>
@@ -346,7 +346,7 @@ useEffect(() => {
                 error={errors.sale_return_account_id?.message}
                 onChange={(value) => handleSelectChange("sale_return_account_id", value)}
                 isRequired={true}
-                        icon={<RefreshCw className="w-4 h-4" />}
+                        icon={<Wallet className="w-4 h-4" />}
                               value={watch('sale_return_account_id')?.toString()}
               />
             </div>
@@ -361,7 +361,7 @@ useEffect(() => {
                 error={errors.purchase_account_id?.message}
                 onChange={(value) => handleSelectChange("purchase_account_id", value)}
                 isRequired={true}
-                        icon={<Package className="w-4 h-4" />}
+                        icon={<Wallet className="w-4 h-4" />}
                          value={watch('purchase_account_id')?.toString()}
               />
             </div>
@@ -376,7 +376,7 @@ useEffect(() => {
                 error={errors.purchase_return_account_id?.message}
                 onChange={(value) => handleSelectChange("purchase_return_account_id", value)}
                 isRequired={true}
-                        icon={<RefreshCw className="w-4 h-4" />}
+                        icon={<Wallet className="w-4 h-4" />}
                          value={watch('purchase_return_account_id')?.toString()}
               />
             </div>

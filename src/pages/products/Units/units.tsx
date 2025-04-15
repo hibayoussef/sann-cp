@@ -1,7 +1,7 @@
 import { unitColumns } from "@/columns/products/units";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
-import { Ruler } from "lucide-react";
+import { Layers, Ruler } from "lucide-react";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -22,7 +22,7 @@ export default function Units() {
         <PageBreadcrumb
           baseTitle={"Dashboard"}
           pageTitle={"Units"}
-          icon={<Ruler className="w-5 h-5 "   />}
+          icon={<Layers className="w-5 h-5 "   />}
         />
 
         <div className="space-y-4 pt-1">

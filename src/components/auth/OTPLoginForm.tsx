@@ -129,13 +129,15 @@ export default function OTPLoginForm() {
                   />
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-between items-center">
+                  <p className='text-sm text-red-500 hover:text-red-600 dark:text-red-400'>OTP will be valid for 15 minutes</p>
                   <button
                     type="button"
                     onClick={handleResendOtp}
                     disabled={countdown > 0}
                     className="flex items-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed text-brand-500 hover:text-brand-600 dark:text-brand-400"
                   >
+                       
                     {countdown > 0 && (
                       <>
                         <ClockIcon className="w-4 h-4" />
@@ -143,6 +145,7 @@ export default function OTPLoginForm() {
                       </>
                     )}
                     {countdown <= 0 && 'Resend OTP'}
+                 
                   </button>
                 </div>
               </>

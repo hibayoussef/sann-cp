@@ -2,7 +2,7 @@ import { subUnitColumns } from "@/columns/products/subUnit";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchSubUnits } from "@/hooks/prouducts/useSubUnits";
 import { usePermissions } from "@/hooks/usePermissions";
-import { Package } from "lucide-react";
+import { Layers, Layers2Icon, Package } from "lucide-react";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 
@@ -22,7 +22,7 @@ export default function SubUnits() {
         <PageBreadcrumb
           baseTitle={"Dashboard"}
           pageTitle={"SubUnits"}
-          icon={<Package className="w-5 h-5" />}
+          icon={<Layers className="w-5 h-5" />}
         />
 
         <div className="space-y-4 pt-1">

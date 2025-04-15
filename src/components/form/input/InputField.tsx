@@ -1,14 +1,17 @@
+import "flatpickr/dist/themes/light.css";
 import type { FC } from "react";
 import React from "react";
+import Flatpickr from "react-flatpickr";
+import { ChangeHandler } from "react-hook-form";
 
 interface InputProps {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
   id?: string;
   name?: string;
   placeholder?: string;
-  value?: string | number;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  value?: string | number | Date | Date[];
+  onChange?: ChangeHandler | ((value: string | Date[]) => void);
+  onBlur?: ChangeHandler;
   className?: string;
   min?: string | number;
   max?: string | number;
@@ -19,6 +22,7 @@ interface InputProps {
   hint?: string;
   readOnly?: boolean;
   icon?: React.ReactNode;
+  options?: any;
 }
 
 const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> =
@@ -42,9 +46,12 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> =
         hint,
         readOnly = false,
         icon,
+        options,
       },
       ref
     ) => {
+      console.log("nameeE:", name);
+      console.log("value:::", value);
       let inputClasses = `h-8 w-full rounded-lg border appearance-none px-4 py-2.5 text-[13px] shadow-theme-xs placeholder:text-gray-400 focus:outline-none focus:ring dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
 
       if (readOnly) {
@@ -63,10 +70,57 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> =
         inputClasses +=
           " bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800";
       }
+      const handleDateChange = (dates: Date[]) => {
+        if (dates[0]) {
+          const selectedDate = dates[0];
+
+          const dateStr = selectedDate
+            .toLocaleDateString("en-CA")
+            .split("/")[0];
+
+          if (typeof onChange === "function") {
+            try {
+              const event = {
+                target: {
+                  name: name || "",
+                  value: dateStr,
+                },
+              };
+              (onChange as (event: any) => void)(event);
+            } catch {
+              (onChange as (value: string) => void)(dateStr);
+            }
+          }
+        }
+      };
+
+      const getDateValue = () => {
+        if (!value) return undefined;
+
+        if (typeof value === "string") {
+          if (!value || value === "null" || value === "undefined")
+            return undefined;
+
+          if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return value;
+          }
+
+          const date = new Date(value);
+          return isNaN(date.getTime())
+            ? undefined
+            : date.toISOString().split("T")[0];
+        }
+
+        if (value instanceof Date) return value.toISOString().split("T")[0];
+
+        if (Array.isArray(value)) return value[0]?.toISOString().split("T")[0];
+
+        return undefined;
+      };
 
       return (
         <div className="relative">
-          {icon && (
+          {icon && type !== "date" && (
             <div
               style={{ paddingBottom: hint ? "18px" : "" }}
               className="absolute inset-y-0 left-3 flex items-center text-gray-400"
@@ -74,22 +128,44 @@ const Input: FC<InputProps & React.RefAttributes<HTMLInputElement>> =
               {icon}
             </div>
           )}
-          <input
-            ref={ref}
-            type={type}
-            id={id}
-            name={name}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-            onBlur={onBlur}
-            min={min}
-            max={max}
-            step={step}
-            disabled={disabled}
-            className={`${inputClasses} ${icon ? "pl-10" : ""}`}
-            readOnly={readOnly}
-          />
+
+          {type === "date" ? (
+            <div className="relative w-full flatpickr-wrapper">
+              {icon && (
+                <span className="absolute start-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none dark:text-gray-400 z-10">
+                  {icon}
+                </span>
+              )}
+              <Flatpickr
+                value={getDateValue()}
+                onChange={handleDateChange}
+                options={{
+                  dateFormat: "Y-m-d",
+                  ...options,
+                }}
+                placeholder={placeholder || "Select date"}
+                className={`${inputClasses} ${icon ? "ps-10" : ""}`}
+                disabled={disabled || readOnly}
+              />
+            </div>
+          ) : (
+            <input
+              ref={ref}
+              type={type}
+              id={id}
+              name={name}
+              placeholder={placeholder}
+              value={value as string | number | readonly string[] | undefined}
+              onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+              onBlur={onBlur}
+              min={min}
+              max={max}
+              step={step}
+              disabled={disabled}
+              className={`${inputClasses} ${icon ? "pl-10" : ""}`}
+              readOnly={readOnly}
+            />
+          )}
 
           {hint && (
             <p

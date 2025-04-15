@@ -14,10 +14,12 @@ import {
   CreditCard,
   Flag,
   Globe,
+  Landmark,
   Mail,
   MapPin,
   Phone,
   Tag,
+  Type,
 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -155,7 +157,7 @@ export default function CreateBranch() {
                   {...register("branch_name_ar")}
                   error={!!errors.branch_name_ar}
                   hint={errors.branch_name_ar?.message}
-                  icon={<Tag className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div>
@@ -167,7 +169,7 @@ export default function CreateBranch() {
                   {...register("branch_name_en")}
                   error={!!errors.branch_name_en}
                   hint={errors.branch_name_en?.message}
-                  icon={<Tag className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div>
@@ -273,7 +275,7 @@ export default function CreateBranch() {
                   {...register("postal_code")}
                   error={!!errors.postal_code}
                   hint={errors.postal_code?.message}
-                  icon={<MapPin className="w-4 h-4" />}
+                  icon={<Landmark className="w-4 h-4" />}
                 />
               </div>
               <div>
@@ -312,7 +314,7 @@ export default function CreateBranch() {
                   {...register("tax_registration_number_label")}
                   error={!!errors.tax_registration_number_label}
                   hint={errors.tax_registration_number_label?.message}
-                  icon={<Tag className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div key="registered_for_vat">

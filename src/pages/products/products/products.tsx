@@ -4,9 +4,8 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { Package } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
-import PageMeta from "../../../components/common/PageMeta";import { useFetchProducts } from "@/hooks/prouducts/useProducts";
-;
-
+import PageMeta from "../../../components/common/PageMeta";
+import { useFetchProducts } from "@/hooks/prouducts/useProducts";
 export default function Products() {
   const { data } = useFetchProducts();
   const products: any = data || [];
@@ -36,6 +35,8 @@ export default function Products() {
             })}
             data={products}
             createPath="/products/create"
+            hasDetails={true}
+            detailsLink="/products"
             permissions={{
               create: hasPermission("create", "products"),
               update: hasPermission("update", "products"),

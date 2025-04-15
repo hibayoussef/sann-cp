@@ -19,13 +19,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Calendar,
+  Folder,
+  FolderTree,
   GitBranch,
   Info,
   Layers,
   Package,
+  Percent,
   Settings,
+  ShieldCheck,
   Tag,
+  Tags,
+  Type,
   Wallet,
+  Wallet2,
+  WalletCards,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
@@ -38,6 +46,9 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
 import Select from 'react-select';
+import { TabGroup } from "@headlessui/react";
+import { BsWalletFill } from "react-icons/bs";
+import { TimeIcon } from "@/icons";
 
 interface ProductType {
   for_selling: number;
@@ -88,8 +99,7 @@ export default function ProductForm() {
   const { data: warranties } = useFetchWarranties();
   const { data: brands } = useFetchBrands();
   const { data: units } = useFetchUnits();
-  const { data: branches } = useFetchBranches();
-
+ 
   const methods = useForm<ProductType>({
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
@@ -164,7 +174,11 @@ export default function ProductForm() {
       );
     }
   }, [productData, setValue]);
-
+ const { data: branches } = useFetchBranches();
+const remainingBranches = branches?.filter(
+  (branch) => !watch("branches")?.map(b => b.branch_id).includes(branch.id)
+);
+const canAddBranch = remainingBranches && remainingBranches?.length > 0;
   useEffect(() => {
     if (selectedUnitId) {
       const defaultSubUnit = subunits?.data?.[0]?.id || selectedUnitId;
@@ -433,7 +447,7 @@ export default function ProductForm() {
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="product_name_en">English Name</Label>
+                    <Label htmlFor="product_name_en">Name (En)</Label>
                     <Input
                       type="text"
                       id="product_name_en"
@@ -441,11 +455,11 @@ export default function ProductForm() {
                       placeholder="Please enter product name (En)"
                       error={!!errors.product_name_en}
                       hint={errors.product_name_en?.message}
-                      icon={<Info className="w-4 h-4" />}
+                      icon={<Type className="w-4 h-4" />}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="product_name_ar">Arabic Name</Label>
+                    <Label htmlFor="product_name_ar">Name (Ar)</Label>
                     <Input
                       type="text"
                       id="product_name_ar"
@@ -453,7 +467,7 @@ export default function ProductForm() {
                       placeholder="Please enter product name (Ar)"
                       error={!!errors.product_name_ar}
                       hint={errors.product_name_ar?.message}
-                      icon={<Info className="w-4 h-4" />}
+                      icon={<Type className="w-4 h-4" />}
                     />
                   </div>
                   <div>
@@ -591,7 +605,7 @@ export default function ProductForm() {
                         }
                       }}
                       isRequired={true}
-                      icon={<Tag className="w-4 h-4" />}
+                      icon={<FolderTree className="w-4 h-4" />}
                     />
                   </div>
 
@@ -622,7 +636,7 @@ export default function ProductForm() {
                       placeholder="Select Warranty"
                       error={errors.warranty_id?.message}
                       onChange={(value) => handleSelectChange("warranty_id", value)}
-                      icon={<Calendar className="w-4 h-4" />}
+                      icon={<ShieldCheck className="w-4 h-4" />}
                     />
                   </div>
 
@@ -634,7 +648,7 @@ export default function ProductForm() {
                       placeholder="Select Brand"
                       error={errors.brand_id?.message}
                       onChange={(value) => handleSelectChange("brand_id", value)}
-                      icon={<Tag className="w-4 h-4" />}
+                      icon={<Tags className="w-4 h-4" />}
                     />
                   </div>
 
@@ -646,7 +660,7 @@ export default function ProductForm() {
                       placeholder="Select Tax"
                       error={errors.tax_id?.message}
                       onChange={(value) => handleSelectChange("tax_id", value)}
-                      icon={<Wallet className="w-4 h-4" />}
+                        icon={<Wallet2  className="w-4 h-4" />}
                     />
                   </div>
                 </div>
@@ -827,10 +841,10 @@ export default function ProductForm() {
                       </div>
                     </>
                   )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                     <div>
                       <Label htmlFor="alert_quantity">Alert Quantity</Label>
-                      <Input
+                      {/* <Input
                         type="number"
                         id="alert_quantity"
                         placeholder="Enter alert quantity"
@@ -839,8 +853,16 @@ export default function ProductForm() {
                         })}
                         error={!!errors.alert_quantity}
                         hint={errors.alert_quantity?.message}
-                        icon={<Info className="w-4 h-4" />}
-                      />
+                        icon={<TimeIcon className="w-4 h-4" />}
+                        /> */}
+                        <Switch
+                          label=""
+                          defaultChecked={true}
+                          onChange={(checked) =>
+                            setValue("alert_quantity", checked ? 1 : 0)
+                          }
+                        />
+                        
                     </div>
                     <div>
                       <Label htmlFor="expiry_date">Expiry Date</Label>
@@ -858,7 +880,7 @@ export default function ProductForm() {
               </ComponentCard>
 
               {/* Branch & Status Section */}
-              <ComponentCard title="Branch Management" icon={<GitBranch />}>
+              {/* <ComponentCard title="Branch Management" icon={<GitBranch />}>
                 <div className="space-y-4">
                   {fields.map((field, index) => (
                     <div key={field.id} className="flex gap-4 items-end">
@@ -903,7 +925,79 @@ export default function ProductForm() {
                     + Add Branch
                   </button>
                 </div>
-              </ComponentCard>
+              </ComponentCard> */}
+            <ComponentCard title="Branch Management" icon={<GitBranch />}>
+  <div className="space-y-4">
+    {fields.map((field, index) => (
+      <div key={field.id} className="flex gap-4 items-end">
+        <div className="flex-1">
+          <Label>Branch</Label>
+          <CustomSelect
+            name={`branches.${index}.branch_id`}
+            options={branchOptions}
+            placeholder="Select Branch"
+            error={errors.branches?.[index]?.branch_id?.message}
+            onChange={(value) => handleBranchChange(index, value)}
+            icon={<GitBranch className="w-4 h-4" />}
+          />
+        </div>
+
+        <div className="flex items-center gap-2 mb-2">
+          <Label>Active</Label>
+          <Switch
+            label=""
+            defaultChecked={watch(`branches.${index}.is_active`)}
+            onChange={(checked) =>
+              setValue(`branches.${index}.is_active`, checked)
+            }
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={() => remove(index)}
+          className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors"
+          title="Remove branch"
+        >
+          <IoTrash className="w-4 h-4" />
+        </button>
+      </div>
+    ))}
+
+    {/* زر الإضافة مع التحكم في التعطيل والتلميح */}
+    <div className="relative inline-block group">
+      <button
+        type="button"
+        onClick={() => append({ branch_id: 0, is_active: true })}
+        disabled={!canAddBranch}
+        className={`
+          text-blue-500 hover:text-blue-700 
+          flex items-center gap-1 text-sm
+          ${!canAddBranch ? "opacity-50 cursor-not-allowed" : ""}
+        `}
+      >
+        <IoAdd className="w-4 h-4" />
+        Add Branch
+      </button>
+
+      {!canAddBranch && (
+        <div className="
+          absolute hidden group-hover:block 
+          bg-gray-800 text-white text-xs 
+          rounded py-1 px-2 bottom-full mb-2 
+          whitespace-nowrap
+        ">
+          No available branches to add
+        </div>
+      )}
+    </div>
+
+    {/* رسالة عدم التوفر تظهر فقط عندما لا يوجد فروع مضافة */}
+    {!canAddBranch && fields.length === 0 && (
+      <p className="text-gray-500 text-sm">No branches available</p>
+    )}
+  </div>
+</ComponentCard>
             </div>
 
             {selectedUnit && (

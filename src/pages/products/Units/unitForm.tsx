@@ -3,7 +3,7 @@ import { unitSchema, type UnitType } from "@/components/lib/validations/unit";
 import { useAddUnit, useFetchUnit, useUpdateUnit } from "@/hooks/prouducts/useUnits";
 import { useMeStore } from "@/store/useMeStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Hash, ShoppingBag, Type } from "lucide-react";
+import { Hash, Percent, ShoppingBag, Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -35,7 +35,7 @@ export default function UnitForm() {
       unit_name_ar: unitData?.unit_name_ar ?? "",
       short_name_en: unitData?.short_name_en ?? "",
       short_name_ar: unitData?.short_name_ar ?? "",
-      allow_decimal: unitData?.allow_decimal ?? 0,
+      allow_decimal: unitData?.allow_decimal ?? 1,
       multiplier: unitData?.multiplier ?? 0,
     },
   });
@@ -46,7 +46,7 @@ export default function UnitForm() {
       setValue("unit_name_ar", unitData.unit_name_ar ?? "");
       setValue("short_name_en", unitData.short_name_en ?? "");
       setValue("short_name_ar", unitData.short_name_ar ?? "");
-      setValue("allow_decimal", unitData.allow_decimal ?? 0);
+      setValue("allow_decimal", unitData.allow_decimal ?? 1);
       setValue("multiplier", unitData.multiplier ?? 0);
     }
   }, [unitData, setValue]);
@@ -141,7 +141,7 @@ export default function UnitForm() {
                     {...register("multiplier", { valueAsNumber: true })}
                     placeholder="Enter multiplier value"
                     error={!!errors.multiplier}
-                    icon={<Hash className="w-4 h-4 text-gray-500" />}
+                    icon={<Percent className="w-4 h-4 text-gray-500" />}
                     hint={errors.multiplier?.message}
                   />
                 </div>
@@ -149,7 +149,7 @@ export default function UnitForm() {
                   <Label>Allow Decimal</Label>
                   <Switch
                     label=""
-                    defaultChecked={unitData?.allow_decimal === 1}
+                    defaultChecked={true}
                     onChange={(checked) =>
                       setValue("allow_decimal", checked ? 1 : 0)
                     }

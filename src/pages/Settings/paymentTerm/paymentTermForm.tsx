@@ -14,6 +14,7 @@ import {
 } from "@/hooks/settings/usePaymentTerm";
 import { useMeStore } from "@/store/useMeStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { BsFillCalendarDayFill } from "react-icons/bs";
@@ -122,7 +123,7 @@ export default function PaymentTermForm() {
                   {...register("term_name_ar")}
                   error={!!errors.term_name_ar}
                   hint={errors.term_name_ar?.message}
-                  icon={<MdOutlineShortText className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
             </div>
@@ -138,7 +139,7 @@ export default function PaymentTermForm() {
                   {...register("term_name_en")}
                   error={!!errors.term_name_en}
                   hint={errors.term_name_en?.message}
-                  icon={<MdOutlineShortText className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
             </div>

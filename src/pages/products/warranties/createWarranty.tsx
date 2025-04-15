@@ -16,7 +16,7 @@ import {
   warrantySchema,
   type WarrantyType,
 } from "@/components/lib/validations/warranty";
-import { Clock, Tag } from "lucide-react";
+import { Clock, Percent, PercentIcon, Tag, Type } from "lucide-react";
 import { WarrantiesType } from "@/types/enums/warrantiesType";
 import { IoAdd } from "react-icons/io5";
 
@@ -110,7 +110,7 @@ export default function WarrantyForm() {
                     error={!!errors.warranty_name_en}
                     hint={errors.warranty_name_en?.message}
                     className="w-full p-3 border rounded-md"
-                    icon={<Tag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div className="py-3">
@@ -123,7 +123,7 @@ export default function WarrantyForm() {
                     error={!!errors.duration}
                     hint={errors.duration?.message}
                     className="w-full p-3 border rounded-md"
-                    icon={<Clock className="w-4 h-4" />}
+                    icon={<Percent className="w-4 h-4" />}
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function WarrantyForm() {
                     error={!!errors.warranty_name_ar}
                     hint={errors.warranty_name_ar?.message}
                     className="w-full p-3 border rounded-md"
-                    icon={<Tag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div className="py-3">

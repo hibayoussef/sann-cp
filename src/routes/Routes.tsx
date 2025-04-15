@@ -60,6 +60,8 @@ import UnitForm from "../pages/products/Units/unitForm";
 import MapSettings from "@/pages/Accountant/MapSettings/MapSettings";
 import CreateMapSettings from "@/pages/Accountant/MapSettings/createMapSettings";
 import ContactForm from "@/pages/Sales/ContactForm";
+import ProductsLayout from "@/pages/products/products/productsLayout";
+import ProductCloneForm from "@/pages/products/products/ProductCloneForm";
 
 const RoutesComponent = () => {
   return (
@@ -82,8 +84,10 @@ const RoutesComponent = () => {
           <Route path="/" element={<Home />} />
 
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductsLayout />} />
           <Route path="/products/create" element={<ProductForm />} />
           <Route path="/products/update/:id" element={<ProductForm />} />
+          <Route path="/products/clone/:id" element={<ProductCloneForm />} />
 
           <Route path="/brands" element={<Brands />} />
           <Route path="/brands/create" element={<CreateBrand />} />

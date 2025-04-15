@@ -53,72 +53,108 @@ const Table = <T,>({ rowData, columnDefs }: TableProps<T>) => {
     filter: true,
   };
 
-  const exportToExcel = () => {
-    const rowData: any[] = [];
-    gridRef.current?.api.forEachNode((node) => {
-      const filteredData = Object.fromEntries(
-        Object.entries(node?.data || {}).filter(([key]) =>
-          visibleColumns.includes(key)
-        )
-      );
-      rowData.push(filteredData);
-    });
+ const exportToExcel = () => {
+  const rowData: any[] = [];
+  const headers: Record<string, string> = {};
 
-    const worksheet = XLSX.utils.json_to_sheet(rowData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, "table_data.xlsx");
-  };
+  // Create mapping of field to headerName
+  columnDefs.forEach(col => {
+    if (col.field) {
+      headers[col.field] = col.headerName || col.field;
+    }
+  });
 
-  const printTable = () => {
-    if (!gridRef.current) return;
-
-    const headerRow = visibleColumns
-      .map(
-        (col) =>
-          `<th>${
-            columnDefs.find((c) => c.field === col)?.headerName || col
-          }</th>`
+  gridRef.current?.api.forEachNode((node) => {
+    const filteredData = Object.fromEntries(
+      Object.entries(node?.data || {}).filter(([key]) =>
+        visibleColumns.includes(key)
       )
-      .join("");
+    );
+    rowData.push(filteredData);
+  });
 
-    const bodyRows = rowData
-      .map((row: any) => {
-        const rowDataHtml = visibleColumns
-          .map((col) => `<td>${row[col] ?? ""}</td>`)
-          .join("");
-        return `<tr>${rowDataHtml}</tr>`;
-      })
-      .join("");
+  const worksheet = XLSX.utils.json_to_sheet(rowData);
+  
+  // Replace headers with headerNames
+  if (worksheet['!cols']) {
+    worksheet['!cols'] = visibleColumns.map(col => ({
+      wch: Math.max(
+        headers[col]?.length || 0,
+        ...rowData.map(row => String(row[col] || '').length)
+      )
+    }));
+  }
 
-    const printWindow = window.open("", "", "width=800,height=600");
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-        <head>
-          <title>Print Table</title>
-          <style>
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid black; padding: 8px; text-align: left; }
-          </style>
-        </head>
-        <body>
-          <table>
-            <thead><tr>${headerRow}</tr></thead>
-            <tbody>${bodyRows}</tbody>
-          </table>
-          <script>
-            window.onload = function() {
+  // Update headers in the worksheet
+  visibleColumns.forEach((col, index) => {
+    const cellRef = XLSX.utils.encode_cell({ r: 0, c: index });
+    if (worksheet[cellRef]) {
+      worksheet[cellRef].v = headers[col] || col;
+    }
+  });
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+  XLSX.writeFile(workbook, "table_data.xlsx");
+};
+
+const printTable = () => {
+  if (!gridRef.current) return;
+
+  // إنشاء خريطة للحقول وأسمائها للوصول السريع
+  const columnHeaders = columnDefs.reduce((acc, col) => {
+    if (col.field) {
+      acc[col.field] = col.headerName || col.field;
+    }
+    return acc;
+  }, {} as Record<string, string>);
+
+  const headerRow = visibleColumns
+    .map((col) => `<th>${columnHeaders[col] || col}</th>`)
+    .join("");
+
+  const bodyRows = rowData
+    .map((row: any) => {
+      const rowDataHtml = visibleColumns
+        .map((col) => `<td>${row[col] ?? ""}</td>`)
+        .join("");
+      return `<tr>${rowDataHtml}</tr>`;
+    })
+    .join("");
+
+  const printWindow = window.open("", "", "width=800,height=600");
+  if (printWindow) {
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>Print Table</title>
+        <style>
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th { background-color: #f2f2f2; font-weight: bold; }
+          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+          tr:nth-child(even) { background-color: #f9f9f9; }
+        </style>
+      </head>
+      <body>
+        <h1>Brands Report</h1>
+        <table>
+          <thead><tr>${headerRow}</tr></thead>
+          <tbody>${bodyRows}</tbody>
+        </table>
+        <script>
+          window.onload = function() {
+            setTimeout(() => {
               window.print();
               window.close();
-            };
-          </script>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-    }
-  };
+            }, 100);
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+};
 
   const toggleColumnVisibility = (field: string) => {
     setVisibleColumns((prev) =>

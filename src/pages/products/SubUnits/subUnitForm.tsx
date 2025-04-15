@@ -8,7 +8,7 @@ import {
 } from "@/hooks/prouducts/useSubUnits";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Folder, Hash, ShoppingBag, Type } from "lucide-react";
+import { Folder, Hash, Layers, Percent, ShoppingBag, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -134,7 +134,7 @@ export default function SubUnitForm() {
                   searchPlaceholder="Search units..."
                   error={errors.related_to?.message}
                   onChange={(value) => handleSelectChange("related_to", value)}
-                  icon={<Folder className="w-4 h-4" />}
+                  icon={<Layers className="w-4 h-4" />}
                   value={relatedToValue}
                 />
               </div>
@@ -169,7 +169,7 @@ export default function SubUnitForm() {
                     {...register("short_name_en")}
                     placeholder="Enter short name (English)"
                     error={!!errors.short_name_en}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     hint={errors.short_name_en?.message}
                   />
                 </div>
@@ -179,7 +179,7 @@ export default function SubUnitForm() {
                     {...register("short_name_ar")}
                     placeholder="Enter short name (Arabic)"
                     error={!!errors.short_name_ar}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     hint={errors.short_name_ar?.message}
                   />
                 </div>
@@ -193,7 +193,7 @@ export default function SubUnitForm() {
                     {...register("multiplier", { valueAsNumber: true })}
                     placeholder="Enter multiplier value"
                     error={!!errors.multiplier}
-                    icon={<Hash className="w-4 h-4" />}
+                    icon={<Percent className="w-4 h-4" />}
                     hint={errors.multiplier?.message}
                   />
                 </div>
@@ -201,7 +201,7 @@ export default function SubUnitForm() {
                   <Label>Allow Decimal</Label>
                   <Switch
                     label=""
-                    defaultChecked={watch("allow_decimal") === 1}
+                    defaultChecked={true}
                     onChange={(checked) =>
                       setValue("allow_decimal", checked ? 1 : 0)
                     } // تعيين القيمة كـ 1 أو 0
