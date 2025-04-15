@@ -199,11 +199,17 @@ const handlePrint = () => {
           body { font-family: Arial, sans-serif; margin: 20px; }
           h1 { color: #333; text-align: center; margin-bottom: 20px; }
           table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-          th { background-color: #f8f9fa; text-align: left; padding: 10px; border: 1px solid #ddd; }
+          th { background-color: #465FFF; color: white;  text-align: left; padding: 10px; border: 1px solid #ddd; }
           td { padding: 8px; border: 1px solid #ddd; }
           @media print {
             body { margin: 0; padding: 0; }
             .no-print { display: none !important; }
+              th { 
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              background-color: #465FFF;
+              color: #ffffff;
+            }
           }
         </style>
       </head>

@@ -34,14 +34,14 @@ export const productColumns = (permissions: {
     ),
     cell: ({ row }) => <div>{row.getValue("sku")}</div>,
   },
-  {
-    id: "sale_price",
-    accessorKey: "sale_price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Sale Price" />
-    ),
-    cell: ({ row }) => <div>{row.getValue("sale_price")}</div>,
-  },
+  // {
+  //   id: "sale_price",
+  //   accessorKey: "sale_price",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Sale Price" />
+  //   ),
+  //   cell: ({ row }) => <div>{row.getValue("sale_price")}</div>,
+  // },
   {
     id: "Actions",
     cell: ({ row }) => (

@@ -13,6 +13,10 @@ import { Home, MoreVertical, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import ProductDetails from "./productDetails";
+import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable'
 
 export default function ProductsLayout() {
     const { data } = useFetchProducts();
@@ -27,14 +31,170 @@ export default function ProductsLayout() {
     id ? +id : null
   );
 
+  // تعريف المتغيرات المطلوبة للتصدير
+  const excludedExportColumns = ['actions']; // أضف الأعمدة التي تريد استثناءها
+  const tableName = 'products'; // اسم الملف الذي سيتم تصديره
+
+ 
+  // دالة التصدير إلى CSV
   const handleExportCSV = () => {
-    console.log("Exporting to CSV...");
+    // تحضير البيانات للتصدير
+    const exportData = products.map(product => ({
+      'Product Name (EN)': product.product_name_en,
+      'Product Name (AR)': product.product_name_ar,
+      'SKU': product.sku,
+      // أضف حقول أخرى حسب الحاجة
+    }));
+
+    const csv = Papa.unparse(exportData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${tableName}.csv`;
+    link.click();
   };
 
+
+ // دالة التصدير إلى Excel
   const handleExportExcel = () => {
-    console.log("Exporting to Excel...");
+    // تحضير البيانات للتصدير
+    const exportData = products.map(product => ({
+      'Product Name (EN)': product.product_name_en,
+      'Product Name (AR)': product.product_name_ar,
+      'SKU': product.sku,
+      // أضف حقول أخرى حسب الحاجة
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `${tableName}.xlsx`);
   };
 
+  const handleExportPDF = () => {
+  const doc = new jsPDF();
+  
+  // تحضير العناوين والبيانات
+  const headers = [
+    'Product Name (EN)',
+    'Product Name (AR)',
+    'SKU',
+    // أضف عناوين أخرى حسب الحاجة
+  ];
+
+  // تحضير البيانات
+  const data = products.map(product => [
+    product.product_name_en || '',
+    product.product_name_ar || '',
+    product.sku || '',
+    // أضف حقول أخرى حسب الحاجة
+  ]);
+
+  doc.text(tableName, 14, 16);
+
+  (doc as any).autoTable({
+    head: [headers],
+    body: data,
+    startY: 20,
+    styles: {
+      fontSize: 10,
+    },
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+    },
+    alternateRowStyles: {
+      fillColor: [245, 245, 245],
+    },
+  });
+
+  doc.save(`${tableName}.pdf`);
+};
+
+const handlePrint = () => {
+  // تحضير العناوين
+  const headers = [
+    'Product Name (EN)',
+    'Product Name (AR)',
+    'SKU',
+  ];
+
+  // تحضير البيانات
+  const data = products.map(product => [
+    product.product_name_en || '',
+    product.product_name_ar || '',
+    product.sku || '',
+  ]);
+
+  const printContent = `
+    <html>
+      <head>
+        <title>Print Products</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          h1 { color: #333; text-align: center; margin-bottom: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          
+          /* تنسيق العناوين للطباعة -      */
+          th { 
+            background-color: #465FFF; 
+            color: white; 
+            text-align: left; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            font-weight: bold;
+          }
+          
+          td { padding: 8px; border: 1px solid #ddd; }
+          tr:nth-child(even) { background-color: #f2f2f2; }
+          
+          @media print {
+            body { margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            table { width: 100% !important; }
+            
+            /* التأكد من تطبيق الألوان عند الطباعة */
+            th { 
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              background-color: #465FFF;
+              color: #ffffff;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${tableName || "Products List"}</h1>
+        <table>
+          <thead>
+            <tr>
+              ${headers.map(header => `<th>${header}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map(row => `
+              <tr>
+                ${row.map(cell => `<td>${cell}</td>`).join("")}
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+       
+      </body>
+    </html>
+  `;
+
+  const printWindow = window.open("", "_blank");
+  if (printWindow) {
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.focus();
+    
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  }
+};
   return (
     <div className="bg-gray-50 min-h-screen">
       <PageBreadcrumb
@@ -77,6 +237,12 @@ export default function ProductsLayout() {
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleExportExcel}>
                       Export as Excel
+                    </DropdownMenuItem>
+                     <DropdownMenuItem onClick={handleExportPDF}>
+                      Export as PDF
+                    </DropdownMenuItem>
+                     <DropdownMenuItem onClick={handlePrint}>
+                     Print
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
