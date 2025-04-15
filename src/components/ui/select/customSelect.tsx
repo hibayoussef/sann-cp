@@ -12,7 +12,7 @@ interface OptionType<T = string> {
 
 interface DynamicSelectProps<T = string> {
   name: string;
-  options: OptionType<T>[];
+  options: any[];
   placeholder?: string;
   searchPlaceholder?: string;
   error?: string;
@@ -70,15 +70,19 @@ export const CustomSelect = <T = string,>({
   }, [formValue, options]);
 
   const filteredOptions = options.filter((option) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    const optionLabel = option.label || '';
+    const optionLabelLower = optionLabel.toLowerCase();
+
     if (option.isParent) {
       return (
-        option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        option.children?.some((child) =>
-          child.label.toLowerCase().includes(searchTerm.toLowerCase())
+        optionLabelLower.includes(searchTermLower) ||
+        option.children?.some((child:any) => 
+          (child.label || '').toLowerCase().includes(searchTermLower)
         )
       );
     }
-    return option.label.toLowerCase().includes(searchTerm.toLowerCase());
+    return optionLabelLower.includes(searchTermLower);
   });
 
   const handleSelect = async (option: OptionType<T>) => {

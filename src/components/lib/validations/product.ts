@@ -9,15 +9,15 @@ export const productSchema = z.object({
   sku: z.string().min(1, "SKU is required"),
   category_id: z.coerce.number().min(1, "Category is required"),
   unit_id: z.coerce.number().min(1, "Unit is required"),
-  alert_quantity: z.coerce.number().min(1, "Alert quantity is required"),
+  alert_quantity: z.coerce.number().min(0, "Alert quantity is required"),
   sale_account: z.coerce.number().min(1, "Sale account is required"),
   purchase_account: z.coerce.number().min(1, "Purchase account is required"),
   sale_return_account: z.coerce
     .number()
-    .min(1, "Sale return account is required"),
+    .min(0, "Sale return account is required"),
   purchase_return_account: z.coerce
     .number()
-    .min(1, "Purchase return account is required"),
+    .min(0, "Purchase return account is required"),
   purchase_price: z.coerce.number().min(1, "Purchase price is required"),
   sale_price: z.coerce.number().min(1, "Sale price is required"),
   is_active: z.coerce.number(),

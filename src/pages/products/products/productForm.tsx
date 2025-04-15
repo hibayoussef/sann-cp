@@ -4,26 +4,16 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import Select from "react-select";
 
-// Icons and Components
-import {
-  Box,
-  Calendar,
-  FolderTree,
-  GitBranch,
-  Layers,
-  Package,
-  Settings,
-  ShieldCheck,
-  Tag,
-  Tags,
-  Type,
-  Wallet,
-  Wallet2,
+// Icons
+import { 
+  Box, Calendar, FolderTree, GitBranch, Info, Layers, 
+  Package, Settings, ShieldCheck, Tag, Tags, Type, 
+  Wallet, Wallet2 
 } from "lucide-react";
 import { FaMoneyBill } from "react-icons/fa";
 import { IoAdd, IoColorPalette, IoTrash } from "react-icons/io5";
 
-// Custom Components
+// Components
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Switch from "@/components/form/switch/Switch";
@@ -35,11 +25,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import { productSchema } from "@/components/lib/validations/product";
 import { useFetchBrands } from "@/hooks/prouducts/useBrands";
 import { useFetchCategories } from "@/hooks/prouducts/useCategories";
-import {
-  useAddProduct,
-  useFetchProduct,
-  useUpdateProduct,
-} from "@/hooks/prouducts/useProducts";
+import { useAddProduct, useFetchProduct, useUpdateProduct } from "@/hooks/prouducts/useProducts";
 import { useFetchSubCategoryById } from "@/hooks/prouducts/useSubCategories";
 import { useFetchSubUnitsById } from "@/hooks/prouducts/useSubUnits";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
@@ -84,30 +70,29 @@ export default function ProductForm() {
   const isUpdate = Boolean(id);
   const organizationId = useMeStore((state) => state.organizationId);
 
-  // State for selected category
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
-  );
+  // States
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [shouldLoadSubUnits, setShouldLoadSubUnits] = useState(false);
 
-  // API Hooks
+  // Data Hooks
   const { data: productData, isLoading } = useFetchProduct(Number(id), {
     enabled: isUpdate,
   });
   const addProduct = useAddProduct();
   const updateProduct = useUpdateProduct();
-
-  // Data fetching hooks
+  
   const { data: accounts } = useFetchAccounts();
   const { data: taxes } = useFetchTaxes();
   const { data: categories } = useFetchCategories();
-  const { data: subCategories, isLoading: subCategoriesLoading } =
+  const { data: subCategories, isLoading: subCategoriesLoading } = 
     useFetchSubCategoryById(selectedCategoryId);
   const { data: warranties } = useFetchWarranties();
   const { data: brands } = useFetchBrands();
   const { data: units } = useFetchUnits();
   const { data: branches } = useFetchBranches();
+  
 
-  // Form setup
+  // Form Setup
   const methods = useForm<ProductType>({
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
@@ -149,173 +134,173 @@ export default function ProductForm() {
     control,
     formState: { errors, isSubmitting },
     trigger,
+    reset,
   } = methods;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "branches",
   });
+  
+  const { data: subunits, isLoading: subunitsLoading } = useFetchSubUnitsById(
+    watch("unit_id"),
+    { enabled: shouldLoadSubUnits || !!watch("unit_id") }
+  );
 
-  // Watched values
+  // Watched Values
   const selectedUnitId = watch("unit_id");
   const selectedSubCategoryId = watch("sub_category_id");
   const watchedBranches = watch("branches");
+  const watchedSubUnits = watch("sub_units");
 
-  // Subunits data
-  const {
-    data: subunits,
-    isLoading: subunitsLoading,
-    error: subunitsError,
-  } = useFetchSubUnitsById(selectedUnitId);
-
-  // Memoized options for better performance
+  // Memoized Options
   const categoryOptions = useMemo(
-    () =>
-      categories?.map((category) => ({
-        value: (category.id || "").toString(),
-        label: category.category_name_en || "",
-      })) || [],
+    () => categories?.map((c) => ({ value: c?.id?.toString(), label: c.category_name_en })) || [],
     [categories]
   );
 
   const subCategoryOptions = useMemo(
-    () =>
-      subCategories?.data?.map((subCategory) => ({
-        value: (subCategory.id || "").toString(),
-        label: subCategory.sub_category_name_en || "",
-      })) || [],
+    () => subCategories?.data?.map((sc) => ({ 
+      value: sc.id.toString(), 
+      label: sc.sub_category_name_en 
+    })) || [],
     [subCategories]
   );
 
   const warrantyOptions = useMemo(
-    () =>
-      warranties?.map((warranty) => ({
-        value: (warranty.id || "").toString(),
-        label: warranty.warranty_name_en || "",
-      })) || [],
+    () => warranties?.map((w) => ({ value: w.id.toString(), label: w.warranty_name_en })) || [],
     [warranties]
   );
 
   const brandOptions = useMemo(
-    () =>
-      brands?.map((brand) => ({
-        value: (brand.id || "").toString(),
-        label: brand.brand_name_en || "",
-      })) || [],
+    () => brands?.map((b) => ({ value: b.id.toString(), label: b.brand_name_en })) || [],
     [brands]
   );
 
   const unitOptions = useMemo(
-    () =>
-      units?.map((unit) => ({
-        value: (unit.id || "").toString(),
-        label: unit.unit_name_en || "",
-      })) || [],
+    () => units?.map((u) => ({ value: u?.id?.toString(), label: u.unit_name_en })) || [],
     [units]
   );
 
   const taxOptions = useMemo(
-    () =>
-      taxes?.map((tax) => ({
-        value: (tax.id || "").toString(),
-        label: `${tax.tax_name_en || ""} (${tax.amount || 0}%)`,
-      })) || [],
+    () => taxes?.map((t) => ({ 
+      value: t.id.toString(), 
+      label: `${t.tax_name_en} (${t.amount}%)` 
+    })) || [],
     [taxes]
   );
 
   const accountOptions = useMemo(
-    () =>
-      accounts?.map((account) => ({
-        value: (account.id || "").toString(),
-        label: account.account_name_en || "",
-      })) || [],
+    () => accounts?.map((a) => ({ value: a.id.toString(), label: a.account_name_en })) || [],
     [accounts]
   );
 
   const branchOptions = useMemo(
-    () =>
-      branches?.map((branch) => ({
-        value: (branch.id || "").toString(),
-        label: branch.branch_name_en || "",
-      })) || [],
+    () => branches?.map((b) => ({ value: b.id.toString(), label: b.branch_name_en })) || [],
     [branches]
   );
 
   const subUnitOptions = useMemo(
-    () =>
-      subunits?.data?.map((subunit) => ({
-        value: (subunit.id || "").toString(),
-        label: `${subunit.unit_name_en || ""} (${
-          subunit.conversion_factor || 0
-        } per main unit)`,
-      })) || [],
+    () => subunits?.data?.map((su) => ({
+      value: su.id.toString(),
+      label: `${su.unit_name_en} (${su.conversion_factor} per main unit)`
+    })) || [],
     [subunits]
   );
 
-  // Set initial values when productData is available (for update)
-  useEffect(() => {
-    if (!productData) return;
+  console.log('subUnitOptions:', subUnitOptions)
+  console.log('subunits:', subUnitOptions)
 
-    const setProductValues = () => {
-      setValue("product_name_en", productData.product_name_en ?? "");
-      setValue("product_name_ar", productData.product_name_ar ?? "");
-      setValue("sku", productData.sku ?? "");
-      setValue("color", productData.color ?? "");
-      setValue("type", productData.type ?? "Goods");
-      setValue("purchase_price", Number(productData.purchase_price) ?? 0);
-      setValue("sale_price", Number(productData.sale_price) ?? 0);
-      setValue("expiry_date", productData.expiry_date?.split("T")[0] ?? "");
-      setValue("alert_quantity", productData.alert_quantity ?? 1);
-      setValue("sale_account", productData.sale_account ?? 0);
-      setValue("purchase_account", productData.purchase_account ?? 0);
-      setValue("sale_return_account", productData.sale_return_account ?? 0);
-      setValue(
-        "purchase_return_account",
-        productData.purchase_return_account ?? 0
-      );
-      setValue("tax_id", productData.tax_id ?? null);
-      setValue("brand_id", productData.brand_id ?? null);
-      setValue("category_id", productData.category_id ?? 0);
-      setValue("sub_category_id", productData.sub_category_id ?? null);
-      setValue("unit_id", productData.unit_id ?? 0);
-      setValue("warranty_id", productData.warranty_id ?? null);
-      setValue(
-        "sub_units",
-        productData?.sub_units?.map((su) => ({ id: Number(su.id) })) || []
-      );
-      setValue("is_active", productData?.is_active ?? 0);
-      setValue("for_selling", productData.for_selling ?? 1);
-      setValue(
-        "branches",
-        productData.branches?.map((b) => ({
-          branch_id: b.branch_id,
-          is_active: Boolean(b.is_active),
-        })) || [{ branch_id: 0, is_active: true }]
-      );
-      setValue("default_sale_unit", productData.default_sale_unit ?? 0);
-      setValue("default_purchase_unit", productData.default_purchase_unit ?? 0);
 
-      // Set selected category ID to load subcategories
-      if (productData.category_id) {
-        setSelectedCategoryId(productData.category_id);
-      }
+  const defaultUnitOptions = useMemo(() => {
+    if (!selectedUnitId) return [];
+    
+    const mainUnit = units?.find((u) => u.id === selectedUnitId);
+    const mainUnitOption = {
+      value: selectedUnitId.toString(),
+      label: `${mainUnit?.unit_name_en} (Main)`
     };
 
-    setProductValues();
-  }, [productData, setValue]);
+    const subUnitOptionsList = (watchedSubUnits || []).map((su) => ({
+      value: su.id.toString(),
+      label: subUnitOptions.find((opt) => opt.value === su.id.toString())?.label || ""
+    }));
 
-  // Handle category change
-  const handleCategoryChange = async (value: string) => {
-    const categoryId = Number(value);
-    if (!isNaN(categoryId)) {
-      setSelectedCategoryId(categoryId);
-      setValue("category_id", categoryId);
-      setValue("sub_category_id", null); // Reset subcategory when changing category
-      await trigger("category_id");
+    return [mainUnitOption, ...subUnitOptionsList];
+  }, [selectedUnitId, watchedSubUnits, subUnitOptions, units]);
+
+  // Handlers
+  const handleUnitChange = (value: string) => {
+    const unitId = Number(value);
+    if (!isNaN(unitId)) {
+      setValue("unit_id", unitId);
+      setShouldLoadSubUnits(true);
+      setValue("sub_units", []);
+      setValue("default_sale_unit", unitId);
+      setValue("default_purchase_unit", unitId);
+      
+      if (productData?.sub_units && isUpdate) {
+        setValue("sub_units", productData.sub_units.map(su => ({ id: Number(su.id) })));
+      }
     }
   };
 
-  // Handle form submission
+  const updateDefaultUnits = (selectedSubUnits: {id: number}[]) => {
+    const currentSaleUnit = watch("default_sale_unit");
+    const currentPurchaseUnit = watch("default_purchase_unit");
+    const mainUnitId = watch("unit_id");
+
+    if (!selectedSubUnits.some(su => su.id === currentSaleUnit) && currentSaleUnit !== mainUnitId) {
+      setValue("default_sale_unit", mainUnitId);
+    }
+
+    if (!selectedSubUnits.some(su => su.id === currentPurchaseUnit) && currentPurchaseUnit !== mainUnitId) {
+      setValue("default_purchase_unit", mainUnitId);
+    }
+  };
+
+  // Effects
+  useEffect(() => {
+    if (!productData) return;
+
+    const defaultValues:any = {
+      product_name_en: productData.product_name_en || "",
+      product_name_ar: productData.product_name_ar || "",
+      sku: productData.sku || "",
+      color: productData.color || "",
+      type: productData.type || "Goods",
+      purchase_price: Number(productData.purchase_price) || 0,
+      sale_price: Number(productData.sale_price) || 0,
+      expiry_date: productData.expiry_date?.split("T")[0] || "",
+      alert_quantity: productData.alert_quantity || 1,
+      sale_account: productData.sale_account || 0,
+      purchase_account: productData.purchase_account || 0,
+      sale_return_account: productData.sale_return_account || 0,
+      purchase_return_account: productData.purchase_return_account || 0,
+      tax_id: productData.tax_id || null,
+      brand_id: productData.brand_id || null,
+      category_id: productData.category_id || 0,
+      sub_category_id: productData.sub_category_id || null,
+      unit_id: productData.unit_id || 0,
+      warranty_id: productData.warranty_id || null,
+      sub_units: productData.sub_units?.map(su => ({ id: su.id })) || [],
+      is_active: productData.is_active || 0,
+      for_selling: productData.for_selling || 1,
+      branches: productData.branches?.map(b => ({
+        branch_id: b.branch_id,
+        is_active: Boolean(b.is_active),
+      })) || [{ branch_id: 0, is_active: true }],
+      default_sale_unit: productData.default_sale_unit || productData.unit_id || 0,
+      default_purchase_unit: productData.default_purchase_unit || productData.unit_id || 0,
+    };
+
+    reset(defaultValues);
+
+    if (productData.unit_id) {
+      setShouldLoadSubUnits(true);
+    }
+  }, [productData, reset]);
+
   const onSubmit = async (formData: ProductType) => {
     const payload: any = {
       ...formData,
@@ -341,7 +326,7 @@ export default function ProductForm() {
     }
   };
 
-  // Branch management
+  // Branch Management
   const remainingBranches = branches?.filter(
     (branch) => !watchedBranches?.map((b) => b.branch_id).includes(branch.id)
   );
@@ -362,9 +347,7 @@ export default function ProductForm() {
   }
 
   const formatDateForInput = (dateString: string | null | undefined) => {
-    if (!dateString || dateString === "null" || dateString === "undefined")
-      return "";
-
+    if (!dateString || dateString === "null" || dateString === "undefined") return "";
     try {
       const date = new Date(dateString);
       return isNaN(date.getTime()) ? "" : date.toISOString().split("T")[0];
@@ -395,7 +378,6 @@ export default function ProductForm() {
               icon={<Package className="text-blue-500 w-5 h-5" />}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Name Fields */}
                 <div>
                   <Label htmlFor="product_name_en">Name (En)</Label>
                   <Input
@@ -421,7 +403,6 @@ export default function ProductForm() {
                   />
                 </div>
 
-                {/* SKU and Color */}
                 <div>
                   <Label htmlFor="sku">SKU</Label>
                   <Input
@@ -447,7 +428,6 @@ export default function ProductForm() {
                   />
                 </div>
 
-                {/* Product Type */}
                 <div>
                   <Label htmlFor="type">Product Type*</Label>
                   <CustomSelect
@@ -467,14 +447,12 @@ export default function ProductForm() {
               </div>
             </ComponentCard>
 
-            {/* General Settings */}
             <ComponentCard
               title="General Settings"
               icon={<Settings className="text-gray-500 w-5 h-5" />}
               className="bg-gray-50 rounded-xl"
             >
               <div className="flex flex-col gap-4">
-                {/* Product Availability */}
                 <div className="flex flex-col gap-2">
                   <Label className="text-[14px] font-medium text-gray-700">
                     Product Availability
@@ -490,9 +468,7 @@ export default function ProductForm() {
                       />
                     </div>
                     <div className="flex-1 pl-3">
-                      <p className="text-sm font-medium">
-                        Available for Selling
-                      </p>
+                      <p className="text-sm font-medium">Available for Selling</p>
                       <p className="text-xs text-gray-500">
                         Enable to list product in sales channels
                       </p>
@@ -500,7 +476,6 @@ export default function ProductForm() {
                   </div>
                 </div>
 
-                {/* Product Status */}
                 <div className="flex flex-col gap-2">
                   <Label className="text-[14px] font-medium text-gray-700">
                     Product Status
@@ -529,13 +504,11 @@ export default function ProductForm() {
 
           {/* Classification and Pricing Sections */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Classification */}
             <ComponentCard
               title="Classification"
               icon={<Tag className="text-red-500 w-5 h-5" />}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Category */}
                 <div>
                   <Label htmlFor="category_id">Category</Label>
                   <CustomSelect
@@ -543,13 +516,17 @@ export default function ProductForm() {
                     options={categoryOptions}
                     placeholder="Select Category"
                     error={errors.category_id?.message}
-                    onChange={handleCategoryChange}
+                    onChange={(value) => {
+                      const categoryId = Number(value);
+                      setSelectedCategoryId(categoryId);
+                      setValue("category_id", categoryId);
+                      setValue("sub_category_id", null);
+                    }}
                     isRequired={true}
                     icon={<FolderTree className="w-4 h-4" />}
                   />
                 </div>
 
-                {/* Sub Category - Only shown when category is selected */}
                 {selectedCategoryId && (
                   <div>
                     <Label htmlFor="sub_category_id">Sub Category</Label>
@@ -572,7 +549,6 @@ export default function ProductForm() {
                   </div>
                 )}
 
-                {/* Warranty */}
                 <div>
                   <Label htmlFor="warranty_id">Warranty</Label>
                   <CustomSelect
@@ -585,7 +561,6 @@ export default function ProductForm() {
                   />
                 </div>
 
-                {/* Brand */}
                 <div>
                   <Label htmlFor="brand_id">Brand</Label>
                   <CustomSelect
@@ -598,7 +573,6 @@ export default function ProductForm() {
                   />
                 </div>
 
-                {/* Tax */}
                 <div>
                   <Label htmlFor="tax_id">Tax</Label>
                   <CustomSelect
@@ -613,13 +587,11 @@ export default function ProductForm() {
               </div>
             </ComponentCard>
 
-            {/* Pricing & Accounts */}
             <ComponentCard
               title="Pricing & Accounts"
               icon={<Wallet className="text-purple-500 w-5 h-5" />}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Pricing */}
                 <div>
                   <Label htmlFor="purchase_price">Purchase Price</Label>
                   <Input
@@ -645,7 +617,6 @@ export default function ProductForm() {
                   />
                 </div>
 
-                {/* Accounts */}
                 <div>
                   <Label htmlFor="sale_account">Sale Account*</Label>
                   <CustomSelect
@@ -715,13 +686,12 @@ export default function ProductForm() {
 
           {/* Units and Branch Management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Units Management */}
+            {/* Units Management Section */}
             <ComponentCard
               title="Units Management"
               icon={<Layers className="text-blue-500 w-5 h-5" />}
             >
               <div className="space-y-4">
-                {/* Main Unit */}
                 <div>
                   <Label htmlFor="unit_id">Main Unit*</Label>
                   <CustomSelect
@@ -729,36 +699,31 @@ export default function ProductForm() {
                     options={unitOptions}
                     placeholder="Select Main Unit"
                     error={errors.unit_id?.message}
-                    onChange={(value) => setValue("unit_id", Number(value))}
+                    onChange={handleUnitChange}
+                    value={watch("unit_id")?.toString()}
                     isRequired={true}
                     icon={<Layers className="w-4 h-4" />}
                   />
                 </div>
 
-                {/* Sub Units - Only shown when unit is selected */}
                 {selectedUnitId && (
                   <>
                     {subunitsLoading ? (
                       <div className="text-gray-500 text-sm">
                         Loading subunits...
                       </div>
-                    ) : subunitsError ? (
-                      <div className="text-red-500 text-sm">
-                        Error loading subunits
-                      </div>
                     ) : (
-                      subunits?.data &&
-                      subunits.data.length > 0 && (
+                      subunits?.data && subunits.data.length > 0 && (
                         <div>
                           <Label htmlFor="sub_units">Available Sub Units</Label>
                           <Select
                             isMulti
                             options={subUnitOptions}
-                            value={watch("sub_units")?.map((su) => ({
-                              value: su.id.toString(),
+                            value={watchedSubUnits?.map((su) => ({
+                              value: su?.id.toString(),
                               label:
                                 subUnitOptions.find(
-                                  (opt) => opt.value === su.id.toString()
+                                  (opt) => opt?.value === su?.id.toString()
                                 )?.label || "",
                             }))}
                             onChange={(selectedOptions) => {
@@ -768,15 +733,20 @@ export default function ProductForm() {
                                 })
                               );
                               setValue("sub_units", selectedValues);
+                              updateDefaultUnits(selectedValues);
                             }}
                             className="basic-multi-select"
                             classNamePrefix="select"
                           />
+                          {errors.sub_units && (
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors.sub_units.message}
+                            </p>
+                          )}
                         </div>
                       )
                     )}
 
-                    {/* Default Units */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="default_sale_unit">
@@ -784,26 +754,13 @@ export default function ProductForm() {
                         </Label>
                         <CustomSelect
                           name="default_sale_unit"
-                          options={[
-                            ...(selectedUnitId
-                              ? [
-                                  {
-                                    value: selectedUnitId.toString(),
-                                    label: `${
-                                      units?.find(
-                                        (u) => u.id === selectedUnitId
-                                      )?.unit_name_en || ""
-                                    } (Main)`,
-                                  },
-                                ]
-                              : []),
-                            ...subUnitOptions,
-                          ]}
+                          options={defaultUnitOptions}
                           placeholder="Select Default Sale Unit"
                           error={errors.default_sale_unit?.message}
                           onChange={(value) =>
                             setValue("default_sale_unit", Number(value))
                           }
+                          value={watch("default_sale_unit")?.toString()}
                           isRequired={true}
                           icon={<Layers className="w-4 h-4" />}
                         />
@@ -815,26 +772,13 @@ export default function ProductForm() {
                         </Label>
                         <CustomSelect
                           name="default_purchase_unit"
-                          options={[
-                            ...(selectedUnitId
-                              ? [
-                                  {
-                                    value: selectedUnitId.toString(),
-                                    label: `${
-                                      units?.find(
-                                        (u) => u.id === selectedUnitId
-                                      )?.unit_name_en || ""
-                                    } (Main)`,
-                                  },
-                                ]
-                              : []),
-                            ...subUnitOptions,
-                          ]}
+                          options={defaultUnitOptions}
                           placeholder="Select Default Purchase Unit"
                           error={errors.default_purchase_unit?.message}
                           onChange={(value) =>
                             setValue("default_purchase_unit", Number(value))
                           }
+                          value={watch("default_purchase_unit")?.toString()}
                           isRequired={true}
                           icon={<Layers className="w-4 h-4" />}
                         />
@@ -843,7 +787,6 @@ export default function ProductForm() {
                   </>
                 )}
 
-                {/* Alert Quantity and Expiry Date */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="expiry_date">Expiry Date</Label>
@@ -859,6 +802,17 @@ export default function ProductForm() {
                   </div>
                   <div>
                     <Label htmlFor="alert_quantity">Alert Quantity</Label>
+                    {/* <Input
+                      type="number"
+                      id="alert_quantity"
+                      placeholder="Enter alert quantity"
+                      {...register("alert_quantity", {
+                        valueAsNumber: true,
+                      })}
+                      error={!!errors.alert_quantity}
+                      hint={errors.alert_quantity?.message}
+                      icon={<Info className="w-4 h-4" />}
+                    /> */}
                     <Switch
                       label=""
                       defaultChecked={watch("alert_quantity") > 0}
@@ -867,12 +821,11 @@ export default function ProductForm() {
                       }
                     />
                   </div>
-                  
                 </div>
               </div>
             </ComponentCard>
 
-            {/* Branch Management */}
+            {/* Branch Management Section */}
             <ComponentCard title="Branch Management" icon={<GitBranch />}>
               <div className="space-y-4">
                 {fields.map((field, index) => (
@@ -911,7 +864,6 @@ export default function ProductForm() {
                   </div>
                 ))}
 
-                {/* Add Branch Button with Tooltip */}
                 <div className="relative inline-block group">
                   <button
                     type="button"
@@ -941,7 +893,6 @@ export default function ProductForm() {
                   )}
                 </div>
 
-                {/* Message when no branches available */}
                 {!canAddBranch && fields.length === 0 && (
                   <p className="text-gray-500 text-sm">No branches available</p>
                 )}
@@ -949,7 +900,6 @@ export default function ProductForm() {
             </ComponentCard>
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-end mt-6">
             <button
               type="submit"

@@ -21,11 +21,14 @@ export const useFetchSubUnit = (id: number, options = {}) => {
   });
 };
 
-export const useFetchSubUnitsById = (unit_id: number | null) => {
+export const useFetchSubUnitsById = (
+  unit_id: number | null,
+  options?: { enabled?: boolean }
+) => {
   return useQuery({
     queryKey: [QueryKeys.SUB_CATEGORIES, unit_id],
     queryFn: () => _SUB_UnitsApi.getSubUnitsById(unit_id),
-    enabled: !!unit_id,
+    enabled: options?.enabled ?? !!unit_id,
   });
 };
 
