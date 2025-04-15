@@ -369,7 +369,8 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Balance</span>
                 <span className="text-xs font-semibold text-gray-800">
-                  {parseFloat(customerData?.balance || 0).toLocaleString()} AED
+                  {parseFloat(customerData?.balance || 0).toLocaleString()}
+                  {/* AED */}
                 </span>
               </div>
               <div className="flex justify-between items-center">
