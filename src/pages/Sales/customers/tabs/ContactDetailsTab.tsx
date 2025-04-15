@@ -373,13 +373,13 @@ const ContactDetailsTab = ({
         <div className="space-y-2">
           <Label>Place of birth</Label>
           <Input
-            type="date"
             {...register("contact_details.place_of_birth", {
               setValueAs: (v) => handleNullValues(v),
             })}
             error={!!errors.contact_details?.place_of_birth}
             hint={errors.contact_details?.place_of_birth?.message}
-            icon={<CalenderIcon className="w-4 h-4" />}
+            placeholder="Enter place of birth"
+            icon={<MapPin className="w-4 h-4" />}
           />
         </div>
 
