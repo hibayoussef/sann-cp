@@ -556,14 +556,19 @@ const AppSidebar: React.FC = () => {
   return (
     <aside
       className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
-        isExpanded || isMobileOpen ? (direction === 'rtl' ? 'w-[184px] left-auto right-0' : 'w-[184px] left-0 right-auto') 
-        : (direction === 'rtl' ? 'w-[80px] left-auto right-0' : 'w-[80px] left-0 right-auto')
+        isExpanded || isMobileOpen
+          ? direction === "rtl"
+            ? "w-[184px] left-auto right-0"
+            : "w-[184px] left-0 right-auto"
+          : direction === "rtl"
+          ? "w-[80px] left-auto right-0"
+          : "w-[80px] left-0 right-auto"
       } ${
         isMobileOpen
-          ? 'translate-x-0'
-          : direction === 'rtl'
-          ? 'translate-x-full'
-          : '-translate-x-full'
+          ? "translate-x-0"
+          : direction === "rtl"
+          ? "translate-x-full"
+          : "-translate-x-full"
       } lg:translate-x-0`}
     >
       {/* ${direction === "rtl" ? "lg:translate-x-0" : "lg:-translate-x-0"} */}
@@ -573,7 +578,6 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
         }`}
       >
-        
         <Link to="/" className="flex items-center justify-center gap-2">
           <img
             className="lg:mr-4"
@@ -597,26 +601,30 @@ const AppSidebar: React.FC = () => {
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             <div>
-              <nav className="p-1 flex flex-col gap-2 ">
+              <nav className="p-1 flex flex-col gap-0">
                 {filteredNavItems.map((nav, index) => (
-                  <div key={nav.name}>
+                  <div key={nav.name} className="px-2">
                     {nav.subItems ? (
                       <>
                         <button
                           onClick={() => handleSubmenuToggle(index)}
-                          className={`flex items-center gap-2 p-2 hover:bg-gray-400 dark:hover:hover:bg-gray-700 dark:text-gray-100 rounded-md w-full text-[13px] font-medium`}
+                          className={`group flex items-center gap-2 p-2 px-3 mx-[-8px] w-[calc(100%+16px)] hover:bg-[#465FFF]/10 dark:hover:bg-[#465FFF]/10 dark:text-gray-100 rounded-md text-[13px] font-medium ${
+                            direction === "rtl" ? "flex-row-reverse" : ""
+                          }`}
                         >
-                          {nav.icon}
+                          <span className="group-hover:text-[#465FFF] dark:group-hover:text-[#465FFF]">
+                            {nav.icon}
+                          </span>
                           {(isExpanded || isMobileOpen) && (
-                            <span className="text-[13px] text-gray-700  dark:text-gray-100">
+                            <span className="text-[13px] text-gray-700 group-hover:text-[#465FFF] dark:text-gray-100 dark:group-hover:text-[#465FFF]">
                               {nav.name}
                             </span>
                           )}
                           <ChevronDownIcon
                             className={`ml-auto w-4 h-4 transition-transform ${
                               openSubmenu === index
-                                ? "rotate-180 text-gray-500"
-                                : ""
+                                ? "rotate-180 text-[#465FFF]"
+                                : "text-gray-500 group-hover:text-[#465FFF]"
                             }`}
                           />
                         </button>
@@ -636,14 +644,18 @@ const AppSidebar: React.FC = () => {
                             {nav.subItems.map((subItem) => (
                               <li
                                 key={subItem.name}
-                                className="relative group hover:bg-gray-400 dark:hover:hover:bg-gray-700 "
+                                className="relative group px-3 mx-[-12px] w-[calc(100%+24px)]"
                               >
                                 <button
-                                  onClick={() => handleLinkClick(subItem.path)} // استخدم handleLinkClick هنا
-                                  className={`menu-dropdown-item text-[13px] hover:bg-gray-400 dark:hover:hover:bg-gray-700 ${
+                                  onClick={() => handleLinkClick(subItem.path)}
+                                  className={`w-full text-left p-2 hover:bg-[#465FFF]/10 hover:text-[#465FFF] dark:hover:bg-[#465FFF]/10 dark:hover:text-[#465FFF] rounded-md ${
                                     isActive(subItem.path)
-                                      ? "menu-dropdown-item-active"
-                                      : "menu-dropdown-item-inactive"
+                                      ? "bg-[#465FFF]/10 text-[#465FFF] dark:bg-[#465FFF]/10 dark:text-[#465FFF]"
+                                      : ""
+                                  } ${
+                                    direction === "rtl"
+                                      ? "text-right"
+                                      : "text-left"
                                   }`}
                                 >
                                   {subItem.name}
@@ -663,33 +675,47 @@ const AppSidebar: React.FC = () => {
                             console.error("Logout failed:", error);
                           }
                         }}
-                        className={`flex items-center gap-2 p-2 hover:bg-gray-400 dark:hover:hover:bg-gray-700 rounded-lg w-full ${
-                          isActive(nav.path || "") ? "bg-gray-200" : ""
-                        }`}
+                        className={`group flex items-center gap-2 p-2 px-3 mx-[-8px] w-[calc(100%+16px)] hover:bg-[#465FFF]/10 dark:hover:bg-[#465FFF]/10 rounded-md ${
+                          isActive(nav.path || "")
+                            ? "bg-[#465FFF]/10 text-[#465FFF]"
+                            : ""
+                        } ${direction === "rtl" ? "flex-row-reverse" : ""}`}
                       >
-                        {nav.icon}
+                        <span className="group-hover:text-[#465FFF] dark:group-hover:text-[#465FFF]">
+                          {nav.icon}
+                        </span>
                         {(isExpanded || isMobileOpen) && (
-                          <span className="text-[13px] text-gray-700 dark:text-gray-200">
+                          <span className="text-[13px] text-gray-700 group-hover:text-[#465FFF] dark:text-gray-200 dark:group-hover:text-[#465FFF]">
                             {nav.name}
                           </span>
                         )}
                       </button>
                     ) : (
-                      <Link
-                        to={nav.path || ""}
-                        className={`flex items-center gap-2 p-2 hover:bg-gray-400 dark:hover:hover:bg-gray-700  dark:hover:bg-gray-700 rounded-md text-[13px] ${
-                          isActive(nav.path || "")
-                            ? "bg-gray-200 dark:bg-gray-800"
-                            : ""
-                        }`}
-                      >
-                        {nav.icon}
-                        {(isExpanded || isMobileOpen) && (
-                          <span className="text-gray-700 dark:text-gray-200">
-                            {nav.name}
-                          </span>
-                        )}
-                      </Link>
+                    <Link
+  to={nav.path || ""}
+  className={`group flex items-center gap-2 p-2 px-3 mx-[-8px] w-[calc(100%+16px)] hover:bg-[#465FFF]/10 dark:hover:bg-[#465FFF]/10 rounded-md text-[13px] ${
+    isActive(nav.path || "")
+      ? "bg-[#465FFF]/10 text-[#465FFF] dark:bg-[#465FFF]/10 dark:text-[#465FFF]"
+      : ""
+  } ${direction === "rtl" ? "flex-row-reverse" : ""}`}
+>
+  <span className={`${
+    isActive(nav.path || "") 
+      ? "text-[#465FFF] dark:text-[#465FFF]" 
+      : "group-hover:text-[#465FFF] dark:group-hover:text-[#465FFF]"
+  }`}>
+    {nav.icon}
+  </span>
+  {(isExpanded || isMobileOpen) && (
+    <span className={`text-[13px] ${
+      isActive(nav.path || "")
+        ? "text-[#465FFF] dark:text-[#465FFF]"
+        : "text-gray-700 group-hover:text-[#465FFF] dark:text-gray-200 dark:group-hover:text-[#465FFF]"
+    }`}>
+      {nav.name}
+    </span>
+  )}
+</Link>
                     )}
                   </div>
                 ))}
