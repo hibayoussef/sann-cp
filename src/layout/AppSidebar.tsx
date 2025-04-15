@@ -555,7 +555,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
+      className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-[99999] lg:z-auto bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
         isExpanded || isMobileOpen
           ? direction === "rtl"
             ? "w-[184px] left-auto right-0"
@@ -691,31 +691,35 @@ const AppSidebar: React.FC = () => {
                         )}
                       </button>
                     ) : (
-                    <Link
-  to={nav.path || ""}
-  className={`group flex items-center gap-2 p-2 px-3 mx-[-8px] w-[calc(100%+16px)] hover:bg-[#465FFF]/10 dark:hover:bg-[#465FFF]/10 rounded-md text-[13px] ${
-    isActive(nav.path || "")
-      ? "bg-[#465FFF]/10 text-[#465FFF] dark:bg-[#465FFF]/10 dark:text-[#465FFF]"
-      : ""
-  } ${direction === "rtl" ? "flex-row-reverse" : ""}`}
->
-  <span className={`${
-    isActive(nav.path || "") 
-      ? "text-[#465FFF] dark:text-[#465FFF]" 
-      : "group-hover:text-[#465FFF] dark:group-hover:text-[#465FFF]"
-  }`}>
-    {nav.icon}
-  </span>
-  {(isExpanded || isMobileOpen) && (
-    <span className={`text-[13px] ${
-      isActive(nav.path || "")
-        ? "text-[#465FFF] dark:text-[#465FFF]"
-        : "text-gray-700 group-hover:text-[#465FFF] dark:text-gray-200 dark:group-hover:text-[#465FFF]"
-    }`}>
-      {nav.name}
-    </span>
-  )}
-</Link>
+                      <Link
+                        to={nav.path || ""}
+                        className={`group flex items-center gap-2 p-2 px-3 mx-[-8px] w-[calc(100%+16px)] hover:bg-[#465FFF]/10 dark:hover:bg-[#465FFF]/10 rounded-md text-[13px] ${
+                          isActive(nav.path || "")
+                            ? "bg-[#465FFF]/10 text-[#465FFF] dark:bg-[#465FFF]/10 dark:text-[#465FFF]"
+                            : ""
+                        } ${direction === "rtl" ? "flex-row-reverse" : ""}`}
+                      >
+                        <span
+                          className={`${
+                            isActive(nav.path || "")
+                              ? "text-[#465FFF] dark:text-[#465FFF]"
+                              : "group-hover:text-[#465FFF] dark:group-hover:text-[#465FFF]"
+                          }`}
+                        >
+                          {nav.icon}
+                        </span>
+                        {(isExpanded || isMobileOpen) && (
+                          <span
+                            className={`text-[13px] ${
+                              isActive(nav.path || "")
+                                ? "text-[#465FFF] dark:text-[#465FFF]"
+                                : "text-gray-700 group-hover:text-[#465FFF] dark:text-gray-200 dark:group-hover:text-[#465FFF]"
+                            }`}
+                          >
+                            {nav.name}
+                          </span>
+                        )}
+                      </Link>
                     )}
                   </div>
                 ))}
