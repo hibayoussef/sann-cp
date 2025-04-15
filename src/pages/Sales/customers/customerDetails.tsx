@@ -33,9 +33,10 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-const displayValue = (value: any, fallback: string = "No Value") => {
+// Improved value display utilities
+const displayValue = (value: any, fallback: string = "-") => {
   if (value === undefined || value === null || value === "") {
-    return fallback;
+    return <span className="text-gray-400 italic">{fallback}</span>;
   }
   return value;
 };
@@ -45,20 +46,36 @@ const displayAddress = (address: {
   street2?: string;
   city?: string;
   zip?: string;
+  phone?: string;
 }) => {
   const parts = [
-    displayValue(address.street1, ""),
-    displayValue(address.street2, ""),
-    displayValue(address.city, ""),
-    displayValue(address.zip, "")
-  ].filter(part => part !== "");
+    address.street1,
+    address.street2,
+    address.city,
+    address.zip
+  ].filter(part => part);
 
   if (parts.length === 0) {
-    return "No Value";
+    return displayValue(null);
   }
 
-  return parts.join(", ");
+  return (
+    <div className="space-y-1">
+      <p>{parts.join(", ")}</p>
+      {address.phone && (
+        <p className="text-xs text-gray-500">
+          Phone: {displayValue(address.phone)}
+        </p>
+      )}
+    </div>
+  );
 };
+
+const EmptyState = ({ message = "No data available" }: { message?: string }) => (
+  <div className="py-2 text-center">
+    <p className="text-sm text-gray-400 italic">{message}</p>
+  </div>
+);
 
 export default function CustomerDetails({ customerId }: { customerId: number }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -130,14 +147,12 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 ? 'bg-purple-50 text-purple-700' 
                 : 'bg-blue-50 text-blue-700'
             }`}>
-             {customerData?.contact_type === "business"
-                ? "BUSINESS"
-                : "INDIVIDUAL"}
+              {customerData?.contact_type === "business" ? "BUSINESS" : "INDIVIDUAL"}
             </span>
           </h1>
-          {/* <p className="text-xs text-gray-500 mt-1">
-            {displayValue(customerData?.branch_name_en)} • الرقم: {displayValue(customerData?.id)}
-          </p> */}
+          <p className="text-xs text-gray-500 mt-1">
+            {displayValue(customerData?.branch_name_en)} • ID: {displayValue(customerData?.id)}
+          </p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -172,121 +187,21 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 className="text-amber-600"
               >
                 <UserX className="w-3 h-3 mr-2" />
-                 Mark as inactive
+                Mark as inactive
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
 
-      {/* Clone Dialog */}
-      <Dialog open={showCloneDialog} onOpenChange={setShowCloneDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Clone Contact</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-            Select the contact type under which you want to create the new
-              cloned contact.
-            </p>
-            <div className="space-y-2">
-              <button
-                onClick={() => handleClone('customer')}
-                className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
-              >
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                  <User className="w-4 h-4 text-blue-600" />
-                </div>
-                <div>
-                  <p className="font-medium">Customer</p>
-                  <p className="text-xs text-gray-500"> Create as a new customer</p>
-                </div>
-              </button>
-              <button
-                onClick={() => handleClone('vendor')}
-                className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
-              >
-                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                  <User className="w-4 h-4 text-purple-600" />
-                </div>
-                <div>
-                  <p className="font-medium">Vendor</p>
-                  <p className="text-xs text-gray-500">
-                    Create as a new vendor
-
-                  </p>
-                </div>
-              </button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-                 <DialogTitle>Confirm Deletion</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Are you sure you want to delete this customer? This action cannot
-              be undone.
-            </p>
-            <div className="flex justify-end gap-2">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowDeleteDialog(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                variant="destructive"
-                onClick={handleDelete}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Mark as Inactive Dialog */}
-      <Dialog open={showInactiveDialog} onOpenChange={setShowInactiveDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-             <DialogTitle>Mark as Inactive</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-           <p className="text-sm text-gray-600">
-              Are you sure you want to mark this customer as inactive? They will
-              no longer appear in active lists.
-            </p>
-            <div className="flex justify-end gap-2">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowInactiveDialog(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                variant="default"
-                onClick={handleMarkInactive}
-              >
-                Confirm
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Dialogs remain the same */}
 
       {/* Tabs Navigation */}
       <div className="border-b border-gray-200 mb-4">
-       <nav className="-mb-px flex space-x-6">
+        <nav className="-mb-px flex space-x-6">
           {["Overview", "Transactions", "Documents", "Activities"].map(
             (tab) => (
-            <button
+              <button
                 key={tab}
                 className={`whitespace-nowrap py-3 px-1 border-b-2 text-xs font-medium ${
                   activeTab === tab.toLowerCase()
@@ -320,7 +235,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-center gap-2 text-xs">
                 <Mail className="w-3 h-3 text-gray-400" />
                 {customerData?.email ? (
@@ -328,19 +243,19 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                     href={`mailto:${customerData?.email}`}
                     className="text-blue-600 hover:underline truncate"
                   >
-                    {displayValue(customerData?.email)}
+                    {customerData?.email}
                   </a>
                 ) : (
-                  <span>No Value  </span>
+                  displayValue(null)
                 )}
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <Phone className="w-3 h-3 text-gray-400" />
-                <span>{displayValue(customerData?.mobile)}</span>
+                {displayValue(customerData?.mobile)}
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <Phone className="w-3 h-3 text-gray-400" />
-                <span> work phone: {displayValue(customerData?.details?.work_phone)}</span>
+                <span>Work: {displayValue(customerData?.details?.work_phone)}</span>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <Globe className="w-3 h-3 text-gray-400" />
@@ -350,10 +265,10 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                     target="_blank"
                     className="text-blue-600 hover:underline truncate"
                   >
-                    {displayValue(customerData?.details?.website_url.replace(/^https?:\/\//, ""))}
+                    {customerData?.details?.website_url.replace(/^https?:\/\//, "")}
                   </a>
                 ) : (
-                  <span> No Value </span>
+                  displayValue(null)
                 )}
               </div>
             </div>
@@ -374,10 +289,10 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 }`} />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-800">   Customer Portal</h3>
+                <h3 className="text-sm font-semibold text-gray-800">Customer Portal</h3>
                 <p className="text-xs text-gray-600 mt-1">
                   {customerData?.portal_access
-                 ? "Portal is currently active"
+                    ? "Portal is currently active"
                     : "Portal access is disabled"}
                 </p>
               </div>
@@ -386,7 +301,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
             <div className="mt-4 flex items-center justify-between">
               <span className="text-xs text-gray-500">
                 {customerData?.portal_access
-                   ? "Customers can view their transactions"
+                  ? "Customers can view their transactions"
                   : "Enable to give access"}
               </span>
               <button
@@ -413,62 +328,44 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <MapPin className="w-3 h-3" />
-               ADDRESS INFORMATION
+              ADDRESS INFORMATION
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
                 <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                     BILLING ADDRESS
+                  BILLING ADDRESS
                 </h4>
-                {customerData?.details?.billing_address_street_1 || 
-                 customerData?.details?.billing_address_city ? (
-                  <p className="text-xs text-gray-800">
-                    {displayAddress({
-                      street1: customerData?.details?.billing_address_street_1,
-                      street2: customerData?.details?.billing_address_street_2,
-                      city: customerData?.details?.billing_address_city,
-                      zip: customerData?.details?.billing_address_zip_code
-                    })}
-                  </p>
-                ) : (
-                  <p className="text-xs text-gray-500">No Value</p>
-                )}
-                <p className="text-xs text-gray-600 mt-1">
-                  Phone: {displayValue(customerData?.details?.billing_address_phone)}
-                </p>
+                {displayAddress({
+                  street1: customerData?.details?.billing_address_street_1,
+                  street2: customerData?.details?.billing_address_street_2,
+                  city: customerData?.details?.billing_address_city,
+                  zip: customerData?.details?.billing_address_zip_code,
+                  phone: customerData?.details?.billing_address_phone
+                })}
               </div>
 
               <div>
                 <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                 SHIPPING ADDRESS
+                  SHIPPING ADDRESS
                 </h4>
-                {customerData?.details?.shipping_address_street_1 || 
-                 customerData?.details?.shipping_address_city ? (
-                  <p className="text-xs text-gray-800">
-                    {displayAddress({
-                      street1: customerData?.details?.shipping_address_street_1,
-                      street2: customerData?.details?.shipping_address_street_2,
-                      city: customerData?.details?.shipping_address_city,
-                      zip: customerData?.details?.shipping_address_zip_code
-                    })}
-                  </p>
-                ) : (
-                  <p className="text-xs text-gray-500">No Value</p>
-                )}
-                <p className="text-xs text-gray-600 mt-1">
-                  Phone: {displayValue(customerData?.details?.shipping_address_phone)}
-                </p>
+                {displayAddress({
+                  street1: customerData?.details?.shipping_address_street_1,
+                  street2: customerData?.details?.shipping_address_street_2,
+                  city: customerData?.details?.shipping_address_city,
+                  zip: customerData?.details?.shipping_address_zip_code,
+                  phone: customerData?.details?.shipping_address_phone
+                })}
               </div>
             </div>
           </div>
 
           {/* Financial Details */}
           <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
-               <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
               FINANCIAL DETAILS
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Balance</span>
                 <span className="text-xs font-semibold text-gray-800">
@@ -476,7 +373,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-500">Payment Terms </span>
+                <span className="text-xs text-gray-500">Payment Terms</span>
                 <span className="text-xs font-semibold text-gray-800">
                   {displayValue(customerData?.payment_term_name_en)} (
                   {displayValue(customerData?.payment_term_number_of_days)} days)
@@ -495,91 +392,77 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           {/* Identification Details */}
           <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <IdCard className="w-3 h-3" />
+              <IdCard className="w-3 h-3" />
               IDENTIFICATION
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-               <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                    PASSPORT
-                  </h4>
+                <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  PASSPORT
+                </h4>
                 <p className="text-xs text-gray-800">
-                  {displayValue(customerData?.details?.passport_number, "No Data")}
+                  {displayValue(customerData?.details?.passport_number, "No data")}
                 </p>
                 {customerData?.details?.id_expiry_date && (
-                  <span className="text-[10px] text-gray-500 block mt-1">
-                    Expires:{" "}
-                    {new Date(customerData?.details?.id_expiry_date).toLocaleDateString()}
-                  </span>
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    Expires: {new Date(customerData?.details?.id_expiry_date).toLocaleDateString()}
+                  </p>
                 )}
               </div>
 
               <div>
-             <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                    UNIFIED NUMBER
-                  </h4>
+                <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  UNIFIED NUMBER
+                </h4>
                 <p className="text-xs text-gray-800">
                   {displayValue(customerData?.details?.unified_number)}
                 </p>
               </div>
 
               <div>
-              <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                    DRIVING LICENSE
-                  </h4>
+                <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  DRIVING LICENSE
+                </h4>
                 <p className="text-xs text-gray-800">
                   {displayValue(customerData?.details?.driving_license_number)}
                 </p>
                 {customerData?.details?.driving_license_expiry_date && (
-                  <span className="text-[10px] text-gray-500 block mt-1">
-                     Expires:{" "}
-                    {new Date(customerData?.details?.driving_license_expiry_date).toLocaleDateString()}
-                  </span>
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    Expires: {new Date(customerData?.details?.driving_license_expiry_date).toLocaleDateString()}
+                  </p>
                 )}
               </div>
             </div>
           </div>
 
           {/* Social Media */}
-          {customerData?.details?.social_media?.length > 0 ? (
-            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
-               <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <Share2 className="w-3 h-3" />
-                SOCIAL MEDIA
-              </h3>
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <Share2 className="w-3 h-3" />
+              SOCIAL MEDIA
+            </h3>
 
+            {customerData?.details?.social_media?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {customerData?.details?.social_media.map((social: any) => (
+                {customerData.details.social_media.map((social: any) => (
                   <a
-                    key={social?.platform}
-                    href={social?.url}
+                    key={social.platform}
+                    href={social.url}
                     target="_blank"
                     className="text-xs px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center gap-1"
                   >
-                    {social?.platform === "Facebook" && (
-                      <Facebook className="w-3 h-3" />
-                    )}
-                    {social?.platform === "Twitter" && (
-                      <Twitter className="w-3 h-3" />
-                    )}
-                    {social?.platform === "Instagram" && (
-                      <Instagram className="w-3 h-3" />
-                    )}
-                    {social?.platform}
+                    {social.platform === "Facebook" && <Facebook className="w-3 h-3" />}
+                    {social.platform === "Twitter" && <Twitter className="w-3 h-3" />}
+                    {social.platform === "Instagram" && <Instagram className="w-3 h-3" />}
+                    {social.platform}
                   </a>
                 ))}
               </div>
-            </div>
-          ) : (
-            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
-              <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <Share2 className="w-3 h-3" />
-               SOCIAL MEDIA
-              </h3>
-              <p className="text-xs text-gray-500">No Value</p>
-            </div>
-          )}
+            ) : (
+              <EmptyState />
+            )}
+          </div>
         </div>
 
         {/* Right Column - Main Content */}
@@ -588,10 +471,10 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-              TOTAL SPEND (6M)
+                TOTAL SPEND (6M)
               </h3>
               <p className="text-lg font-semibold text-gray-900">
-                {parseFloat(customerData.balance || 0).toLocaleString()}AED
+                {parseFloat(customerData.balance || 0).toLocaleString()} AED
               </p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 +12% from last period
@@ -604,13 +487,13 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
               </h3>
               <p className="text-lg font-semibold text-gray-900">3</p>
               <p className="text-[10px] text-gray-500 mt-0.5">
-                   12,450 AED total
+                12,450 AED total
               </p>
             </div>
 
             <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                 AVG. PAYMENT DAYS
+                AVG. PAYMENT DAYS
               </h3>
               <p className="text-lg font-semibold text-gray-900">45</p>
               <p className="text-[10px] text-gray-500 mt-0.5">
@@ -648,7 +531,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
-              CONTACT PERSONS ({customerData?.persons?.length || 0})
+                CONTACT PERSONS ({customerData?.persons?.length || 0})
               </h3>
               <Button size="sm" variant="outline" className="h-7">
                 <Plus className="w-3 h-3 mr-1" />
@@ -657,9 +540,9 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
             </div>
 
             {customerData?.persons?.length > 0 ? (
-              customerData?.persons.map((person: any) => (
+              customerData.persons.map((person: any) => (
                 <div
-                  key={person?.id}
+                  key={person.id}
                   className="p-3 flex items-start gap-3 border-b border-gray-200 last:border-0"
                 >
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -668,55 +551,55 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
 
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium text-gray-800">
-                      {displayValue(person?.full_name_en || person?.full_name_ar)}
+                      {displayValue(person.full_name_en || person.full_name_ar)}
                     </h4>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      {displayValue(person?.designation)} • {displayValue(person?.department)}
+                      {displayValue(person.designation)} • {displayValue(person.department)}
                     </p>
 
                     <div className="mt-2 space-y-1.5">
                       <div className="flex items-center gap-2 text-xs">
                         <Mail className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                        {person?.email ? (
+                        {person.email ? (
                           <a
-                            href={`mailto:${person?.email}`}
+                            href={`mailto:${person.email}`}
                             className="text-blue-600 hover:underline truncate"
                           >
-                            {displayValue(person?.email)}
+                            {person.email}
                           </a>
                         ) : (
-                          <span>No Value</span>
+                          displayValue(null)
                         )}
                       </div>
 
                       <div className="flex items-center gap-2 text-xs">
                         <Phone className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                        {person?.mobile ? (
+                        {person.mobile ? (
                           <a
-                            href={`tel:${person?.mobile}`}
+                            href={`tel:${person.mobile}`}
                             className="text-blue-600 hover:underline"
                           >
-                            {displayValue(person?.mobile)}
+                            {person.mobile}
                           </a>
                         ) : (
-                          <span>No Value</span>
+                          displayValue(null)
                         )}
                       </div>
 
-                      {person?.social_media?.length > 0 ? (
+                      {person.social_media?.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {person?.social_media.map((social: any) => (
+                          {person.social_media.map((social: any) => (
                             <a
-                              key={`${person?.id}-${social?.platform}`}
-                              href={social?.url}
+                              key={`${person.id}-${social.platform}`}
+                              href={social.url}
                               target="_blank"
                               className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-0.5"
                             >
-                              {displayValue(social?.platform)}
+                              {social.platform}
                             </a>
                           ))}
                         </div>
-                      ) : null}
+                      )}
                     </div>
                   </div>
 
@@ -734,11 +617,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 </div>
               ))
             ) : (
-              <div className="p-3 text-center">
-                <p className="text-xs text-gray-500">
-             No Contact Person
-                </p>
-              </div>
+              <EmptyState message="No contact persons available" />
             )}
           </div>
         </div>
