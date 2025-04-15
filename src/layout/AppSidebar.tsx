@@ -555,7 +555,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-12 flex flex-col lg:mt-0 top-0 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
+      className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
         isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"
       } ${direction === "rtl" ? "right-0" : "left-0"} ${
         isMobileOpen

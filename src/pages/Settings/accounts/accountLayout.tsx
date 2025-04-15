@@ -43,8 +43,8 @@ export default function AccountLayout() {
         icon={<Home className="w-5 h-5" />}
       />
         <ComponentCardDetails title="Accounts Management" className="h-full">
-          <div className="grid grid-cols-5 gap-4 h-[calc(100vh-120px)]">
-            <div className="col-span-1 overflow-y-auto  border-r border-gray-100 flex flex-col">
+       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 h-[calc(100vh-120px)]">
+  <div className="hidden md:flex md:col-span-1 overflow-y-auto border-r border-gray-100 flex-col">
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <h3 className="text-sm px-4 font-semibold">All</h3>
                 <div className="flex items-center  gap-2">
@@ -82,7 +82,8 @@ export default function AccountLayout() {
                 </div>
               </div>
 
-              <div className="flex-1">
+           <div className="md:col-span-4 py-5 px-4 overflow-y-auto">
+
                 {accounts?.map((account: any) => (
                   <div key={account.id} className="relative">
                     <div
@@ -105,7 +106,7 @@ export default function AccountLayout() {
               </div>
             </div>
 
-            <div className="col-span-4 py-5 px-4 overflow-y-auto">
+             <div className="col-span-1 md:col-span-4 py-5 px-4 overflow-y-auto">
               {selectedAccountId ? (
                 <AccountDetails accountId={selectedAccountId} />
               ) : (

@@ -38,11 +38,12 @@ export default function CustomersLayout() {
           pageTitle="Customers"
           icon={<Home className="w-5 h-5" />}
         />
-        
         <div className="mt-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="flex h-[calc(100vh-120px)]">
+          <div className="flex flex-col md:flex-row h-[calc(100vh-120px)]">
+
             {/* Sidebar */}
-            <div className="w-60 border-r border-gray-100 flex flex-col">
+            <div className="hidden md:flex w-60 border-r border-gray-100 flex-col">
+
               <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                 <h3 className="font-medium text-gray-800 text-[15px]">Customers</h3>
                 <div className="flex gap-2">
@@ -114,7 +115,8 @@ export default function CustomersLayout() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto px-4 py-6">
+
               {selectedCustomerId ? (
                 <CustomerDetails customerId={selectedCustomerId} />
               ) : (
