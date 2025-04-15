@@ -417,7 +417,7 @@ type NavItem = {
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, toggleMobileSidebar } =
     useSidebar();
-  const { direction } = useLocaliztionStore();
+  const { direction, setLanguage } = useLocaliztionStore();
   const { t } = useTranslation("items");
   const { permissions } = useAuthStore();
   const hasPermission = (key?: any) => !key || permissions?.includes(key);
@@ -556,14 +556,15 @@ const AppSidebar: React.FC = () => {
   return (
     <aside
       className={`fixed mt-12 flex flex-col lg:mt-0 top-0 z-99999 bg-white shadow-md transition-all border-r h-screen dark:border-r-gray-700 dark:text-gray-400 dark:bg-gray-900 ${
-        isExpanded || isMobileOpen ? "w-[184px]" : "w-[80px]"
-      } ${direction === "rtl" ? "right-0" : "left-0"} ${
+        isExpanded || isMobileOpen ? (direction === 'rtl' ? 'w-[184px] left-auto right-0' : 'w-[184px] left-0 right-auto') 
+        : (direction === 'rtl' ? 'w-[80px] left-auto right-0' : 'w-[80px] left-0 right-auto')
+      } ${
         isMobileOpen
-          ? "translate-x-0"
-          : direction === "rtl"
-          ? "translate-x-full"
-          : "-translate-x-full"
-      } lg:translate-x-0  `} // إضافة lg:translate-x-0
+          ? 'translate-x-0'
+          : direction === 'rtl'
+          ? 'translate-x-full'
+          : '-translate-x-full'
+      } lg:translate-x-0`}
     >
       {/* ${direction === "rtl" ? "lg:translate-x-0" : "lg:-translate-x-0"} */}
 
@@ -572,6 +573,7 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
         }`}
       >
+        
         <Link to="/" className="flex items-center justify-center gap-2">
           <img
             className="lg:mr-4"
