@@ -147,12 +147,14 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 ? 'bg-purple-50 text-purple-700' 
                 : 'bg-blue-50 text-blue-700'
             }`}>
-              {customerData?.contact_type === "business" ? "BUSINESS" : "INDIVIDUAL"}
+             {customerData?.contact_type === "business"
+                ? "BUSINESS"
+                : "INDIVIDUAL"}
             </span>
           </h1>
-          <p className="text-xs text-gray-500 mt-1">
-            {displayValue(customerData?.branch_name_en)} • ID: {displayValue(customerData?.id)}
-          </p>
+          {/* <p className="text-xs text-gray-500 mt-1">
+            {displayValue(customerData?.branch_name_en)} • الرقم: {displayValue(customerData?.id)}
+          </p> */}
         </div>
         <div className="flex gap-2">
           <Button 
@@ -187,21 +189,121 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 className="text-amber-600"
               >
                 <UserX className="w-3 h-3 mr-2" />
-                Mark as inactive
+                 Mark as inactive
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
 
-      {/* Dialogs remain the same */}
+      {/* Clone Dialog */}
+      <Dialog open={showCloneDialog} onOpenChange={setShowCloneDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Clone Contact</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+            Select the contact type under which you want to create the new
+              cloned contact.
+            </p>
+            <div className="space-y-2">
+              <button
+                onClick={() => handleClone('customer')}
+                className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
+              >
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                  <User className="w-4 h-4 text-blue-600" />
+                </div>
+                <div>
+                  <p className="font-medium">Customer</p>
+                  <p className="text-xs text-gray-500"> Create as a new customer</p>
+                </div>
+              </button>
+              <button
+                onClick={() => handleClone('vendor')}
+                className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors flex items-center gap-3"
+              >
+                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                  <User className="w-4 h-4 text-purple-600" />
+                </div>
+                <div>
+                  <p className="font-medium">Vendor</p>
+                  <p className="text-xs text-gray-500">
+                    Create as a new vendor
+
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+                 <DialogTitle>Confirm Deletion</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+              Are you sure you want to delete this customer? This action cannot
+              be undone.
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowDeleteDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mark as Inactive Dialog */}
+      <Dialog open={showInactiveDialog} onOpenChange={setShowInactiveDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+             <DialogTitle>Mark as Inactive</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+           <p className="text-sm text-gray-600">
+              Are you sure you want to mark this customer as inactive? They will
+              no longer appear in active lists.
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowInactiveDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="default"
+                onClick={handleMarkInactive}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Tabs Navigation */}
       <div className="border-b border-gray-200 mb-4">
-        <nav className="-mb-px flex space-x-6">
+       <nav className="-mb-px flex space-x-6">
           {["Overview", "Transactions", "Documents", "Activities"].map(
             (tab) => (
-              <button
+            <button
                 key={tab}
                 className={`whitespace-nowrap py-3 px-1 border-b-2 text-xs font-medium ${
                   activeTab === tab.toLowerCase()
@@ -218,7 +320,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Left Column - Customer Information */}
         <div className="lg:col-span-1 space-y-4">
           {/* Profile Card */}
@@ -275,7 +377,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Customer Portal Card */}
-          <div className={`rounded-xl p-4 transition-all duration-200 ${
+        <div className={`rounded-xl p-4 transition-all duration-200 ${
             customerData?.portal_access
               ? "bg-green-50 border border-green-100"
               : "bg-blue-50 border border-blue-100"
@@ -325,7 +427,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Address Information */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <MapPin className="w-3 h-3" />
               ADDRESS INFORMATION
@@ -369,8 +471,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Balance</span>
                 <span className="text-xs font-semibold text-gray-800">
-                  {parseFloat(customerData?.balance || 0).toLocaleString()}
-                  {/* AED */}
+                  {parseFloat(customerData?.balance || 0).toLocaleString()} AED
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -465,9 +566,8 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
             )}
           </div>
         </div>
-
         {/* Right Column - Main Content */}
-        <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-4">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
@@ -529,7 +629,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Contact Persons */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
                 CONTACT PERSONS ({customerData?.persons?.length || 0})
