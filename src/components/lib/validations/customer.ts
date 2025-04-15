@@ -51,7 +51,8 @@ const contactDetailsSchema = z.object({
   //   z.string().optional().nullable()
   // ),
   driving_license_issued_by: z.preprocess(
-    (val) => (val === "undefined" ? undefined : val),
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
     z.string().optional().nullable()
   ),
   billing_address_country_id: z.preprocess(
@@ -59,17 +60,20 @@ const contactDetailsSchema = z.object({
       val === "undefined" || val === undefined ? undefined : String(val),
     z.string().optional().nullable()
   ),
+
   billing_address_country_state_id: z.preprocess(
     (val) =>
       val === "undefined" || val === undefined ? undefined : String(val),
     z.string().optional().nullable()
   ),
   shipping_address_country_id: z.preprocess(
-    (val) => (val === "undefined" ? undefined : val),
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
     z.string().optional().nullable()
   ),
   shipping_address_country_state_id: z.preprocess(
-    (val) => (val === "undefined" ? undefined : val),
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
     z.string().optional().nullable()
   ),
   billing_address_attention: z.string().optional().nullable(),

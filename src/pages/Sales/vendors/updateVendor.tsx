@@ -224,8 +224,8 @@ export default function UpdateVendor() {
         shipping_address_country_state_id:
           formData.contact_details?.shipping_address_country_state_id ||
           undefined,
-        driving_license_issued_by:
-          formData.contact_details?.driving_license_issued_by || undefined,
+        // driving_license_issued_by:
+        //   formData.contact_details?.driving_license_issued_by.toString() || undefined,
         billing_address_country_id:
           formData.contact_details?.billing_address_country_id?.toString() ||
           undefined,

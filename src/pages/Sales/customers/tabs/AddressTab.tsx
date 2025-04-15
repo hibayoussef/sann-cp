@@ -29,8 +29,10 @@ export const AddressTab = ({
     control,
     setValue,
     trigger,
+    getValues,
   } = useFormContext<CustomerType>();
 
+  // الحصول على القيم الحالية
   const billingCountryId = useWatch({
     control,
     name: "contact_details.billing_address_country_id",
@@ -53,6 +55,40 @@ export const AddressTab = ({
     Array<{ value: string; label: string }>
   >([]);
 
+  const loadStateOptions = (countryId: string | undefined | null, isBilling: boolean) => {
+    if (!countriesData?.data || !countryId) {
+      if (isBilling) {
+        setBillingStateOptions([]);
+      } else {
+        setShippingStateOptions([]);
+      }
+      return;
+    }
+
+    const selectedCountry = countriesData.data.find(
+      (c) => c.id.toString() === countryId
+    );
+
+    if (selectedCountry) {
+      const options = selectedCountry.country_states.map((state) => ({
+        value: state.id.toString(),
+        label: state.name_en,
+      }));
+
+      if (isBilling) {
+        setBillingStateOptions(options);
+      } else {
+        setShippingStateOptions(options);
+      }
+    } else {
+      if (isBilling) {
+        setBillingStateOptions([]);
+      } else {
+        setShippingStateOptions([]);
+      }
+    }
+  };
+
   useEffect(() => {
     if (countriesData?.data) {
       setCountryOptions(
@@ -61,64 +97,41 @@ export const AddressTab = ({
           label: country.name_en,
         }))
       );
+
+      const initialBillingCountry = getValues("contact_details.billing_address_country_id");
+      const initialShippingCountry = getValues("contact_details.shipping_address_country_id");
+
+      loadStateOptions(initialBillingCountry, true);
+      loadStateOptions(initialShippingCountry, false);
     }
   }, [countriesData]);
 
+  // مراقبة تغييرات البلدان
   useEffect(() => {
-    if (billingCountryId && countriesData?.data) {
-      const selectedCountry = countriesData.data.find(
-        (c) => c.id.toString() === billingCountryId
-      );
-      if (selectedCountry) {
-        setBillingStateOptions(
-          selectedCountry.country_states.map((state) => ({
-            value: state.id.toString(),
-            label: state.name_en,
-          }))
-        );
-      } else {
-        setBillingStateOptions([]);
-      }
-    }
-  }, [billingCountryId, countriesData]);
+    loadStateOptions(billingCountryId, true);
+  }, [billingCountryId]);
 
   useEffect(() => {
-    if (shippingCountryId && countriesData?.data) {
-      const selectedCountry = countriesData.data.find(
-        (c) => c.id.toString() === shippingCountryId
-      );
-      if (selectedCountry) {
-        setShippingStateOptions(
-          selectedCountry.country_states.map((state) => ({
-            value: state.id.toString(),
-            label: state.name_en,
-          }))
-        );
-      } else {
-        setShippingStateOptions([]);
-      }
-    }
-  }, [shippingCountryId, countriesData]);
+    loadStateOptions(shippingCountryId, false);
+  }, [shippingCountryId]);
 
-const handleSelectChange = async (name: string, value: any) => {
-  const finalValue = value === null || value === undefined || value === "" ? 
-    undefined : 
-    typeof value === 'number' ? value.toString() : value;
-  
-  setValue(name as any, finalValue, { shouldValidate: true });
-  await trigger(name as any);
-};
+  const handleSelectChange = async (name: string, value: any) => {
+    const finalValue =
+      value === null || value === undefined || value === ""
+        ? undefined
+        : typeof value === "number"
+        ? value.toString()
+        : value;
 
-const handleNullValues = (value: any) => {
-  return value === null || value === undefined || value === "" ? undefined : value;
-};
+    setValue(name as any, finalValue, { shouldValidate: true });
+    await trigger(name as any);
+  };
 
-  // const handleNullValues = (value: any) => {
-  //   // إرجاع undefined للقيم الفارغة بدلاً من string فارغة
-  //   return value === null || value === undefined || value === ""
-  //     ? undefined
-  //     : value;
-  // };
+  const handleNullValues = (value: any) => {
+    return value === null || value === undefined || value === ""
+      ? undefined
+      : value;
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">

@@ -146,7 +146,6 @@ export default function UpdateCustomer() {
     }
     return sm;
   };
-  
   useEffect(() => {
   if (customerData) {
     const { details, persons, ...mainData } = customerData;
@@ -169,11 +168,11 @@ export default function UpdateCustomer() {
             date_of_birth: details.date_of_birth || null,
             driving_license_issued_date: details.driving_license_issued_date || null,
             driving_license_expiry_date: details.driving_license_expiry_date || null,
-            billing_address_country_state_id: details.billing_address_country_state_id || "",
-            billing_address_country_id: details.billing_address_country_id || "",
+            billing_address_country_id: details.billing_address_country_id?.toString(),
+            billing_address_country_state_id: details.billing_address_country_state_id?.toString(),
+            shipping_address_country_id: details.shipping_address_country_id?.toString(),
+            shipping_address_country_state_id: details.shipping_address_country_state_id?.toString(),
             driving_license_issued_by: details.driving_license_issued_by || "",
-            shipping_address_country_state_id: details.shipping_address_country_state_id || "",
-            shipping_address_country_id: details.shipping_address_country_id || "",
           }
         : undefined,
       contact_persons:

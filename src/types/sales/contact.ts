@@ -37,7 +37,7 @@ export interface IContactDetails {
   billing_address_phone?: string;
   billing_address_fax_number?: string;
   shipping_address_attention?: string;
-  shipping_address_country_id?: string;
+  shipping_address_country_id?: string | null;
   shipping_address_street_1?: string;
   shipping_address_street_2?: string;
   shipping_address_city?: string;
