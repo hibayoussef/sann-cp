@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useFormikContext } from "formik";
 import { _AuthApi } from "../../../services/auth.service";
 import { useMutation } from "@tanstack/react-query";
+import Input from "@/components/form/input/InputSign";
 
 export default function Step3() {
   const [showPassword, setShowPassword] = useState(false);

@@ -1,19 +1,19 @@
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { type Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Settings2, FileText, Printer } from "lucide-react";
-import * as XLSX from "xlsx";
-import * as Papa from "papaparse";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { type Table } from "@tanstack/react-table";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { FileText, Printer, Settings2 } from "lucide-react";
+import * as Papa from "papaparse";
+import * as XLSX from "xlsx";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -27,21 +27,21 @@ export function DataTableViewOptions<TData>({
   const excludedExportColumns = ["Actions"];
 
  const handleExportCSV = () => {
-  const headers = table
-    .getVisibleLeafColumns()
-    .filter((column) => !excludedExportColumns.includes(column.id))
-    .map((column) => {
-      const columnDef = column.columnDef as any;
-      if (columnDef.header && typeof columnDef.header === 'string') {
-        return columnDef.header;
-      }
-      if (columnDef.headerName) {
-        return columnDef.headerName;
-      }
-      return column.id
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-    });
+  // const headers = table
+  //   .getVisibleLeafColumns()
+  //   .filter((column) => !excludedExportColumns.includes(column.id))
+  //   .map((column) => {
+  //     const columnDef = column.columnDef as any;
+  //     if (columnDef.header && typeof columnDef.header === 'string') {
+  //       return columnDef.header;
+  //     }
+  //     if (columnDef.headerName) {
+  //       return columnDef.headerName;
+  //     }
+  //     return column.id
+  //       .replace(/_/g, " ")
+  //       .replace(/\b\w/g, (char) => char.toUpperCase());
+  //   });
 
   const rows = table.getRowModel().rows.map((row) => {
     const rowData: any = {};
@@ -66,21 +66,21 @@ export function DataTableViewOptions<TData>({
 };
 
 const handleExportExcel = () => {
-  const headers = table
-    .getVisibleLeafColumns()
-    .filter((column) => !excludedExportColumns.includes(column.id))
-    .map((column) => {
-      const columnDef = column.columnDef as any;
-      if (columnDef.header && typeof columnDef.header === 'string') {
-        return columnDef.header;
-      }
-      if (columnDef.headerName) {
-        return columnDef.headerName;
-      }
-      return column.id
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-    });
+  // const headers = table
+  //   .getVisibleLeafColumns()
+  //   .filter((column) => !excludedExportColumns.includes(column.id))
+  //   .map((column) => {
+  //     const columnDef = column.columnDef as any;
+  //     if (columnDef.header && typeof columnDef.header === 'string') {
+  //       return columnDef.header;
+  //     }
+  //     if (columnDef.headerName) {
+  //       return columnDef.headerName;
+  //     }
+  //     return column.id
+  //       .replace(/_/g, " ")
+  //       .replace(/\b\w/g, (char) => char.toUpperCase());
+  //   });
 
   const rows = table.getRowModel().rows.map((row) => {
     const rowData: any = {};

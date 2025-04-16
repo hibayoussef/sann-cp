@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Table } from "@tanstack/react-table";
 import { Plus, X } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { useState, useEffect } from "react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -15,7 +15,7 @@ interface DataTableToolbarProps<TData> {
     update: boolean;
     delete: boolean;
   };
-  searchColumns?: string[]; // الأعمدة المحددة للبحث
+  searchColumns?: string[]; 
 }
 
 export function DataTableToolbar<TData>({

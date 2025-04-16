@@ -2,6 +2,8 @@ import {
   subCategorySchema,
   type SubCategoryType,
 } from "@/components/lib/validations/subCategory";
+import Loader from "@/components/ui/loader/loader";
+import { CustomSelect } from "@/components/ui/select/customSelect";
 import { useFetchCategories } from "@/hooks/prouducts/useCategories";
 import {
   useAddSubCategory,
@@ -9,18 +11,16 @@ import {
   useUpdateSubCategory,
 } from "@/hooks/prouducts/useSubCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, Folder, Tag, Type } from "lucide-react";
+import { Code, Folder, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
-import { IoAdd } from "react-icons/io5";
-import { CustomSelect } from "@/components/ui/select/customSelect";
-import Loader from "@/components/ui/loader/loader";
 
 const isFieldRequired = (fieldName: keyof SubCategoryType): boolean => {
   const schemaShape = subCategorySchema.shape;
