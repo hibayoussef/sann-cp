@@ -158,6 +158,7 @@ export default function ProductDetails({ productId }: { productId: number }) {
           <h1 className="text-xl font-semibold text-gray-800">
             {productData.product_name_en}
           </h1>
+          
           {/* <p className="text-xs text-gray-500 mt-1">
             SKU: {productData.sku} • ID: {productData.id}
           </p> */}
