@@ -1,5 +1,5 @@
 import Switch from "@/components/form/switch/Switch";
-import { unitSchema, type UnitType } from "@/components/lib/validations/unit";
+import { unitBaseSchema, unitSchema, type UnitType } from "@/components/lib/validations/unit";
 import { useAddUnit, useFetchUnit, useUpdateUnit } from "@/hooks/prouducts/useUnits";
 import { useMeStore } from "@/store/useMeStore";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
+import Loader from "@/components/ui/loader/loader";
 
 export default function UnitForm() {
   const { id } = useParams();
@@ -27,18 +28,21 @@ export default function UnitForm() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<UnitType>({
-    resolver: zodResolver(unitSchema),
+    resolver: zodResolver(unitBaseSchema),
     defaultValues: {
       unit_name_en: unitData?.unit_name_en ?? "",
       unit_name_ar: unitData?.unit_name_ar ?? "",
       short_name_en: unitData?.short_name_en ?? "",
       short_name_ar: unitData?.short_name_ar ?? "",
-      allow_decimal: unitData?.allow_decimal ?? 1,
+      allow_decimal: unitData?.allow_decimal ?? 0,
       multiplier: unitData?.multiplier ?? 1,
     },
   });
+
+  const allowDecimalValue = watch("allow_decimal");
 
   useEffect(() => {
     if (unitData) {
@@ -46,7 +50,7 @@ export default function UnitForm() {
       setValue("unit_name_ar", unitData.unit_name_ar ?? "");
       setValue("short_name_en", unitData.short_name_en ?? "");
       setValue("short_name_ar", unitData.short_name_ar ?? "");
-      setValue("allow_decimal", unitData.allow_decimal ?? 1);
+      setValue("allow_decimal", unitData.allow_decimal ?? 0);
       setValue("multiplier", unitData.multiplier ?? 1);
     }
   }, [unitData, setValue]);
@@ -55,7 +59,7 @@ export default function UnitForm() {
     const payload: any = {
       ...formData, 
       organization_id: organizationId,
-      multiplier: 1
+      multiplier: Number(1)
      };
 
     if (isUpdate && id) {
@@ -64,8 +68,6 @@ export default function UnitForm() {
       await addUnit.mutateAsync(payload);
     }
   };
-  
-  console.log('errororr: ', errors)
 
   return (
     <>
@@ -82,12 +84,10 @@ export default function UnitForm() {
 
       <ComponentCard title={isUpdate ? "Update Unit" : "Create Unit"}>
         {isUpdate && isLoading ? (
-          <p>Loading unit data...</p>
+          <Loader />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-6">
-              
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>Unit Name (En)</Label>
@@ -135,22 +135,11 @@ export default function UnitForm() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* <div>
-                  <Label>Multiplier</Label>
-                  <Input
-                    type="number"
-                    {...register("multiplier", { valueAsNumber: true })}
-                    placeholder="Enter multiplier value"
-                    error={!!errors.multiplier}
-                    icon={<Percent className="w-4 h-4 text-gray-500" />}
-                    hint={errors.multiplier?.message}
-                  />
-                </div> */}
                 <div>
                   <Label>Allow Decimal</Label>
                   <Switch
                     label=""
-                    defaultChecked={true}
+                    checked={allowDecimalValue === 1}
                     onChange={(checked) =>
                       setValue("allow_decimal", checked ? 1 : 0)
                     }

@@ -92,6 +92,18 @@ export default function CategoryForm() {
             <p>Loading Category data...</p>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1">
+                <Label htmlFor="code">Code</Label>
+                <Input
+                  type="text"
+                  id="code"
+                  placeholder="Please enter category code"
+                  {...register("code")}
+                  error={!!errors.code}
+                  hint={errors.code?.message}
+                  icon={<Code className="w-4 h-4" />}
+                />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="py-2">
@@ -140,19 +152,6 @@ export default function CategoryForm() {
                     />
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-6">
-                <Label htmlFor="code">Code</Label>
-                <Input
-                  type="text"
-                  id="code"
-                  placeholder="Please enter category code"
-                  {...register("code")}
-                  error={!!errors.code}
-                  hint={errors.code?.message}
-                  icon={<Code className="w-4 h-4" />}
-                />
               </div>
 
               <div className="flex justify-end mt-6">

@@ -25,7 +25,7 @@ export default function TaxForm() {
   const organizationId = useMeStore((state) => state.organizationId);
 
   // Fetch tax data for updating
-  const { data: taxData = null, isLoading } = useFetchTax(Number(id), {
+  const { data: taxData, isLoading } = useFetchTax(Number(id), {
     enabled: isUpdate,
   });
 
@@ -39,10 +39,10 @@ export default function TaxForm() {
   } = useForm<TaxType>({
     resolver: zodResolver(taxSchema),
     defaultValues: {
-      tax_name_ar: "",
-      tax_name_en: "",
-      amount: 0.0,
-      is_active: 0, // Default to inactive for create
+      tax_name_ar: taxData?.tax_name_ar ?? "",
+      tax_name_en: taxData?.tax_name_en ?? "",
+      amount: taxData?.amount ?? 0.0,
+      is_active: taxData?.is_active ?? 0, // Use existing value or default to inactive
     },
   });
 
@@ -52,10 +52,10 @@ export default function TaxForm() {
   // Populate form fields with tax data
   useEffect(() => {
     if (taxData) {
-      setValue("tax_name_ar", taxData?.tax_name_ar ?? "");
-      setValue("tax_name_en", taxData?.tax_name_en ?? "");
-      setValue("amount", taxData?.amount ?? 0.0);
-      setValue("is_active", taxData?.is_active ?? 0); // Keep existing value for update
+      setValue("tax_name_ar", taxData.tax_name_ar ?? "");
+      setValue("tax_name_en", taxData.tax_name_en ?? "");
+      setValue("amount", taxData.amount ?? 0.0);
+      setValue("is_active", taxData.is_active ?? 0);
     }
   }, [taxData, setValue]);
 
@@ -145,7 +145,7 @@ export default function TaxForm() {
                 <Label htmlFor="is-active">Tax Status</Label>
                 <Switch
                   label={isActive ? "Active" : "Inactive"}
-                  defaultChecked={isUpdate ? taxData?.is_active === 1 : false}
+                  checked={isActive === 1}
                   onChange={(checked) => setValue("is_active", checked ? 1 : 0)}
                 />
               </div>
