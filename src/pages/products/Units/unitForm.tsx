@@ -36,7 +36,7 @@ export default function UnitForm() {
       short_name_en: unitData?.short_name_en ?? "",
       short_name_ar: unitData?.short_name_ar ?? "",
       allow_decimal: unitData?.allow_decimal ?? 1,
-      multiplier: unitData?.multiplier ?? 0,
+      multiplier: unitData?.multiplier ?? 1,
     },
   });
 
@@ -47,7 +47,7 @@ export default function UnitForm() {
       setValue("short_name_en", unitData.short_name_en ?? "");
       setValue("short_name_ar", unitData.short_name_ar ?? "");
       setValue("allow_decimal", unitData.allow_decimal ?? 1);
-      setValue("multiplier", unitData.multiplier ?? 0);
+      setValue("multiplier", unitData.multiplier ?? 1);
     }
   }, [unitData, setValue]);
 
@@ -55,6 +55,7 @@ export default function UnitForm() {
     const payload: any = {
       ...formData, 
       organization_id: organizationId,
+      multiplier: 1
      };
 
     if (isUpdate && id) {
@@ -134,7 +135,7 @@ export default function UnitForm() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <Label>Multiplier</Label>
                   <Input
                     type="number"
@@ -144,7 +145,7 @@ export default function UnitForm() {
                     icon={<Percent className="w-4 h-4 text-gray-500" />}
                     hint={errors.multiplier?.message}
                   />
-                </div>
+                </div> */}
                 <div>
                   <Label>Allow Decimal</Label>
                   <Switch

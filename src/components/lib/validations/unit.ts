@@ -6,7 +6,7 @@ export const unitSchema = z.object({
   unit_name_ar: z.string().optional(),
   short_name_en: z.string().nonempty("Short Name (EN) is required"),
   short_name_ar: z.string().optional(),
-  allow_decimal: z.number(),
+  allow_decimal: z.number().default(0),
   multiplier: z.number().optional(),
   // related_to: z.coerce.number().min(1, "Unit is required").nullable(),
   sub_units: z

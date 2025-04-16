@@ -44,7 +44,7 @@ const TABS = [
 ];
 
 function cleanContactObject(obj: any): any {
-  if (!obj) return {}; // إرجاع كائن فارغ بدلاً من null
+  if (!obj) return {};
 
   const cleaned = Object.entries(obj).reduce((acc, [key, value]) => {
     if (
@@ -71,6 +71,7 @@ export default function ContactForm() {
   const organizationId = useMeStore((state) => state.organizationId);
   const type =
     (searchParams.get("type") as "customer" | "vendor") || "customer";
+  const isClone = searchParams.get("type") !== null;
 
   // API Hooks
   const { data: contactData, isLoading } = useFetchContact(Number(id), {
@@ -132,6 +133,23 @@ export default function ContactForm() {
           ? {
               ...details,
               social_media: parseSocialMedia(details.social_media),
+              id_issued_date: details.id_issued_date || null,
+              id_expiry_date: details.id_expiry_date || null,
+              date_of_birth: details.date_of_birth || null,
+              driving_license_issued_date:
+                details.driving_license_issued_date || null,
+              driving_license_expiry_date:
+                details.driving_license_expiry_date || null,
+              billing_address_country_id:
+                details.billing_address_country_id?.toString(),
+              billing_address_country_state_id:
+                details.billing_address_country_state_id?.toString(),
+              shipping_address_country_id:
+                details.shipping_address_country_id?.toString(),
+              shipping_address_country_state_id:
+                details.shipping_address_country_state_id?.toString(),
+              driving_license_issued_by:
+                details.driving_license_issued_by || "",
             }
           : undefined,
         contact_persons:
@@ -167,10 +185,8 @@ export default function ContactForm() {
       const full_name_ar = `${formData.first_name_ar} ${formData.last_name_ar}`;
       const full_name_en = `${formData.first_name_en} ${formData.last_name_en}`;
 
-      // تنظيف كائن contact_details مع ضمان إرجاع كائن حتى لو كان فارغاً
       let contactDetails = cleanContactObject(formData.contact_details || {});
 
-      // معالجة وسائل التواصل الاجتماعي إذا كانت موجودة
       if (contactDetails.social_media) {
         contactDetails = {
           ...contactDetails,
@@ -190,7 +206,7 @@ export default function ContactForm() {
         nationality_id: Number(formData.nationality_id),
         exchange_rate: formData.exchange_rate.toString(),
         balance: formData.balance.toString(),
-        contact_details: contactDetails, // سيتم إرسال كائن حتى لو كان فارغاً
+        contact_details: contactDetails,
         contact_persons:
           formData?.contact_persons?.map((person: any) => ({
             id: person.id || null,
@@ -202,7 +218,10 @@ export default function ContactForm() {
         type: type,
       };
 
-      console.log("Payload being sent:", payload); // للتأكد من البيانات المرسلة
+      if (isClone) {
+        delete payload.id;
+        delete payload.contact_persons?.id;
+      }
 
       await addContact.mutateAsync(payload);
     } catch (error) {
@@ -214,9 +233,8 @@ export default function ContactForm() {
     return <Loader />;
   }
 
-  const isUpdate = !!id;
   const pageTitle = id
-    ? searchParams.get("type")
+    ? isClone
       ? `Clone as ${type}`
       : "Update Customer"
     : `Create ${type.charAt(0).toUpperCase() + type.slice(1)}`;
@@ -358,37 +376,6 @@ export default function ContactForm() {
               </div>
             </div>
 
-            {/* Other Details - Exchange Rate and Balance */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label>Exchange Rate</Label>
-                <Input
-                  type="number"
-                  step={0.01}
-                  {...methods.register("exchange_rate", {
-                    valueAsNumber: true,
-                  })}
-                  error={!!methods.formState.errors.exchange_rate}
-                  hint={methods.formState.errors.exchange_rate?.message}
-                  placeholder="1.00"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Balance</Label>
-                <Input
-                  type="number"
-                  step={0.01}
-                  {...methods.register("balance", {
-                    valueAsNumber: true,
-                  })}
-                  error={!!methods.formState.errors.balance}
-                  hint={methods.formState.errors.balance?.message}
-                  placeholder="0.00"
-                />
-              </div>
-            </div> */}
-
             {/* Tabs Navigation */}
             <div className="bg-white p-6 rounded-lg shadow-sm border dark:bg-gray-900 border-gray-100">
               <div className="border-b border-gray-200 mb-6">
@@ -460,7 +447,7 @@ export default function ContactForm() {
                     {id ? "Processing..." : "Creating..."}
                   </span>
                 ) : id ? (
-                  searchParams.get("type") ? (
+                  isClone ? (
                     "Clone"
                   ) : (
                     "Save Changes"

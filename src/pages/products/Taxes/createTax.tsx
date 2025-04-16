@@ -7,7 +7,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { Clock, Percent, Type } from "lucide-react";
+import { Percent, Type } from "lucide-react";
 import {
   useAddTax,
   useFetchTax,
@@ -15,7 +15,6 @@ import {
 } from "@/hooks/prouducts/useTaxes";
 import { taxSchema, TaxType } from "@/components/lib/validations/tax";
 import { IoAdd } from "react-icons/io5";
-import { ShoppingBag } from "lucide-react";
 import Switch from "@/components/form/switch/Switch";
 
 export default function TaxForm() {
@@ -43,9 +42,12 @@ export default function TaxForm() {
       tax_name_ar: "",
       tax_name_en: "",
       amount: 0.0,
-      is_active: 1,
+      is_active: 0, // Default to inactive for create
     },
   });
+
+  // Get current is_active value
+  const isActive = watch("is_active");
 
   // Populate form fields with tax data
   useEffect(() => {
@@ -53,18 +55,15 @@ export default function TaxForm() {
       setValue("tax_name_ar", taxData?.tax_name_ar ?? "");
       setValue("tax_name_en", taxData?.tax_name_en ?? "");
       setValue("amount", taxData?.amount ?? 0.0);
-       setValue("is_active", taxData?.is_active === 1 ? 1 : 0);
+      setValue("is_active", taxData?.is_active ?? 0); // Keep existing value for update
     }
   }, [taxData, setValue]);
 
   // Submit handler
-  
   const onSubmit = async (formData: TaxType) => {
-     const isActiveValue: 0 | 1 = formData.is_active === 1 ? 1 : 0;
     const payload = {
       organization_id: organizationId,
       ...formData,
-      is_active: isActiveValue
     };
   
     if (isUpdate && id) {
@@ -72,14 +71,11 @@ export default function TaxForm() {
         id: id,
         data: payload,
       });
-      
     } else {
       await addTax.mutateAsync(payload);
     }
   };
 
-
-console.log("Errors:", errors);
   return (
     <>
       <PageBreadcrumb
@@ -97,8 +93,7 @@ console.log("Errors:", errors);
         {isUpdate && isLoading ? (
           <p className="dark:text-gray-400">Loading tax data...</p>
         ) : (
-            <form onSubmit={handleSubmit(onSubmit)}>
-              
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-6">
               {/* Name Fields (English and Arabic) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -129,8 +124,8 @@ console.log("Errors:", errors);
                   />
                 </div>
               </div>
-                <div className="grid grid-cols-1 md:grid-cols-2">
-              {/* Amount Field (Full Width) */}
+              
+              {/* Amount Field */}
               <div className="py-2">
                 <Label htmlFor="amount">Amount</Label>
                 <Input
@@ -140,32 +135,28 @@ console.log("Errors:", errors);
                   {...register("amount", { valueAsNumber: true })}
                   error={!!errors.amount}
                   hint={errors.amount?.message}
-                    className="w-full p-2 border rounded-md"
-                    icon={<Percent className="w-4 h-4" />}
-                  />
-                </div>
+                  className="w-full p-2 border rounded-md"
+                  icon={<Percent className="w-4 h-4" />}
+                />
+              </div>
 
               {/* Is Active Switch */}
               <div className="pl-6 mt-3">
-                <Label htmlFor="is-active">Is This Tax Actived ?</Label>
+                <Label htmlFor="is-active">Tax Status</Label>
                 <Switch
-                    label=""
-                    defaultChecked={true}
-                    onChange={(checked) => setValue("is_active", checked ? 1 : 0)}
-                   
-                  />
+                  label={isActive ? "Active" : "Inactive"}
+                  defaultChecked={isUpdate ? taxData?.is_active === 1 : false}
+                  onChange={(checked) => setValue("is_active", checked ? 1 : 0)}
+                />
               </div>
-                </div>
-              </div>
+            </div>
 
             {/* Submit Button */}
             <div className="flex justify-end mt-12">
               <button
                 type="submit"
                 className="px-6 py-3 text-sm font-medium disabled:opacity-50 text-white transition rounded-lg shadow-theme-xs bg-[#465FFF] hover:bg-[#465FFF] flex items-center gap-2"
-                disabled={
-                  isSubmitting || addTax.isPending || updateTax.isPending
-                }
+                disabled={isSubmitting || addTax.isPending || updateTax.isPending}
               >
                 {(addTax.isPending || updateTax.isPending) && (
                   <svg
