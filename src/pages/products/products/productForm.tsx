@@ -164,7 +164,7 @@ export default function ProductForm() {
 
   // Watched Values
   const selectedUnitId = watch("unit_id");
-  const selectedSubCategoryId = watch("sub_category_id");
+  // const selectedSubCategoryId = watch("sub_category_id");
   const watchedBranches = watch("branches");
   const watchedSubUnits = watch("sub_units");
 
