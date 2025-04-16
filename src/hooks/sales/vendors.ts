@@ -22,12 +22,13 @@ export const useFetchContact = (id: number, options = {}) => {
   });
 };
 
-export const useAddContact = (type: "customer" | "vendor" = "customer") => {
+// ADD CONTACT
+export const useAddContact = () => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: _ContactsApi.addContact,
     onSuccess: () => {
-      navigate(`/${type ? type:"/customer"}s`); 
+      navigate("/vendors");
     },
   });
 };
@@ -44,7 +45,7 @@ export const useUpdateContact = () => {
       data: Partial<IContact>;
     }) => _ContactsApi.updateContact(id, data),
     onSuccess: () => {
-      navigate("/customers");
+      navigate("/vendors");
     },
   });
 };

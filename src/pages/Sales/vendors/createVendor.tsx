@@ -3,12 +3,12 @@ import {
   customerSchema,
   type CustomerType,
 } from "@/components/lib/validations/customer";
-import { useAddContact } from "@/hooks/sales/contacts";
+import { useAddContact } from "@/hooks/sales/vendors";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Info, Mail, Phone, Type } from "lucide-react";
+import { Mail, Phone, Type } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -30,11 +30,17 @@ const TABS = [
   { id: 3, name: "Contact Person" },
   { id: 4, name: "Address" },
 ];
+
 function cleanContactDetails(contactDetails: any): any {
   if (!contactDetails) return null;
 
   const cleaned = Object.entries(contactDetails).reduce((acc, [key, value]) => {
-    if (value === null || value === undefined || value === "" || value === "undefined") {
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      value === "undefined"
+    ) {
       return acc;
     }
     if (Array.isArray(value) && value.length === 0) {
@@ -46,7 +52,7 @@ function cleanContactDetails(contactDetails: any): any {
   return Object.keys(cleaned).length > 0 ? cleaned : null;
 }
 
-export default function CreateVendor() {
+export default function VendorForm() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
   const isUpdate = Boolean(id);
@@ -63,8 +69,9 @@ export default function CreateVendor() {
       exchange_rate: 1,
       balance: 1,
       contact_type: "individual",
-      portal_access: "1",
-      portal_language: "ar"
+      portal_access: "0",
+      portal_language: "en", 
+
     },
   });
 
@@ -94,7 +101,7 @@ const onSubmit = async (formData: CustomerType) => {
       full_name_en: `${person?.first_name_en} ${person?.last_name_en}`,
     })),
     contact_details: contactDetails,
-    type: "vendor",
+    type: "customer",
   };
 
   await addCustomer.mutateAsync(payload);

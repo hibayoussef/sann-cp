@@ -77,7 +77,8 @@ export default function ContactForm() {
   const { data: contactData, isLoading } = useFetchContact(Number(id), {
     enabled: !!id,
   });
-  const addContact = useAddContact();
+  const addContact = useAddContact(type);
+
   const { data: branches } = useFetchBranches();
   const { data: paymentsTerm } = useFetchPaymentTerms();
   const { data: currencies } = useFetchCurrencies();
