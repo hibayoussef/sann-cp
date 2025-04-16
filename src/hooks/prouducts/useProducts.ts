@@ -33,6 +33,21 @@ export const useAddProduct = () => {
   });
 };
 
+// UPDATE PRODUCT STATUS
+export const useUpdateProductStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: number; status: number }) =>
+      _ProductsApi.updateProductStatus(id, status),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PRODUCT, variables.id],
+      });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.PRODUCTS] });
+    },
+  });
+};
+
 // UPDATE PRODUCT
 export const useUpdateProduct = () => {
   const navigate = useNavigate();
@@ -52,7 +67,7 @@ export const useDeleteProduct = () => {
     mutationFn: _ProductsApi.deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PRODUCTS]
+        queryKey: [QueryKeys.PRODUCTS],
       });
     },
   });

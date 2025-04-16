@@ -13,13 +13,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/ui/table-data/table-data";
-import { useFetchProduct } from "@/hooks/prouducts/useProducts";
+import {
+  useFetchProduct,
+  useUpdateProductStatus,
+} from "@/hooks/prouducts/useProducts";
 import { usePermissions } from "@/hooks/usePermissions";
 import {
   ChevronDown,
   ChevronUp,
   Copy,
   Edit,
+  Loader2,
   MoreVertical,
   Trash2,
   UserX,
@@ -38,6 +42,7 @@ export default function ProductDetails({ productId }: { productId: number }) {
   const navigate = useNavigate();
   const { data: productData }: any = useFetchProduct(productId);
   const { hasPermission } = usePermissions();
+  const updateStatusMutation = useUpdateProductStatus();
 
   if (!productData) {
     return (
@@ -56,10 +61,23 @@ export default function ProductDetails({ productId }: { productId: number }) {
     console.log("Deleting product:", productData.id);
     setShowDeleteDialog(false);
   };
-
   const handleMarkInactive = () => {
-    console.log("Marking product as inactive:", productData.id);
-    setShowInactiveDialog(false);
+    updateStatusMutation.mutate(
+      {
+        id: productData.id,
+        status: productData.is_active ? 0 : 1,
+      },
+      {
+        onSuccess: () => {
+          setShowInactiveDialog(false);
+          // You might want to add a success toast here
+        },
+        onError: (error) => {
+          console.error("Failed to update status:", error);
+          // You might want to add an error toast here
+        },
+      }
+    );
   };
 
   // Basic product information
@@ -174,7 +192,10 @@ export default function ProductDetails({ productId }: { productId: number }) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setShowInactiveDialog(true)}
-                className="text-amber-600"
+                className={
+                  productData.is_active ? "text-amber-600" : "text-green-600"
+                }
+                disabled={updateStatusMutation.isPending}
               >
                 <UserX className="w-3 h-3 mr-2" />
                 {productData.is_active ? "Deactivate" : "Activate"}
@@ -263,7 +284,16 @@ export default function ProductDetails({ productId }: { productId: number }) {
               >
                 Cancel
               </Button>
-              <Button onClick={handleMarkInactive}>Confirm</Button>
+              <Button
+                onClick={handleMarkInactive}
+                variant={productData.is_active ? "destructive" : "default"}
+                disabled={updateStatusMutation.isPending}
+              >
+                {updateStatusMutation.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {productData.is_active ? "Deactivate" : "Activate"}
+              </Button>
             </div>
           </div>
         </DialogContent>

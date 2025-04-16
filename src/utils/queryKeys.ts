@@ -37,4 +37,5 @@ export enum QueryKeys {
   MAPSETTINGS = "mapSettings",
   MAPSETTING = "mapSetting",
   ALLOWED_BRANCHES = "allowedBranches",
+  PRODUCT_STATUS = "product-status",
 }

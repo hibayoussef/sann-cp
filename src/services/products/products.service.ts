@@ -26,6 +26,13 @@ export const _ProductsApi = {
     const response = await _axios.post("/products/products", data);
     return response.data;
   },
+  // UPDATE PRODUCT STATUS
+  updateProductStatus: async (id: number, status: number) => {
+    const response = await _axios.post(`/products/products/${id}/status`, {
+      status, // This should match exactly what your backend expects
+    });
+    return response.data;
+  },
   // UPDATE PRODUCT
   updateProduct: async (id: number | undefined, data: ProductUpdateForm) => {
     const response = await _axios.post(`/products/products/${id}`, data);
