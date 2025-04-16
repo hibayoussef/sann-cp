@@ -1,3 +1,20 @@
+import { subCategoryColumns } from "@/columns/products/subCategory";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DataTable } from "@/components/ui/table-data/table-data";
+import { useFetchProduct } from "@/hooks/prouducts/useProducts";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   ChevronDown,
   ChevronUp,
@@ -9,23 +26,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useFetchProduct } from "@/hooks/prouducts/useProducts";
-import { DataTable } from "@/components/ui/table-data/table-data";
-import { subCategoryColumns } from "@/columns/products/subCategory";
-import { usePermissions } from "@/hooks/usePermissions";
 
 export default function ProductDetails({ productId }: { productId: number }) {
   const [showAdditionalDetails, setShowAdditionalDetails] = useState(false);
@@ -140,9 +140,9 @@ export default function ProductDetails({ productId }: { productId: number }) {
           <h1 className="text-xl font-semibold text-gray-800">
             {productData.product_name_en}
           </h1>
-          <p className="text-xs text-gray-500 mt-1">
+          {/* <p className="text-xs text-gray-500 mt-1">
             SKU: {productData.sku} • ID: {productData.id}
-          </p>
+          </p> */}
         </div>
         <div className="flex gap-2">
           <Button
