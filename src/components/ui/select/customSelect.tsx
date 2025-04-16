@@ -163,10 +163,10 @@ export const CustomSelect = <T = string,>({
   };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={` relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`w-full text-left pl-3 pr-2 py-[3px] border rounded-[8px] flex items-center justify-between transition-all duration-200 ${
+        className={`w-full dark:bg-gray-900 dark:text-gray-400 dark:border-gray-700 text-left pl-3 pr-2 py-1 border rounded-[8px] flex items-center justify-between transition-all duration-200 ${
           error
             ? "border-red-400 focus:border-red-500"
             : "border-gray-200 hover:border-gray-300 focus:border-blue-400"
@@ -178,9 +178,9 @@ export const CustomSelect = <T = string,>({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <div className="flex items-center">
+        <div className="flex items-center ">
           {icon && <span className="mr-2 text-gray-400">{icon}</span>}
-          <span className={`truncate ${!selectedOption ? "text-gray-400" : ""}`}>
+          <span className={`truncate ${!selectedOption ? "text-gray-400 " : ""}`}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
         </div>
@@ -192,7 +192,7 @@ export const CustomSelect = <T = string,>({
                 e.stopPropagation();
                 handleClear();
               }}
-              className="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-1 text-gray-400  hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -206,14 +206,14 @@ export const CustomSelect = <T = string,>({
       </button>
 
       {isOpen && (
-        <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-          <div className="p-2 border-b border-gray-100 bg-gray-50">
+        <div className="absolute z-20 w-full mt-1 dark:bg-gray-800  bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+          <div className="p-2 border-b border-gray-100 dark:bg-gray-800 dark:text-gray-200 bg-gray-50 ">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute  left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
                 placeholder={searchPlaceholder}
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400"
+                className="w-full pl-9 pr-3 py-2 text-sm border dark:text-gray-400 dark:bg-gray-800 border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 autoFocus
@@ -223,7 +223,23 @@ export const CustomSelect = <T = string,>({
 
           <div className="max-h-60 overflow-y-auto">
             {filteredOptions.length > 0 ? (
-              renderOptions(filteredOptions)
+              filteredOptions.map((option) => (
+                <button
+                  key={String(option.value)}
+                  type="button"
+                  className={`w-full text-left dark:text-gray-400 dark:hover:bg-gray-700 px-3 py-1 text-sm flex items-center justify-between hover:bg-blue-50 transition-colors ${
+                    selectedOption?.value === option.value
+                      ? "bg-blue-50 text-blue-600 dark:bg-blue-700 dark:text-gray-400"
+                      : "text-gray-700"
+                  }`}
+                  onClick={() => handleSelect(option)}
+                >
+                  <span>{option.label}</span>
+                  {selectedOption?.value === option.value && (
+                    <Check className="w-4 h-4 text-blue-500 dark:text-blue-100" />
+                  )}
+                </button>
+              ))
             ) : (
               <div className="px-3 py-3 text-sm text-gray-500 text-center">
                 No options found

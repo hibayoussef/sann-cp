@@ -511,7 +511,8 @@ export default function ProductCloneForm() {
                   <Label className="text-[14px] font-medium text-gray-700">
                     Product Availability
                   </Label>
-                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                  
+                  <div className="flex items-center gap-3 p-3  dark:bg-gray-900 bg-white rounded-lg border border-gray-200">
                     <div className="pr-3 border-r border-gray-200">
                       <Switch
                         label="Available for Selling"

@@ -196,22 +196,22 @@ const handlePrint = () => {
   }
 };
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen dark:bg-gray-900 dark:text-gray-400">
       <PageBreadcrumb
         baseTitle="Dashboard"
         pageTitle="Products"
         icon={<Home className="w-5 h-5" />}
       />
 
-      <div className="mt-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="mt-1 bg-white rounded-xl shadow-sm border dark:bg-gray-900 dark:text-gray-400 border-gray-200 overflow-hidden">
         <div className="flex h-[calc(100vh-120px)]">
           {/* Sidebar */}
-          <div className="w-60 border-r border-gray-100 flex flex-col">
-            <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-              <h3 className="font-medium text-gray-800 text-[15px]">
+          <div className="w-60 border-r border-gray-100 flex flex-col ">
+            <div className="p-4 border-b border-gray-100 bg-gray-50  dark:bg-gray-900 dark:text-gray-400 flex justify-between items-center">
+              <h3 className="font-medium text-gray-800 text-[15px]   dark:text-gray-400">
                 Products
               </h3>
-              <div className="flex gap-2">
+              <div className="flex gap-2 ">
                 <Button
                   size="sm"
                   className="h-8 bg-[#465FFF] hover:bg-[#465FFF]/90 text-white"
@@ -224,12 +224,12 @@ const handlePrint = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="h-8 w-8 p-0 hover:bg-gray-100"
+                      className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-600 "
                     >
-                      <MoreVertical className="h-4 w-4 text-gray-600" />
+                      <MoreVertical className="h-4 w-4 text-gray-600  dark:text-gray-300" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-[200px]">
+                  <DropdownMenuContent className="w-[200px] dark:bg-gray-800 dark:text-gray-400">
                     <DropdownMenuLabel>Export Options</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleExportCSV}>
@@ -249,7 +249,7 @@ const handlePrint = () => {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto ">
               {products.map((product: any) => (
                 <div
                   key={product.id}
@@ -257,9 +257,9 @@ const handlePrint = () => {
                     setSelectedProductId(product.id);
                     navigate(`/products/${product.id}`);
                   }}
-                  className={`p-3 border-b border-gray-100 cursor-pointer transition-colors ${
+                  className={`p-3 border-b dark:hover:bg-gray-700 border-gray-100 cursor-pointer transition-colors ${
                     selectedProductId === product.id
-                      ? "bg-blue-50 border-l-4 border-l-blue-500"
+                      ? "bg-blue-50 border-l-4 border-l-blue-500 dark:bg-gray-700"
                       : "hover:bg-gray-50"
                   }`}
                 >
@@ -279,10 +279,10 @@ const handlePrint = () => {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900 text-[14px]">
+                      <h4 className="font-medium text-gray-900 text-[14px] dark:text-gray-400">
                         {product.product_name_en || product.product_name_ar}
                       </h4>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
                         SKU: {product.sku}
                       </p>
                     </div>
@@ -293,7 +293,7 @@ const handlePrint = () => {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto dark:bg-gray-900 dark:text-gray-400">
             {selectedProductId ? (
               <ProductDetails productId={selectedProductId} />
             ) : (
@@ -312,7 +312,7 @@ const handlePrint = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900">
+                <h3 className="text-xl font-medium text-gray-900 ">
                   No product selected
                 </h3>
                 <p className="text-gray-500 mt-2 max-w-md">

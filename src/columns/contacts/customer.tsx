@@ -53,7 +53,7 @@ export const customerColumns = (permissions?: {
     ),
   },
   {
-    id: "actions",
+    id: "Actions",
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}

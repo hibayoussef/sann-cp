@@ -170,7 +170,7 @@ export default function SubCategoryForm() {
               </div>
 
               {/* Code Field */}
-              <div className="space-y-2">
+              <div className="space-y-2 ">
                 <Label htmlFor="code">Code</Label>
                 <Input
                   type="text"
@@ -179,7 +179,8 @@ export default function SubCategoryForm() {
                   {...register("code")}
                   error={!!errors.code}
                   hint={errors.code?.message}
-                  icon={<Code className="w-4 h-4" />}
+                    icon={<Code className="w-4 h-4" />}
+                    className="dark:bg-gray-900"
                 />
               </div>
             </div>

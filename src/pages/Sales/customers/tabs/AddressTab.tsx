@@ -136,8 +136,8 @@ export const AddressTab = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-          <Wallet className="w-4 h-4 text-gray-600" />
+        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2 dark:text-gray-400">
+          <Wallet className="w-4 h-4 text-gray-600  dark:text-gray-400" />
           Billing Address
         </h3>
 
@@ -273,8 +273,8 @@ export const AddressTab = ({
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-          <Truck className="w-4 h-4 text-gray-600" />
+        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2 dark:text-gray-400">
+          <Truck className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           Shipping Address
         </h3>
 

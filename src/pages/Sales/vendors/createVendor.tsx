@@ -18,9 +18,9 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import AddressTab from "../customers/tabs/AddressTab";
 import ContactDetailsTab from "../customers/tabs/ContactDetailsTab";
 import ContactPersonTab from "../customers/tabs/ContactPersonTab";
+import AddressTab from "../customers/tabs/AddressTab";
 import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
 
 
@@ -118,13 +118,13 @@ const onSubmit = async (formData: CustomerType) => {
           </div>
         }
       />
-      <ComponentCard title={isUpdate ? "Update Vendor" : "Create Vendor"}>
+      <ComponentCard title={isUpdate ? "Update Vendors" : "Create Vendors"}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-4">
-                  <Label className="mb-0">Vendor Type</Label>
+                  <Label className="mb-0">Vendors Type</Label>
                   <div className="flex items-center gap-6">
                     <Radio
                       id="individual"
@@ -221,6 +221,7 @@ const onSubmit = async (formData: CustomerType) => {
                   hint={methods.formState.errors.email?.message}
                   placeholder="contact@example.com"
                   icon={<Mail className="w-4 h-4" />}
+                  className="dark:bg-gray-900"
                 />
               </div>
 

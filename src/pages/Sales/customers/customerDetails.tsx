@@ -136,11 +136,11 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 dark:bg-gray-900 dark:text-gray-500">
       {/* Header Section */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-4 dark:bg-gray-900 dark:text-gray-500">
         <div>
-          <h1 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+          <h1 className="text-xl font-semibold text-gray-800 flex items-center gap-2 dark:bg-gray-900 dark:text-gray-500">
             {displayValue(customerData?.organization_name_en || customerData?.full_name_en)}
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
               customerData?.contact_type === 'business' 
@@ -172,21 +172,21 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 <MoreVertical className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40">
-              <DropdownMenuItem onClick={() => setShowCloneDialog(true)}>
-                <Copy className="w-3 h-3 mr-2" />
+            <DropdownMenuContent className="w-40 dark:bg-gray-900 dark:text-gray-500 ">
+              <DropdownMenuItem onClick={() => setShowCloneDialog(true)} className="dark:hover:bg-gray-700" >
+                <Copy className="w-3 h-3 mr-2  " />
                 Clone
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setShowDeleteDialog(true)}
-                className="text-red-600"
+                className="text-red-600 dark:hover:bg-gray-700"
               >
                 <Trash2 className="w-3 h-3 mr-2" />
                 Delete
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setShowInactiveDialog(true)}
-                className="text-amber-600"
+                className="text-amber-600 dark:hover:bg-gray-700"
               >
                 <UserX className="w-3 h-3 mr-2" />
                  Mark as inactive
@@ -198,7 +198,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
 
       {/* Clone Dialog */}
       <Dialog open={showCloneDialog} onOpenChange={setShowCloneDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900  dark:text-gray-500">
           <DialogHeader>
             <DialogTitle>Clone Contact</DialogTitle>
           </DialogHeader>
@@ -242,7 +242,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900  dark:text-gray-500">
           <DialogHeader>
                  <DialogTitle>Confirm Deletion</DialogTitle>
           </DialogHeader>
@@ -271,7 +271,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
 
       {/* Mark as Inactive Dialog */}
       <Dialog open={showInactiveDialog} onOpenChange={setShowInactiveDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900  dark:text-gray-500">
           <DialogHeader>
              <DialogTitle>Mark as Inactive</DialogTitle>
           </DialogHeader>
@@ -299,7 +299,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
       </Dialog>
 
       {/* Tabs Navigation */}
-      <div className="border-b border-gray-200 mb-4">
+      <div className="border-b border-gray-200  dark:border-gray-900   mb-4">
        <nav className="-mb-px flex space-x-6">
           {["Overview", "Transactions", "Documents", "Activities"].map(
             (tab) => (
@@ -322,14 +322,14 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
       {/* Main Content Grid */}
        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Left Column - Customer Information */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-4 dark:bg-gray-900  dark:text-gray-500">
           {/* Profile Card */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs dark:bg-gray-900  dark:text-gray-500">
             <div className="flex flex-col items-center text-center mb-3">
               <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-2">
                 <User className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-sm font-medium text-gray-800">
+              <h3 className="text-sm font-medium text-gray-800   dark:text-gray-500">
                 {displayValue(customerData?.full_name_en || customerData?.organization_name_en)}
               </h3>
               <p className="text-xs text-gray-500 capitalize">
@@ -377,7 +377,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Customer Portal Card */}
-        <div className={`rounded-xl p-4 transition-all duration-200 ${
+          <div className={`rounded-xl p-4 transition-all dark:bg-gray-900  dark:text-gray-500 duration-200 ${
             customerData?.portal_access
               ? "bg-green-50 border border-green-100"
               : "bg-blue-50 border border-blue-100"
@@ -391,7 +391,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                 }`} />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-800">Customer Portal</h3>
+                <h3 className="text-sm font-semibold text-gray-800  dark:text-gray-500">   Customer Portal</h3>
                 <p className="text-xs text-gray-600 mt-1">
                   {customerData?.portal_access
                     ? "Portal is currently active"
@@ -427,7 +427,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Address Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs dark:bg-gray-900  dark:text-gray-500">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <MapPin className="w-3 h-3" />
               ADDRESS INFORMATION
@@ -463,28 +463,27 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Financial Details */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
-            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+          <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 p-4 shadow-xs">
+               <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
               FINANCIAL DETAILS
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Balance</span>
-                <span className="text-xs font-semibold text-gray-800">
-                  {parseFloat(customerData?.balance || 0).toLocaleString()}
-                  {/* AED */}
+                <span className="text-xs font-semibold text-gray-800  dark:text-gray-500">
+                  {parseFloat(customerData?.balance || 0).toLocaleString()} AED
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-500">Payment Terms</span>
-                <span className="text-xs font-semibold text-gray-800">
+                <span className="text-xs text-gray-500">Payment Terms </span>
+                <span className="text-xs font-semibold text-gray-800   dark:text-gray-500">
                   {displayValue(customerData?.payment_term_name_en)} (
                   {displayValue(customerData?.payment_term_number_of_days)} days)
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Currency</span>
-                <span className="text-xs font-semibold text-gray-800">
+                <span className="text-xs font-semibold text-gray-800 dark:text-gray-500">
                   {customerData?.currency_id === 2 ? "AED" : "Other"} (Rate:{" "}
                   {displayValue(customerData?.exchange_rate)})
                 </span>
@@ -493,7 +492,7 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Identification Details */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs dark:bg-gray-900  dark:text-gray-500">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <IdCard className="w-3 h-3" />
               IDENTIFICATION
@@ -501,33 +500,34 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                  PASSPORT
-                </h4>
-                <p className="text-xs text-gray-800">
-                  {displayValue(customerData?.details?.passport_number, "No data")}
+               <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    PASSPORT
+                  </h4>
+                <p className="text-xs text-gray-800   dark:text-gray-400">
+                  {displayValue(customerData?.details?.passport_number, "No Data")}
                 </p>
                 {customerData?.details?.id_expiry_date && (
-                  <p className="text-[10px] text-gray-500 mt-1">
-                    Expires: {new Date(customerData?.details?.id_expiry_date).toLocaleDateString()}
-                  </p>
+                  <span className="text-[10px] text-gray-500 block mt-1 ">
+                    Expires:{" "}
+                    {new Date(customerData?.details?.id_expiry_date).toLocaleDateString()}
+                  </span>
                 )}
               </div>
 
               <div>
-                <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                  UNIFIED NUMBER
-                </h4>
-                <p className="text-xs text-gray-800">
+             <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    UNIFIED NUMBER
+                  </h4>
+                <p className="text-xs text-gray-800  dark:text-gray-400">
                   {displayValue(customerData?.details?.unified_number)}
                 </p>
               </div>
 
               <div>
-                <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
-                  DRIVING LICENSE
-                </h4>
-                <p className="text-xs text-gray-800">
+              <h4 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    DRIVING LICENSE
+                  </h4>
+                <p className="text-xs text-gray-800  dark:text-gray-400">
                   {displayValue(customerData?.details?.driving_license_number)}
                 </p>
                 {customerData?.details?.driving_license_expiry_date && (
@@ -540,64 +540,76 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Social Media */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
-            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-              <Share2 className="w-3 h-3" />
-              SOCIAL MEDIA
-            </h3>
+          {customerData?.details?.social_media?.length > 0 ? (
+            <div className="bg-white rounded-lg border  border-gray-200 p-4 shadow-xs dark:bg-gray-900  dark:text-gray-500">
+               <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1 dark:bg-gray-900  dark:text-gray-500">
+                <Share2 className="w-3 h-3" />
+                SOCIAL MEDIA
+              </h3>
 
-            {customerData?.details?.social_media?.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {customerData.details.social_media.map((social: any) => (
+              <div className="flex flex-wrap gap-2 dark:bg-gray-900  dark:text-gray-500">
+                {customerData?.details?.social_media.map((social: any) => (
                   <a
                     key={social.platform}
                     href={social.url}
                     target="_blank"
-                    className="text-xs px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center gap-1"
+                    className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700  dark:text-gray-300 hover:bg-gray-200 text-gray-800 flex items-center gap-1"
                   >
-                    {social.platform === "Facebook" && <Facebook className="w-3 h-3" />}
-                    {social.platform === "Twitter" && <Twitter className="w-3 h-3" />}
-                    {social.platform === "Instagram" && <Instagram className="w-3 h-3" />}
-                    {social.platform}
+                    {social?.platform === "Facebook" && (
+                      <Facebook className="w-3 h-3 dark:bg-gray-700  dark:text-gray-300" />
+                    )}
+                    {social?.platform === "Twitter" && (
+                      <Twitter className="w-3 h-3 dark:bg-gray-700  dark:text-gray-300" />
+                    )}
+                    {social?.platform === "Instagram" && (
+                      <Instagram className="w-3 h-3 dark:bg-gray-700  dark:text-gray-300" />
+                    )}
+                    {social?.platform}
                   </a>
                 ))}
               </div>
-            ) : (
-              <EmptyState />
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs dark:bg-gray-900  dark:text-gray-500">
+              <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+                <Share2 className="w-3 h-3" />
+               SOCIAL MEDIA
+              </h3>
+              <p className="text-xs text-gray-500">No Value</p>
+            </div>
+          )}
         </div>
         {/* Right Column - Main Content */}
-          <div className="lg:col-span-3 space-y-4">
+        <div className="lg:col-span-3 space-y-4 dark:bg-gray-900  dark:text-gray-500">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 ">
+            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs dark:bg-gray-900  dark:text-gray-500">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
                 TOTAL SPEND (6M)
               </h3>
-              <p className="text-lg font-semibold text-gray-900">
-                {parseFloat(customerData.balance || 0).toLocaleString()} AED
+              <p className="text-lg font-semibold text-gray-900 ] dark:text-gray-500">
+                {parseFloat(customerData.balance || 0).toLocaleString()}AED
               </p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 +12% from last period
               </p>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
+            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs dark:bg-gray-900  dark:text-gray-500">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
                 OPEN INVOICES
               </h3>
-              <p className="text-lg font-semibold text-gray-900">3</p>
+              <p className="text-lg font-semibold text-gray-900   dark:text-gray-500">3</p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 12,450 AED total
               </p>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
+            <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 p-3 shadow-xs">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
                 AVG. PAYMENT DAYS
               </h3>
-              <p className="text-lg font-semibold text-gray-900">45</p>
+              <p className="text-lg font-semibold text-gray-900 dark:bg-gray-900  dark:text-gray-500">45</p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 On time payment: 78%
               </p>
@@ -605,9 +617,9 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Recent Transactions */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
+          <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200">
-              <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
+              <h3 className="text-xs font-medium text-gray-700  dark:text-gray-500 uppercase tracking-wider">
                 RECENT TRANSACTIONS
               </h3>
             </div>
@@ -630,10 +642,10 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
           </div>
 
           {/* Contact Persons */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
+          <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
-                CONTACT PERSONS ({customerData?.persons?.length || 0})
+              <h3 className="text-xs font-medium text-gray-700   dark:text-gray-500 uppercase tracking-wider">
+              CONTACT PERSONS ({customerData?.persons?.length || 0})
               </h3>
               <Button size="sm" variant="outline" className="h-7">
                 <Plus className="w-3 h-3 mr-1" />
@@ -644,16 +656,16 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
             {customerData?.persons?.length > 0 ? (
               customerData.persons.map((person: any) => (
                 <div
-                  key={person.id}
-                  className="p-3 flex items-start gap-3 border-b border-gray-200 last:border-0"
+                  key={person?.id}
+                  className="p-3 flex items-start gap-3  border-b border-gray-200 last:border-0"
                 >
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                     <User className="w-3.5 h-3.5 text-gray-500" />
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-gray-800">
-                      {displayValue(person.full_name_en || person.full_name_ar)}
+                    <h4 className="text-sm font-medium text-gray-800   dark:text-gray-500">
+                      {displayValue(person?.full_name_en || person?.full_name_ar)}
                     </h4>
                     <p className="text-xs text-gray-500 mt-0.5">
                       {displayValue(person.designation)} • {displayValue(person.department)}
@@ -711,9 +723,9 @@ export default function CustomerDetails({ customerId }: { customerId: number }) 
                         <MoreVertical className="h-3.5 w-3.5" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="text-xs">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                    <DropdownMenuContent align="end" className="text-xs dark:bg-gray-900  dark:text-gray-500">
+                      <DropdownMenuItem className="dark:hover:bg-gray-800">Edit</DropdownMenuItem>
+                      <DropdownMenuItem className="dark:hover:bg-gray-800">Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>

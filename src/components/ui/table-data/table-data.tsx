@@ -135,7 +135,7 @@ export function DataTable<TData, TValue>({
                         navigate(`${detailsLink}/${id}`);
                       }
                     }}
-                    className="cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                    className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800  active:bg-gray-100 transition-colors"
                   >
                     <TableHead
                       colSpan={1}

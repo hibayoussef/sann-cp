@@ -46,7 +46,7 @@ export default function ProductDetails({ productId }: { productId: number }) {
 
   if (!productData) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full ">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-3 text-sm text-gray-500">
@@ -151,17 +151,16 @@ export default function ProductDetails({ productId }: { productId: number }) {
   }));
 
   return (
-    <div className="p-6">
+    <div className="p-6 ">
       {/* Header Section */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex justify-between items-start mb-6 ">
         <div>
-          <h1 className="text-xl font-semibold text-gray-800">
+          <h1 className="text-xl font-semibold text-gray-800 dark:bg-gray-900 dark:text-gray-500 ">
             {productData.product_name_en}
           </h1>
-          
-          {/* <p className="text-xs text-gray-500 mt-1">
+          {/* <p className="text-xs text-gray-500 mt-1  dark:text-gray-400">
             SKU: {productData.sku} • ID: {productData.id}
-          </p> */}
+          </p>  */}
         </div>
         <div className="flex gap-2">
           <Button
@@ -179,14 +178,14 @@ export default function ProductDetails({ productId }: { productId: number }) {
                 <MoreVertical className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40">
-              <DropdownMenuItem onClick={() => setShowCloneDialog(true)}>
-                <Copy className="w-3 h-3 mr-2" />
+            <DropdownMenuContent className="w-40 dark:bg-gray-800 dark:text-gray-400 ">
+              <DropdownMenuItem className="dark:hover:bg-gray-700" onClick={() => setShowCloneDialog(true)}>
+                <Copy className="w-3 h-3 mr-2 " />
                 Clone
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setShowDeleteDialog(true)}
-                className="text-red-600"
+                className="text-red-600 dark:hover:bg-gray-700"
               >
                 <Trash2 className="w-3 h-3 mr-2" />
                 Delete
@@ -208,7 +207,7 @@ export default function ProductDetails({ productId }: { productId: number }) {
 
       {/* Clone Dialog */}
       <Dialog open={showCloneDialog} onOpenChange={setShowCloneDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900 dark:text-gray-400">
           <DialogHeader>
             <DialogTitle>Clone Product</DialogTitle>
           </DialogHeader>
@@ -238,7 +237,7 @@ export default function ProductDetails({ productId }: { productId: number }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900 dark:text-gray-400 ">
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
           </DialogHeader>
@@ -264,7 +263,7 @@ export default function ProductDetails({ productId }: { productId: number }) {
 
       {/* Inactive Confirmation Dialog */}
       <Dialog open={showInactiveDialog} onOpenChange={setShowInactiveDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900 dark:text-gray-400">
           <DialogHeader>
             <DialogTitle>
               {productData.is_active
@@ -301,19 +300,19 @@ export default function ProductDetails({ productId }: { productId: number }) {
       </Dialog>
 
       {/* Product Details Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         {/* Basic Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-          <h2 className="text-sm font-medium text-gray-700 mb-3">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm dark:bg-gray-900 dark:text-gray-500">
+          <h2 className="text-sm font-medium text-gray-700 dark:text-gray-500 mb-2 ">
             Basic Information
           </h2>
           <div className="space-y-3">
             {basicInfo.map((item, index) => (
               <div key={index} className="grid grid-cols-3 gap-2">
-                <span className="text-xs text-gray-500 col-span-1">
+                <span className="text-xs text-gray-500 col-span-1  dark:text-gray-400">
                   {item.label}
                 </span>
-                <span className="text-xs font-medium text-gray-800 col-span-2">
+                <span className="text-xs font-medium text-gray-800 col-span-2 dark:text-gray-400">
                   {item.value || "N/A"}
                 </span>
               </div>
@@ -322,15 +321,15 @@ export default function ProductDetails({ productId }: { productId: number }) {
         </div>
 
         {/* Pricing Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-          <h2 className="text-sm font-medium text-gray-700 mb-3">Pricing</h2>
+        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm dark:bg-gray-900 dark:text-gray-400">
+          <h2 className="text-sm font-medium text-gray-700 mb-3  dark:text-gray-500">Pricing</h2>
           <div className="space-y-3">
             {pricingInfo.map((item, index) => (
               <div key={index} className="grid grid-cols-3 gap-2">
-                <span className="text-xs text-gray-500 col-span-1">
+                <span className="text-xs text-gray-500 col-span-1  dark:text-gray-400">
                   {item.label}
                 </span>
-                <span className="text-xs font-medium text-gray-800 col-span-2">
+                <span className="text-xs font-medium text-gray-800 col-span-2  dark:text-gray-400">
                   {item.value}
                 </span>
               </div>
@@ -339,17 +338,17 @@ export default function ProductDetails({ productId }: { productId: number }) {
         </div>
 
         {/* Category Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-          <h2 className="text-sm font-medium text-gray-700 mb-3">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm dark:bg-gray-900 dark:text-gray-400">
+          <h2 className="text-sm font-medium text-gray-700 mb-3  dark:text-gray-500">
             Category Information
           </h2>
           <div className="space-y-3">
             {categoryInfo.map((item, index) => (
               <div key={index} className="grid grid-cols-3 gap-2">
-                <span className="text-xs text-gray-500 col-span-1">
+                <span className="text-xs text-gray-500 col-span-1  dark:text-gray-400">
                   {item.label}
                 </span>
-                <span className="text-xs font-medium text-gray-800 col-span-2">
+                <span className="text-xs font-medium text-gray-800 col-span-2  dark:text-gray-400">
                   {item.value || "N/A"}
                 </span>
               </div>
@@ -358,17 +357,17 @@ export default function ProductDetails({ productId }: { productId: number }) {
         </div>
 
         {/* Branches Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-          <h2 className="text-sm font-medium text-gray-700 mb-3">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm dark:bg-gray-900 dark:text-gray-400">
+          <h2 className="text-sm font-medium text-gray-700 mb-3  dark:text-gray-500">
             Branches Availability
           </h2>
           <div className="space-y-3">
             {branchesInfo.map((item: any, index: number) => (
               <div key={index} className="grid grid-cols-3 gap-2">
-                <span className="text-xs text-gray-500 col-span-1">
+                <span className="text-xs text-gray-500 col-span-1  dark:text-gray-400">
                   {item.label}
                 </span>
-                <span className="text-xs font-medium text-gray-800 col-span-2">
+                <span className="text-xs font-medium text-gray-800 col-span-2 dark:text-gray-400">
                   {item.value}
                 </span>
               </div>
@@ -440,17 +439,17 @@ export default function ProductDetails({ productId }: { productId: number }) {
         </button>
 
         {showAdditionalDetails && (
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-            <h2 className="text-sm font-medium text-gray-700 mb-3">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm dark:bg-gray-900 dark:text-gray-400">
+            <h2 className="text-sm font-medium text-gray-700 mb-3  dark:text-gray-500">
               Additional Details
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {additionalDetails.map((item, index) => (
                 <div key={index} className="grid grid-cols-3 gap-2">
-                  <span className="text-xs text-gray-500 col-span-1">
+                  <span className="text-xs text-gray-500 col-span-1  dark:text-gray-400">
                     {item.label}
                   </span>
-                  <span className="text-xs font-medium text-gray-800 col-span-2">
+                  <span className="text-xs font-medium text-gray-800 col-span-2  dark:text-gray-400">
                     {item.value || "N/A"}
                   </span>
                 </div>

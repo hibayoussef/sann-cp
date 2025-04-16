@@ -220,6 +220,7 @@ const onSubmit = async (formData: CustomerType) => {
                   hint={methods.formState.errors.email?.message}
                   placeholder="contact@example.com"
                   icon={<Mail className="w-4 h-4" />}
+                  className="dark:bg-gray-900"
                 />
               </div>
 
