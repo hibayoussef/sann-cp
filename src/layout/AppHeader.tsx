@@ -15,7 +15,7 @@ import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
-  const [dir, setDir] = useState<"ltr" | "rtl">("ltr");
+  const [dir] = useState<"ltr" | "rtl">("ltr");
   const navigate = useNavigate();
   const location = useLocation();
 

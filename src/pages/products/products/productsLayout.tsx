@@ -31,9 +31,8 @@ export default function ProductsLayout() {
     id ? +id : null
   );
 
-  // تعريف المتغيرات المطلوبة للتصدير
-  const excludedExportColumns = ['actions']; // أضف الأعمدة التي تريد استثناءها
-  const tableName = 'products'; // اسم الملف الذي سيتم تصديره
+  // const excludedExportColumns = ['actions'];
+  const tableName = 'products'; 
 
  
   // دالة التصدير إلى CSV

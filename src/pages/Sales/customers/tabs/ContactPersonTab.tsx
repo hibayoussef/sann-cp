@@ -15,10 +15,7 @@ import {
   PlusCircle,
   Trash2,
   Type,
-  User,
-  UserCheck,
-  UserCircle,
-  X,
+  X
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -307,7 +304,7 @@ const ContactPersonTab = () => {
                     No social media accounts added
                   </div>
                 ) : (
-                  socialMedia.map((socialField: any, socialIndex) => (
+                  socialMedia.map((socialField: any, socialIndex: any) => (
                     <div
                       key={socialIndex}
                       className="flex gap-2 items-center mb-2 animate-fade-in"

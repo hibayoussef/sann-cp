@@ -8,7 +8,7 @@ import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Info, Mail, Phone, Type } from "lucide-react";
+import { Mail, Phone, Type } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";

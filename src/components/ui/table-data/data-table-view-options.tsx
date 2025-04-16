@@ -27,7 +27,6 @@ export function DataTableViewOptions<TData>({
   const excludedExportColumns = ["Actions"];
 
  const handleExportCSV = () => {
-  // الحصول على العناوين الحقيقية
   const headers = table
     .getVisibleLeafColumns()
     .filter((column) => !excludedExportColumns.includes(column.id))
@@ -44,7 +43,6 @@ export function DataTableViewOptions<TData>({
         .replace(/\b\w/g, (char) => char.toUpperCase());
     });
 
-  // الحصول على البيانات مع العناوين الصحيحة
   const rows = table.getRowModel().rows.map((row) => {
     const rowData: any = {};
     row.getVisibleCells()
@@ -68,7 +66,6 @@ export function DataTableViewOptions<TData>({
 };
 
 const handleExportExcel = () => {
-  // نفس منطق CSV لكن بتنسيق Excel
   const headers = table
     .getVisibleLeafColumns()
     .filter((column) => !excludedExportColumns.includes(column.id))

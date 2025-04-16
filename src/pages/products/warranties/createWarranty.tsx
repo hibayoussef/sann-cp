@@ -1,24 +1,24 @@
+import {
+  warrantySchema,
+  type WarrantyType,
+} from "@/components/lib/validations/warranty";
+import {
+  useAddWarranty,
+  useFetchWarranty,
+  useUpdateWarranty,
+} from "@/hooks/prouducts/useWarranties";
+import { WarrantiesType } from "@/types/enums/warrantiesType";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Percent, Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import {
-  useAddWarranty,
-  useFetchWarranty,
-  useUpdateWarranty,
-} from "@/hooks/prouducts/useWarranties";
-import {
-  warrantySchema,
-  type WarrantyType,
-} from "@/components/lib/validations/warranty";
-import { Clock, Percent, PercentIcon, Tag, Type } from "lucide-react";
-import { WarrantiesType } from "@/types/enums/warrantiesType";
-import { IoAdd } from "react-icons/io5";
 
 export default function WarrantyForm() {
   const { id } = useParams();

@@ -19,7 +19,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { BsFillCalendarDayFill } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
-import { MdOutlineShortText } from "react-icons/md";
 import { useParams } from "react-router-dom";
 
 export default function PaymentTermForm() {

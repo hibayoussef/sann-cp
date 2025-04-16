@@ -8,7 +8,7 @@ import {
   useUpdateCategory,
 } from "@/hooks/prouducts/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, Tag, Type } from "lucide-react";
+import { Code, Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";

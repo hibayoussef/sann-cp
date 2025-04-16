@@ -8,6 +8,7 @@ import {
 } from "@/hooks/settings/useBranches";
 import { useFetchOrganizations } from "@/hooks/settings/useOrganizations";
 import { useFetchCountries } from "@/hooks/useCommon";
+import { FileType } from "@/types/enums/attatchementType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Calendar,
@@ -18,8 +19,7 @@ import {
   Mail,
   MapPin,
   Phone,
-  Tag,
-  Type,
+  Type
 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -31,7 +31,6 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Switch from "../../../components/form/switch/Switch";
 import { useMeStore } from "../../../store/useMeStore";
-import { FileType } from "@/types/enums/attatchementType";
 
 export default function CreateBranch() {
   const { id } = useParams();

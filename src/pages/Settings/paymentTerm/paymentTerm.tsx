@@ -4,9 +4,8 @@ import PageMeta from "@/components/common/PageMeta";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { usePermissions } from "@/hooks/usePermissions";
-import { GitBranch, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { IoDocumentText } from "react-icons/io5";
 
 export default function PaymentTerm() {
   const { data } = useFetchPaymentTerms();

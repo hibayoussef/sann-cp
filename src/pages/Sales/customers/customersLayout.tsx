@@ -26,9 +26,8 @@ export default function CustomersLayout() {
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(
     +id! || null
   );
-  // تعريف المتغيرات المطلوبة للتصدير
-  const excludedExportColumns = ["actions"]; // أضف الأعمدة التي تريد استثناءها
-  const tableName = "Customers"; // اسم الملف الذي سيتم تصديره
+  // const excludedExportColumns = ["actions"]; 
+  const tableName = "Customers";
 
   const getCustomerExportData = () => {
     return customers.map((customer) => ({

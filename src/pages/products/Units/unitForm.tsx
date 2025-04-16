@@ -1,9 +1,10 @@
 import Switch from "@/components/form/switch/Switch";
-import { unitBaseSchema, unitSchema, type UnitType } from "@/components/lib/validations/unit";
+import { unitBaseSchema, type UnitType } from "@/components/lib/validations/unit";
+import Loader from "@/components/ui/loader/loader";
 import { useAddUnit, useFetchUnit, useUpdateUnit } from "@/hooks/prouducts/useUnits";
 import { useMeStore } from "@/store/useMeStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Hash, Percent, ShoppingBag, Type } from "lucide-react";
+import { ShoppingBag, Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -12,7 +13,6 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
-import Loader from "@/components/ui/loader/loader";
 
 export default function UnitForm() {
   const { id } = useParams();

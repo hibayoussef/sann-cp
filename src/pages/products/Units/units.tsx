@@ -1,10 +1,10 @@
 import { unitColumns } from "@/columns/products/units";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
-import { Layers, Ruler } from "lucide-react";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Layers } from "lucide-react";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
-import { usePermissions } from "@/hooks/usePermissions";
 
 export default function Units() {
   const { data } = useFetchUnits();

@@ -1,5 +1,6 @@
 import Switch from "@/components/form/switch/Switch";
 import { subUnitSchema, type SubUnitType } from "@/components/lib/validations/subUnit";
+import Loader from "@/components/ui/loader/loader";
 import { CustomSelect } from "@/components/ui/select/customSelect";
 import {
   useAddSubUnit,
@@ -8,7 +9,7 @@ import {
 } from "@/hooks/prouducts/useSubUnits";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Folder, Hash, Layers, Percent, ShoppingBag, Type } from "lucide-react";
+import { Layers, Percent, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -17,7 +18,6 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
-import Loader from "@/components/ui/loader/loader";
 
 export default function SubUnitForm() {
   const { id } = useParams();

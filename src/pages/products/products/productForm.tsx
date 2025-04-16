@@ -10,7 +10,6 @@ import {
   Calendar,
   FolderTree,
   GitBranch,
-  Info,
   Layers,
   Package,
   Settings,
@@ -19,7 +18,7 @@ import {
   Tags,
   Type,
   Wallet,
-  Wallet2,
+  Wallet2
 } from "lucide-react";
 import { FaMoneyBill } from "react-icons/fa";
 import { IoAdd, IoColorPalette, IoTrash } from "react-icons/io5";

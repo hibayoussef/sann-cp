@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
 import { useParams, useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 // Components
 import ComponentCard from "@/components/common/ComponentCard";
@@ -31,10 +30,10 @@ import { useMeStore } from "@/store/useMeStore";
 
 // Tabs
 import type { ISocialMedia } from "@/types/sales/contact";
-import { OtherDetailsTab } from "./customers/tabs/OtherDetailsTab";
+import AddressTab from "./customers/tabs/AddressTab";
 import ContactDetailsTab from "./customers/tabs/ContactDetailsTab";
 import ContactPersonTab from "./customers/tabs/ContactPersonTab";
-import AddressTab from "./customers/tabs/AddressTab";
+import { OtherDetailsTab } from "./customers/tabs/OtherDetailsTab";
 
 const TABS = [
   { id: 1, name: "Other Details" },

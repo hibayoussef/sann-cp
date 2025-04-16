@@ -1,3 +1,4 @@
+import DropzoneComponent from "@/components/form/form-elements/DropZone";
 import TextArea from "@/components/form/input/TextArea";
 import {
   accountSchema,
@@ -14,6 +15,7 @@ import {
 } from "@/hooks/settings/useAccounts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchCurrencies } from "@/hooks/useCommon";
+import { FileType } from "@/types/enums/attatchementType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Banknote,
@@ -23,9 +25,8 @@ import {
   CreditCard,
   GitBranch,
   Hash,
-  Tag,
   Type,
-  X,
+  X
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,8 +37,6 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { FileType } from "@/types/enums/attatchementType";
-import DropzoneComponent from "@/components/form/form-elements/DropZone";
 
 interface OptionType {
   value: string;

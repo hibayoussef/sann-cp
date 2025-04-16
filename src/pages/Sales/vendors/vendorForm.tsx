@@ -71,7 +71,7 @@ export default function VendorForm() {
           salutation_ar: "",
           salutation_en: "",
           full_name_ar: "",
-          full_name_en: "",
+          // full_name_en: "",
           first_name_ar: "",
           first_name_en: "",
           last_name_ar: "",
@@ -185,16 +185,16 @@ export default function VendorForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {/* Primary Contact */}
                 <div className="space-y-2">
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label>Full Name (En)</Label>
                     <Input
                       {...methods.register("full_name_en")}
                       error={!!methods.formState.errors.full_name_en}
-                      hint={methods.formState.errors.full_name_en?.message}
+                      hint={methods.formState.errors?.full_name_en?.message}
                       icon={<Info className="w-4 h-4" />}
                       placeholder="Please Enter Your Full Name (En)"
                     />
-                  </div>
+                  </div> */}
 
                   <div className="space-y-2">
                     <Label>Full Name (Ar)</Label>

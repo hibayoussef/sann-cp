@@ -126,7 +126,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
 
   if (!customerData) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full  ">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-3 text-sm text-gray-500">Loading vendor Data...</p>
@@ -136,11 +136,11 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 dark:bg-gray-900 dark:text-gray-500">
       {/* Header Section */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-4 dark:bg-gray-900 dark:text-gray-500">
         <div>
-          <h1 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+          <h1 className="text-xl font-semibold text-gray-800 flex items-center gap-  dark:bg-gray-900 dark:text-gray-500">
             {displayValue(customerData?.organization_name_en || customerData?.full_name_en)}
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
               customerData?.contact_type === 'business' 
@@ -172,21 +172,21 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
                 <MoreVertical className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40">
-              <DropdownMenuItem onClick={() => setShowCloneDialog(true)}>
-                <Copy className="w-3 h-3 mr-2" />
+            <DropdownMenuContent className="w-40  dark:bg-gray-900 dark:text-gray-500">
+              <DropdownMenuItem onClick={() => setShowCloneDialog(true)} className="dark:hover:bg-gray-700">
+                <Copy className="w-3 h-3 mr-2 " />
                 Clone
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setShowDeleteDialog(true)}
-                className="text-red-600"
+                className="text-red-600 dark:hover:bg-gray-700"
               >
-                <Trash2 className="w-3 h-3 mr-2" />
+                <Trash2 className="w-3 h-3 mr-2 " />
                 Delete
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setShowInactiveDialog(true)}
-                className="text-amber-600"
+                className="text-amber-600 dark:hover:bg-gray-700"
               >
                 <UserX className="w-3 h-3 mr-2" />
                  Mark as inactive
@@ -198,7 +198,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
 
       {/* Clone Dialog */}
       <Dialog open={showCloneDialog} onOpenChange={setShowCloneDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900  dark:text-gray-500">
           <DialogHeader>
             <DialogTitle>Clone Contact</DialogTitle>
           </DialogHeader>
@@ -242,7 +242,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900  dark:text-gray-500">
           <DialogHeader>
                  <DialogTitle>Confirm Deletion</DialogTitle>
           </DialogHeader>
@@ -271,7 +271,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
 
       {/* Mark as Inactive Dialog */}
       <Dialog open={showInactiveDialog} onOpenChange={setShowInactiveDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-900  dark:text-gray-500">
           <DialogHeader>
              <DialogTitle>Mark as Inactive</DialogTitle>
           </DialogHeader>
@@ -299,7 +299,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
       </Dialog>
 
       {/* Tabs Navigation */}
-      <div className="border-b border-gray-200 mb-4">
+      <div className="border-b border-gray-200 mb-4  dark:border-gray-900 ">
        <nav className="-mb-px flex space-x-6">
           {["Overview", "Transactions", "Documents", "Activities"].map(
             (tab) => (
@@ -322,14 +322,14 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
       {/* Main Content Grid */}
        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Left Column - Customer Information */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-4 dark:bg-gray-900  dark:text-gray-500">
           {/* Profile Card */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs  dark:bg-gray-900  dark:text-gray-500">
             <div className="flex flex-col items-center text-center mb-3">
               <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-2">
                 <User className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-sm font-medium text-gray-800">
+              <h3 className="text-sm font-medium text-gray-800  dark:text-gray-500">
                 {displayValue(customerData?.full_name_en || customerData?.organization_name_en)}
               </h3>
               <p className="text-xs text-gray-500 capitalize">
@@ -377,7 +377,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Customer Portal Card */}
-        <div className={`rounded-xl p-4 transition-all duration-200 ${
+        <div className={`rounded-xl p-4 transition-all duration-200 dark:bg-gray-900  dark:text-gray-500  ${
             customerData?.portal_access
               ? "bg-green-50 border border-green-100"
               : "bg-blue-50 border border-blue-100"
@@ -391,7 +391,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
                 }`} />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-800">Customer Portal</h3>
+                <h3 className="text-sm font-semibold text-gray-800   dark:text-gray-500 ">Customer Portal</h3>
                 <p className="text-xs text-gray-600 mt-1">
                   {customerData?.portal_access
                     ? "Portal is currently active"
@@ -427,7 +427,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Address Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+        <div className="bg-white rounded-lg border border-gray-200 dark:bg-gray-900  dark:text-gray-500  p-4 shadow-xs">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <MapPin className="w-3 h-3" />
               ADDRESS INFORMATION
@@ -463,28 +463,28 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Financial Details */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs dark:bg-gray-900  dark:text-gray-500 ">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
               FINANCIAL DETAILS
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Balance</span>
-                <span className="text-xs font-semibold text-gray-800">
+                <span className="text-xs font-semibold text-gray-800   dark:text-gray-500 ">
                   {parseFloat(customerData?.balance || 0).toLocaleString()}
                   {/* AED */}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Payment Terms</span>
-                <span className="text-xs font-semibold text-gray-800">
+                <span className="text-xs font-semibold text-gray-800  dark:text-gray-500 ">
                   {displayValue(customerData?.payment_term_name_en)} (
                   {displayValue(customerData?.payment_term_number_of_days)} days)
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-500">Currency</span>
-                <span className="text-xs font-semibold text-gray-800">
+                <span className="text-xs font-semibold text-gray-800  dark:text-gray-500 ">
                   {customerData?.currency_id === 2 ? "AED" : "Other"} (Rate:{" "}
                   {displayValue(customerData?.exchange_rate)})
                 </span>
@@ -493,7 +493,7 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Identification Details */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 dark:bg-gray-900  dark:text-gray-500  shadow-xs">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <IdCard className="w-3 h-3" />
               IDENTIFICATION
@@ -540,24 +540,24 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Social Media */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500  border-gray-200 p-4 shadow-xs">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <Share2 className="w-3 h-3" />
               SOCIAL MEDIA
             </h3>
 
             {customerData?.details?.social_media?.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 dark:bg-gray-900  dark:text-gray-500 ">
                 {customerData.details.social_media.map((social: any) => (
                   <a
                     key={social.platform}
                     href={social.url}
                     target="_blank"
-                    className="text-xs px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center gap-1"
+                    className="text-xs px-2 py-1 rounded-full bg-gray-100  dark:bg-gray-700  dark:text-gray-300 hover:bg-gray-200 text-gray-800 flex items-center gap-1"
                   >
-                    {social.platform === "Facebook" && <Facebook className="w-3 h-3" />}
-                    {social.platform === "Twitter" && <Twitter className="w-3 h-3" />}
-                    {social.platform === "Instagram" && <Instagram className="w-3 h-3" />}
+                    {social.platform === "Facebook" && <Facebook className="w-3 h-3 dark:bg-gray-700  dark:text-gray-300" />}
+                    {social.platform === "Twitter" && <Twitter className="w-3 h-3 dark:bg-gray-700  dark:text-gray-300" />}
+                    {social.platform === "Instagram" && <Instagram className="w-3 h-3 dark:bg-gray-700  dark:text-gray-300" />}
                     {social.platform}
                   </a>
                 ))}
@@ -568,14 +568,14 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
         </div>
         {/* Right Column - Main Content */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-4 dark:bg-gray-900  dark:text-gray-500">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
+            <div className="bg-white rounded-lg border  border-gray-200 p-3 dark:bg-gray-900  dark:text-gray-500 shadow-xs">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
                 TOTAL SPEND (6M)
               </h3>
-              <p className="text-lg font-semibold text-gray-900">
+              <p className="text-lg font-semibold text-gray-900  dark:text-gray-500">
                 {parseFloat(customerData.balance || 0).toLocaleString()} AED
               </p>
               <p className="text-[10px] text-gray-500 mt-0.5">
@@ -583,21 +583,21 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
               </p>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
+            <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 p-3 shadow-xs">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
                 OPEN INVOICES
               </h3>
-              <p className="text-lg font-semibold text-gray-900">3</p>
+              <p className="text-lg font-semibold text-gray-900   dark:text-gray-500">3</p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 12,450 AED total
               </p>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-xs">
+            <div className="bg-white rounded-lg border border-gray-200 dark:bg-gray-900  dark:text-gray-500 p-3 shadow-xs">
               <h3 className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1">
                 AVG. PAYMENT DAYS
               </h3>
-              <p className="text-lg font-semibold text-gray-900">45</p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-gray-500">45</p>
               <p className="text-[10px] text-gray-500 mt-0.5">
                 On time payment: 78%
               </p>
@@ -605,9 +605,9 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Recent Transactions */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
+          <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200">
-              <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
+              <h3 className="text-xs font-medium   dark:text-gray-500 text-gray-700 uppercase tracking-wider">
                 RECENT TRANSACTIONS
               </h3>
             </div>
@@ -630,9 +630,9 @@ export default function VendorDetails({ vendorId }: { vendorId: number }) {
           </div>
 
           {/* Contact Persons */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs">
+        <div className="bg-white rounded-lg border dark:bg-gray-900  dark:text-gray-500 border-gray-200 overflow-hidden shadow-xs">
             <div className="p-3 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-xs font-medium text-gray-700 uppercase tracking-wider">
+              <h3 className="text-xs font-medium text-gray-700   dark:text-gray-500 uppercase tracking-wider">
                 CONTACT PERSONS ({customerData?.persons?.length || 0})
               </h3>
               <Button size="sm" variant="outline" className="h-7">

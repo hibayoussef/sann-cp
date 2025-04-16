@@ -7,8 +7,7 @@ import { useTranslation } from "react-i18next";
 import { taxColumns } from "@/columns/products/tax";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { usePermissions } from "@/hooks/usePermissions";
-import { ReceiptText, Wallet, Wallet2, WalletCardsIcon, WalletMinimal } from "lucide-react";
-import { BsWalletFill } from "react-icons/bs";
+import { Wallet2 } from "lucide-react";
 
 export default function Taxes() {
   const { data } = useFetchTaxes();

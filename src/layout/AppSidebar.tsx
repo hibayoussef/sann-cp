@@ -417,7 +417,7 @@ type NavItem = {
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, toggleMobileSidebar } =
     useSidebar();
-  const { direction, setLanguage } = useLocaliztionStore();
+  const { direction } = useLocaliztionStore();
   const { t } = useTranslation("items");
   const { permissions } = useAuthStore();
   const hasPermission = (key?: any) => !key || permissions?.includes(key);

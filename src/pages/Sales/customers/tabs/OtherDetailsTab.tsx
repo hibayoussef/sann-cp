@@ -5,18 +5,15 @@ import {
   CustomerType,
 } from "@/components/lib/validations/customer";
 import { CustomSelect } from "@/components/ui/select/customSelect";
-import Branches from "@/pages/Settings/branches/branches";
 import { CountriesData, CurrencyResponse } from "@/types/common";
 import { IBranch } from "@/types/settings/branches";
 import { IPaymentTerm } from "@/types/settings/payment_term";
 import {
-  Building2,
-  CalendarDays,
   CreditCard,
   Flag,
   Languages,
   Lock,
-  Wallet,
+  Wallet
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";

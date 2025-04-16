@@ -1,12 +1,11 @@
 import { brandColumns } from "@/columns/products/brand";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { usePermissions } from "@/hooks/usePermissions";
-import { Tag, Tags } from "lucide-react";
+import { Tags } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
 import { useFetchBrands } from "../../../hooks/prouducts/useBrands";
-import { FaCube } from "react-icons/fa";
 
 export default function Brands() {
   const { data } = useFetchBrands();
