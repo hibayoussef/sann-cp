@@ -250,9 +250,6 @@ export default function ProductForm() {
     [subunits]
   );
 
-  console.log("subUnitOptions:", subUnitOptions);
-  console.log("subunits:", subUnitOptions);
-
   const defaultUnitOptions = useMemo(() => {
     if (!selectedUnitId) return [];
 
@@ -336,13 +333,8 @@ export default function ProductForm() {
       unit_id: productData.unit_id || 0,
       warranty_id: productData.warranty_id || null,
       sub_units: productData.sub_units?.map((su) => ({ id: su.id })) || [],
-      // is_active: productData.is_active || 0,
-      // is_active: productData?.is_active === 1 ? 1 : 0,
-      // for_selling: productData.for_selling || 1,
-
       is_active: Number(productData.is_active) === 1 ? 1 : 0,
       for_selling: Number(productData.for_selling) === 1 ? 1 : 0,
-
       branches: productData.branches?.map((b) => ({
         branch_id: b.branch_id,
         is_active: Boolean(b.is_active),
@@ -354,6 +346,11 @@ export default function ProductForm() {
     };
 
     reset(defaultValues);
+
+    // Set the selected category ID to trigger subcategory loading
+    if (productData.category_id) {
+      setSelectedCategoryId(productData.category_id);
+    }
 
     if (productData.unit_id) {
       setShouldLoadSubUnits(true);
@@ -603,27 +600,25 @@ export default function ProductForm() {
                   />
                 </div>
 
-                {selectedCategoryId && (
-                  <div>
-                    <Label htmlFor="sub_category_id">Sub Category</Label>
-                    {subCategoriesLoading ? (
-                      <p>Loading subcategories...</p>
-                    ) : (
-                      <CustomSelect
-                        name="sub_category_id"
-                        options={subCategoryOptions}
-                        placeholder="Select Sub Category"
-                        error={errors.sub_category_id?.message}
-                        onChange={(value) =>
-                          setValue("sub_category_id", Number(value))
-                        }
-                        value={selectedSubCategoryId?.toString()}
-                        isRequired={true}
-                        icon={<Tag className="w-4 h-4" />}
-                      />
-                    )}
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="sub_category_id">Sub Category</Label>
+                  {subCategoriesLoading ? (
+                    <p>Loading subcategories...</p>
+                  ) : (
+                    <CustomSelect
+                      name="sub_category_id"
+                      options={subCategoryOptions}
+                      placeholder="Select Sub Category"
+                      error={errors.sub_category_id?.message}
+                      onChange={(value) =>
+                        setValue("sub_category_id", Number(value))
+                      }
+                      value={watch("sub_category_id")?.toString()}
+                      isRequired={true}
+                      icon={<Tag className="w-4 h-4" />}
+                    />
+                  )}
+                </div>
 
                 <div>
                   <Label htmlFor="warranty_id">Warranty</Label>
@@ -879,17 +874,6 @@ export default function ProductForm() {
                   </div>
                   <div>
                     <Label htmlFor="alert_quantity">Alert Quantity</Label>
-                    {/* <Input
-                      type="number"
-                      id="alert_quantity"
-                      placeholder="Enter alert quantity"
-                      {...register("alert_quantity", {
-                        valueAsNumber: true,
-                      })}
-                      error={!!errors.alert_quantity}
-                      hint={errors.alert_quantity?.message}
-                      icon={<Info className="w-4 h-4" />}
-                    /> */}
                     <Switch
                       label=""
                       defaultChecked={watch("alert_quantity") > 0}
