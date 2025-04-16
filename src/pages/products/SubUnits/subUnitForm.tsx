@@ -1,5 +1,6 @@
 import Switch from "@/components/form/switch/Switch";
 import { subUnitSchema, type SubUnitType } from "@/components/lib/validations/subUnit";
+import Loader from "@/components/ui/loader/loader";
 import { CustomSelect } from "@/components/ui/select/customSelect";
 import {
   useAddSubUnit,
@@ -8,7 +9,7 @@ import {
 } from "@/hooks/prouducts/useSubUnits";
 import { useFetchUnits } from "@/hooks/prouducts/useUnits";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Folder, Hash, ShoppingBag, Type } from "lucide-react";
+import { Layers, Percent, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -48,10 +49,14 @@ export default function SubUnitForm() {
       unit_name_ar: "",
       short_name_en: "",
       short_name_ar: "",
-      allow_decimal: subUnitData?.allow_decimal,
+      allow_decimal: 0, // Default to 0 (false)
       multiplier: null,
     },
   });
+
+  // Watch allow_decimal and multiplier values
+  const allowDecimalValue = watch("allow_decimal");
+  const multiplierValue = watch("multiplier");
 
   const relatedToValue = watch("related_to");
 
@@ -74,38 +79,39 @@ export default function SubUnitForm() {
     if (subUnitData) {
       let relatedToValue = "";
 
-   if (subUnitData.related_to) {
-     relatedToValue =
-       typeof subUnitData.related_to === "object" &&
-       subUnitData.related_to !== null
-         ? (subUnitData.related_to as { id: number }).id.toString() // Cast to the expected type
-         : subUnitData.related_to.toString();
-   }
+      if (subUnitData.related_to) {
+        relatedToValue =
+          typeof subUnitData.related_to === "object" &&
+          subUnitData.related_to !== null
+            ? (subUnitData.related_to as { id: number }).id.toString()
+            : subUnitData.related_to.toString();
+      }
+
       reset({
-        related_to: relatedToValue || "", 
-        unit_name_en: subUnitData.unit_name_en ?? "", 
-        unit_name_ar: subUnitData.unit_name_ar ?? "",
-        short_name_en: subUnitData.short_name_en ?? "", 
-        short_name_ar: subUnitData.short_name_ar ?? "",
-        allow_decimal: subUnitData.allow_decimal === 1 ? 1 : 0,
-        multiplier: subUnitData.multiplier ? Number(subUnitData.multiplier) : 0,
+        related_to: relatedToValue || "",
+        unit_name_en: subUnitData.unit_name_en || "",
+        unit_name_ar: subUnitData.unit_name_ar || "",
+        short_name_en: subUnitData.short_name_en || "",
+        short_name_ar: subUnitData.short_name_ar || "",
+        allow_decimal: subUnitData.allow_decimal ?? 0,
+        multiplier: subUnitData.multiplier ? Number(subUnitData.multiplier) : null,
       });
     }
   }, [subUnitData, reset]);
 
   const onSubmit = async (formData: SubUnitType) => {
-  const payload: any = {
-    ...formData,
-    related_to: formData.related_to ? Number(formData.related_to) : null,
+    const payload: any = {
+      ...formData,
+      related_to: formData.related_to ? Number(formData.related_to) : null,
+    };
+
+    if (isUpdate && id) {
+      await updateSubUnit.mutateAsync({ id: id, data: payload });
+    } else {
+      await addSubUnit.mutateAsync(payload);
+    }
   };
 
-  if (isUpdate && id) {
-    await updateSubUnit.mutateAsync({ id: id, data: payload });
-  } else {
-    await addSubUnit.mutateAsync(payload);
-  }
-  };
-  
   return (
     <>
       <PageBreadcrumb
@@ -121,7 +127,7 @@ export default function SubUnitForm() {
 
       <ComponentCard title={isUpdate ? "Update Sub Unit" : "Create Sub Unit"}>
         {isUpdate && isLoading ? (
-          <p>Loading unit data...</p>
+          <Loader />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-6">
@@ -134,7 +140,7 @@ export default function SubUnitForm() {
                   searchPlaceholder="Search units..."
                   error={errors.related_to?.message}
                   onChange={(value) => handleSelectChange("related_to", value)}
-                  icon={<Folder className="w-4 h-4" />}
+                  icon={<Layers className="w-4 h-4" />}
                   value={relatedToValue}
                 />
               </div>
@@ -169,7 +175,7 @@ export default function SubUnitForm() {
                     {...register("short_name_en")}
                     placeholder="Enter short name (English)"
                     error={!!errors.short_name_en}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     hint={errors.short_name_en?.message}
                   />
                 </div>
@@ -179,7 +185,7 @@ export default function SubUnitForm() {
                     {...register("short_name_ar")}
                     placeholder="Enter short name (Arabic)"
                     error={!!errors.short_name_ar}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     hint={errors.short_name_ar?.message}
                   />
                 </div>
@@ -193,18 +199,19 @@ export default function SubUnitForm() {
                     {...register("multiplier", { valueAsNumber: true })}
                     placeholder="Enter multiplier value"
                     error={!!errors.multiplier}
-                    icon={<Hash className="w-4 h-4" />}
+                    icon={<Percent className="w-4 h-4" />}
                     hint={errors.multiplier?.message}
+                    value={multiplierValue || ""}
                   />
                 </div>
                 <div>
                   <Label>Allow Decimal</Label>
                   <Switch
                     label=""
-                    defaultChecked={watch("allow_decimal") === 1}
+                    checked={allowDecimalValue === 1}
                     onChange={(checked) =>
                       setValue("allow_decimal", checked ? 1 : 0)
-                    } // تعيين القيمة كـ 1 أو 0
+                    }
                   />
                 </div>
               </div>

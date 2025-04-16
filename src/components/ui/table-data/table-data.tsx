@@ -40,6 +40,7 @@ interface DataTableProps<TData, TValue> {
     update: boolean;
     delete: boolean;
   };
+  searchColumns?: string[];
 }
 
 export function DataTable<TData, TValue>({
@@ -50,6 +51,7 @@ export function DataTable<TData, TValue>({
   detailsLink,
   permissions,
   tableName,
+    searchColumns,
 }: DataTableProps<TData, TValue>) {
   const [tableColumns, setTableColumns] = React.useState<any>(columns);
 
@@ -92,6 +94,7 @@ export function DataTable<TData, TValue>({
         createPath={createPath}
         permissions={permissions}
         tableName={tableName}
+         searchColumns={searchColumns}
       />
       <div className="rounded-md border  border-gray-100 shadow-md bg-white dark:border-gray-700 dark:bg-gray-900">
         <Table id="table-container">
@@ -132,7 +135,7 @@ export function DataTable<TData, TValue>({
                         navigate(`${detailsLink}/${id}`);
                       }
                     }}
-                    className="cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                    className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800  active:bg-gray-100 transition-colors"
                   >
                     <TableHead
                       colSpan={1}

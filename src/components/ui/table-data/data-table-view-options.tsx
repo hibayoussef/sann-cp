@@ -1,19 +1,19 @@
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { type Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Settings2, FileText, Printer } from "lucide-react";
-import * as XLSX from "xlsx";
-import * as Papa from "papaparse";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { type Table } from "@tanstack/react-table";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { FileText, Printer, Settings2 } from "lucide-react";
+import * as Papa from "papaparse";
+import * as XLSX from "xlsx";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -26,101 +26,223 @@ export function DataTableViewOptions<TData>({
 }: DataTableViewOptionsProps<TData>) {
   const excludedExportColumns = ["Actions"];
 
-  const handleExportCSV = () => {
-    const rows = table.getRowModel().rows.map((row) =>
-      row
-        .getVisibleCells()
-        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
-        .map((cell) => cell.getValue())
-    );
-    const csv = Papa.unparse(rows);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${tableName}.csv`;
-    link.click();
-  };
+ const handleExportCSV = () => {
+  // const headers = table
+  //   .getVisibleLeafColumns()
+  //   .filter((column) => !excludedExportColumns.includes(column.id))
+  //   .map((column) => {
+  //     const columnDef = column.columnDef as any;
+  //     if (columnDef.header && typeof columnDef.header === 'string') {
+  //       return columnDef.header;
+  //     }
+  //     if (columnDef.headerName) {
+  //       return columnDef.headerName;
+  //     }
+  //     return column.id
+  //       .replace(/_/g, " ")
+  //       .replace(/\b\w/g, (char) => char.toUpperCase());
+  //   });
 
-  const handleExportExcel = () => {
-    const rows = table.getRowModel().rows.map((row) => {
-      const rowData: any = {};
-      row
-        .getVisibleCells()
-        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
-        .forEach((cell) => {
-          rowData[cell.column.id] = cell.getValue();
-        });
-      return rowData;
+  const rows = table.getRowModel().rows.map((row) => {
+    const rowData: any = {};
+    row.getVisibleCells()
+      .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+      .forEach((cell) => {
+        const columnDef = cell.column.columnDef as any;
+        const headerName = columnDef.headerName || 
+                         (columnDef.header && typeof columnDef.header === 'string' ? columnDef.header : 
+                          cell.column.id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()));
+        rowData[headerName] = cell.getValue();
+      });
+    return rowData;
+  });
+
+  const csv = Papa.unparse(rows);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${tableName}.csv`;
+  link.click();
+};
+
+const handleExportExcel = () => {
+  // const headers = table
+  //   .getVisibleLeafColumns()
+  //   .filter((column) => !excludedExportColumns.includes(column.id))
+  //   .map((column) => {
+  //     const columnDef = column.columnDef as any;
+  //     if (columnDef.header && typeof columnDef.header === 'string') {
+  //       return columnDef.header;
+  //     }
+  //     if (columnDef.headerName) {
+  //       return columnDef.headerName;
+  //     }
+  //     return column.id
+  //       .replace(/_/g, " ")
+  //       .replace(/\b\w/g, (char) => char.toUpperCase());
+  //   });
+
+  const rows = table.getRowModel().rows.map((row) => {
+    const rowData: any = {};
+    row.getVisibleCells()
+      .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+      .forEach((cell) => {
+        const columnDef = cell.column.columnDef as any;
+        const headerName = columnDef.headerName || 
+                         (columnDef.header && typeof columnDef.header === 'string' ? columnDef.header : 
+                          cell.column.id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()));
+        rowData[headerName] = cell.getValue();
+      });
+    return rowData;
+  });
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  XLSX.writeFile(wb, `${tableName}.xlsx`);
+};
+
+const handleExportPDF = () => {
+  const doc = new jsPDF();
+  
+  // الحصول على العناوين الحقيقية
+  const headers = table
+    .getVisibleLeafColumns()
+    .filter((column) => !excludedExportColumns.includes(column.id))
+    .map((column) => {
+      const columnDef = column.columnDef as any;
+      if (columnDef.header && typeof columnDef.header === 'string') {
+        return columnDef.header;
+      }
+      if (columnDef.headerName) {
+        return columnDef.headerName;
+      }
+      return column.id
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
     });
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, `${tableName}.xlsx`);
-  };
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-    const headers = table
-      .getVisibleLeafColumns()
-      .filter((column) => !excludedExportColumns.includes(column.id))
-      .map((column) => column.id);
+  // الحصول على البيانات
+  const data = table.getRowModel().rows.map((row) =>
+    row
+      .getVisibleCells()
+      .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+      .map((cell) => {
+        const value = cell.getValue();
+        return typeof value === "string" || typeof value === "number"
+          ? value
+          : JSON.stringify(value);
+      })
+  );
 
-    const data = table.getRowModel().rows.map((row) =>
-      row
-        .getVisibleCells()
-        .filter((cell) => !excludedExportColumns.includes(cell.column.id))
-        .map((cell) => {
-          const value = cell.getValue();
-          return typeof value === "string" || typeof value === "number"
-            ? value
-            : JSON.stringify(value);
-        })
-    );
+  doc.text(tableName ? tableName : "Table Export", 14, 16);
 
-     doc.text(tableName ? tableName: "Table Export", 14, 16);
+  autoTable(doc, {
+    head: [headers],
+    body: data,
+    startY: 20,
+    styles: {
+      fontSize: 10,
+    },
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+    },
+    alternateRowStyles: {
+      fillColor: [245, 245, 245],
+    },
+  });
 
-    autoTable(doc, {
-      head: [headers],
-      body: data,
-      startY: 20,
-      styles: {
-        fontSize: 10,
-      },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-      },
-      alternateRowStyles: {
-        fillColor: [245, 245, 245],
-      },
+  doc.save(`${tableName}.pdf`);
+};
+
+ 
+const handlePrint = () => {
+  // الحصول على العناوين الحقيقية من تعريفات الأعمدة
+  const headers = table
+    .getVisibleLeafColumns()
+    .filter((column) => !excludedExportColumns.includes(column.id))
+    .map((column) => {
+      // محاولة الحصول على العنوان من خاصية columnDef.header أو column.id
+      const columnDef = column.columnDef as any;
+      if (columnDef.header && typeof columnDef.header === 'string') {
+        return columnDef.header;
+      }
+      if (columnDef.headerName) {
+        return columnDef.headerName;
+      }
+      return column.id
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
     });
 
-    doc.save(`${tableName}.pdf`);
-  };
+  const data = table.getRowModel().rows.map((row) =>
+    row
+      .getVisibleCells()
+      .filter((cell) => !excludedExportColumns.includes(cell.column.id))
+      .map((cell) => {
+        const value = cell.getValue();
+        return typeof value === "string" || typeof value === "number"
+          ? value
+          : JSON.stringify(value);
+      })
+  );
 
-  const handlePrint = () => {
-    const printContent = document.getElementById("table-container")?.innerHTML;
-    const newWindow = window.open("", "", "width=800,height=600");
-    newWindow?.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-          <style>
-            body { font-family: Arial, sans-serif; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          </style>
-        </head>
-        <body>
-          <h2>Table Print</h2>
-          ${printContent}
-        </body>
-      </html>
-    `);
-    newWindow?.document.close();
-    newWindow?.print();
-  };
+  const printContent = `
+    <html>
+      <head>
+        <title>Print</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          h1 { color: #333; text-align: center; margin-bottom: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th { background-color: #465FFF; color: white;  text-align: left; padding: 10px; border: 1px solid #ddd; }
+          td { padding: 8px; border: 1px solid #ddd; }
+          @media print {
+            body { margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+              th { 
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              background-color: #465FFF;
+              color: #ffffff;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${tableName || "Table Print"}</h1>
+        <table>
+          <thead>
+            <tr>
+              ${headers.map((header) => `<th>${header}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${data
+              .map(
+                (row) => `
+              <tr>
+                ${row.map((cell) => `<td>${cell}</td>`).join("")}
+              </tr>`
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
 
+  const printWindow = window.open("", "_blank");
+  if (printWindow) {
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  }
+};
   return (
     <div className="flex space-x-4">
       <Button

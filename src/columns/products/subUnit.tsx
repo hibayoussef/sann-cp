@@ -63,7 +63,7 @@ export const subUnitColumns = (permissions?: {
       <DataTableRowActions
         row={row}
         schema={unitSchema}
-        viewDetails={`/sub-units/${row.original.id}`}
+        // viewDetails={`/sub-units/${row.original.id}`}
         editItem={`/sub-units/update/${row.original.id}`}
         onDelete={(id) => console.log(`Deleting sub-unit ID: ${id}`)}
         permissions={permissions}

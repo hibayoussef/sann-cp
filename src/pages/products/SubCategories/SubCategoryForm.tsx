@@ -2,6 +2,8 @@ import {
   subCategorySchema,
   type SubCategoryType,
 } from "@/components/lib/validations/subCategory";
+import Loader from "@/components/ui/loader/loader";
+import { CustomSelect } from "@/components/ui/select/customSelect";
 import { useFetchCategories } from "@/hooks/prouducts/useCategories";
 import {
   useAddSubCategory,
@@ -9,17 +11,16 @@ import {
   useUpdateSubCategory,
 } from "@/hooks/prouducts/useSubCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, Folder, Tag } from "lucide-react";
+import { Code, Folder, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
-import { IoAdd } from "react-icons/io5";
-import { CustomSelect } from "@/components/ui/select/customSelect";
 
 const isFieldRequired = (fieldName: keyof SubCategoryType): boolean => {
   const schemaShape = subCategorySchema.shape;
@@ -40,7 +41,7 @@ export default function SubCategoryForm() {
 
   const { data: categories } = useFetchCategories();
 
-  const { data: subCategoryData, isLoading } = useFetchSubCategory(Number(id), {
+  const { data: subCategoryData, isLoading }: any = useFetchSubCategory(Number(id), {
     enabled: isUpdate,
   });
 
@@ -58,7 +59,7 @@ export default function SubCategoryForm() {
   } = useForm<SubCategoryType>({
     resolver: zodResolver(subCategorySchema),
     defaultValues: {
-      category_id: subCategoryData?.category_id?.toString() ?? "",
+      category_id: subCategoryData?.related_to?.id?.toString() ?? "",
       sub_category_name_en: subCategoryData?.sub_category_name_en ?? "",
       sub_category_name_ar: subCategoryData?.sub_category_name_ar ?? "",
       code: subCategoryData?.code ?? "",
@@ -85,9 +86,9 @@ export default function SubCategoryForm() {
       }));
       setCategoryOptions(options);
 
-      if (subCategoryData?.category_id && options.length > 0) {
+      if (subCategoryData?.related_to?.id && options.length > 0) {
         const selectedCategory = options.find(
-          (opt) => opt.value === subCategoryData.category_id?.toString()
+          (opt) => opt.value === subCategoryData.related_to.id?.toString()
         );
         if (selectedCategory) {
           setValue("category_id", selectedCategory.value);
@@ -98,17 +99,10 @@ export default function SubCategoryForm() {
 
   useEffect(() => {
     if (subCategoryData) {
-      // تأخير تعيين القيم حتى يتم تحميل الخيارات
       setTimeout(() => {
-        setValue("category_id", subCategoryData.category_id?.toString() ?? "");
-        setValue(
-          "sub_category_name_en",
-          subCategoryData.sub_category_name_en ?? ""
-        );
-        setValue(
-          "sub_category_name_ar",
-          subCategoryData.sub_category_name_ar ?? ""
-        );
+        setValue("category_id", subCategoryData?.related_to.id?.toString() ?? "");
+        setValue("sub_category_name_en", subCategoryData?.sub_category_name_en ?? "");
+        setValue("sub_category_name_ar", subCategoryData?.sub_category_name_ar ?? "");
         setValue("description_en", subCategoryData.description_en ?? "");
         setValue("description_ar", subCategoryData.description_ar ?? "");
         setValue("code", subCategoryData.code ?? "");
@@ -149,7 +143,7 @@ export default function SubCategoryForm() {
         title={isUpdate ? "Update Sub Category" : "Create Sub Category"}
       >
         {isUpdate && isLoading ? (
-          <p>Loading Sub Category data...</p>
+          <Loader />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -165,7 +159,7 @@ export default function SubCategoryForm() {
                   onChange={(value) => handleSelectChange("category_id", value)}
                   isRequired={isFieldRequired("category_id")}
                   icon={<Folder className="w-4 h-4" />}
-                  value={categoryId}
+                  value={categoryId || subCategoryData?.related_to?.id?.toString()}
                 />
               </div>
 
@@ -180,11 +174,36 @@ export default function SubCategoryForm() {
                   error={!!errors.code}
                   hint={errors.code?.message}
                   icon={<Code className="w-4 h-4" />}
+                  className="dark:bg-gray-900"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* English Section */}
+              <div>
+                <div className="py-2">
+                  <Label htmlFor="sub_category_name_en">Name (En)</Label>
+                  <Input
+                    type="text"
+                    id="sub_category_name_en"
+                    placeholder="Enter sub category name (En)"
+                    {...register("sub_category_name_en")}
+                    error={!!errors.sub_category_name_en}
+                    hint={errors.sub_category_name_en?.message}
+                    icon={<Type className="w-4 h-4" />}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="description_en">Description (En)</Label>
+                  <TextArea
+                    rows={6}
+                    {...register("description_en")}
+                    error={!!errors.description_en}
+                    hint={errors.description_en?.message}
+                  />
+                </div>
+              </div>
               {/* Arabic Section */}
               <div>
                 <div className="py-2">
@@ -196,7 +215,7 @@ export default function SubCategoryForm() {
                     {...register("sub_category_name_ar")}
                     error={!!errors.sub_category_name_ar}
                     hint={errors.sub_category_name_ar?.message}
-                    icon={<Tag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div>
@@ -210,30 +229,7 @@ export default function SubCategoryForm() {
                 </div>
               </div>
 
-              {/* English Section */}
-              <div>
-                <div className="py-2">
-                  <Label htmlFor="sub_category_name_en">Name (En)</Label>
-                  <Input
-                    type="text"
-                    id="sub_category_name_en"
-                    placeholder="Enter sub category name (En)"
-                    {...register("sub_category_name_en")}
-                    error={!!errors.sub_category_name_en}
-                    hint={errors.sub_category_name_en?.message}
-                    icon={<Tag className="w-4 h-4" />}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="description_en">Description (En)</Label>
-                  <TextArea
-                    rows={6}
-                    {...register("description_en")}
-                    error={!!errors.description_en}
-                    hint={errors.description_en?.message}
-                  />
-                </div>
-              </div>
+          
             </div>
 
             <div className="flex justify-end mt-6">

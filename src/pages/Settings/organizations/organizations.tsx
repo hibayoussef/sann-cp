@@ -29,6 +29,7 @@ export default function Organizations() {
         />
         <div className="space-y-4 pt-10">
           <DataTable
+             tableName="Organizations"
             columns={branchColumns({
               update: hasPermission("update", "categories"),
               delete: hasPermission("delete", "categories"),

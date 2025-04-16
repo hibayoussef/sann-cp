@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 // Components
 import ComponentCard from "@/components/common/ComponentCard";
@@ -21,7 +20,6 @@ import {
 } from "@/components/lib/validations/customer";
 
 // Hooks
-import { useFetchContact, useUpdateContact } from "@/hooks/sales/contacts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
@@ -35,6 +33,7 @@ import { OtherDetailsTab } from "../customers/tabs/OtherDetailsTab";
 import ContactDetailsTab from "../customers/tabs/ContactDetailsTab";
 import ContactPersonTab from "../customers/tabs/ContactPersonTab";
 import AddressTab from "../customers/tabs/AddressTab";
+import { useFetchContact, useUpdateContact } from "@/hooks/sales/vendors";
 
 const TABS = [
   { id: 1, name: "Other Details" },
@@ -42,7 +41,6 @@ const TABS = [
   { id: 3, name: "Contact Persons" },
   { id: 4, name: "Addresses" },
 ];
-
 function cleanContactObject(obj: any): any {
   if (!obj) return null;
 
@@ -55,16 +53,18 @@ function cleanContactObject(obj: any): any {
     ) {
       return acc;
     }
+
     if (Array.isArray(value) && value.length === 0) {
       return acc;
     }
+
     return { ...acc, [key]: value };
   }, {});
 
   return Object.keys(cleaned).length > 0 ? cleaned : null;
 }
 
-export default function UpdateCustomer() {
+export default function UpdateVendor() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
   const organizationId = useMeStore((state) => state.organizationId);
@@ -90,6 +90,42 @@ export default function UpdateCustomer() {
       portal_language: "en",
       contact_details: {
         social_media: [],
+        passport_number: "",
+        work_phone: "",
+        website_url: "",
+        department: "",
+        profession: "",
+        designation: "",
+        id_issued_date: "",
+        id_expiry_date: "",
+        unified_number: "",
+        date_of_birth: "",
+        place_of_birth: "",
+        visit_visa_number: "",
+        driving_license_number: "",
+        driving_license_issued_by: undefined,
+        driving_license_issued_date: "",
+        driving_license_expiry_date: "",
+        home_address: "",
+        work_address: "",
+        p_o_box: "",
+        billing_address_attention: "",
+        billing_address_country_id: undefined,
+        billing_address_street_1: "",
+        billing_address_street_2: "",
+        billing_address_city: "",
+        billing_address_country_state_id: undefined,
+        billing_address_zip_code: "",
+        billing_address_phone: "",
+        billing_address_fax_number: "",
+        shipping_address_attention: "",
+        shipping_address_country_id: undefined,
+        shipping_address_street_1: "",
+        shipping_address_street_2: "",
+        shipping_address_city: "",
+        shipping_address_country_state_id: "",
+        shipping_address_zip_code: "",
+        shipping_address_fax_number: "",
       },
       contact_persons: [],
     },
@@ -110,8 +146,6 @@ export default function UpdateCustomer() {
     }
     return sm;
   };
-
-  // Load customer data into form
   useEffect(() => {
     if (customerData) {
       const { details, persons, ...mainData } = customerData;
@@ -129,6 +163,23 @@ export default function UpdateCustomer() {
           ? {
               ...details,
               social_media: parseSocialMedia(details.social_media),
+              id_issued_date: details.id_issued_date || null,
+              id_expiry_date: details.id_expiry_date || null,
+              date_of_birth: details.date_of_birth || null,
+              driving_license_issued_date:
+                details.driving_license_issued_date || null,
+              driving_license_expiry_date:
+                details.driving_license_expiry_date || null,
+              billing_address_country_id:
+                details.billing_address_country_id?.toString(),
+              billing_address_country_state_id:
+                details.billing_address_country_state_id?.toString(),
+              shipping_address_country_id:
+                details.shipping_address_country_id?.toString(),
+              shipping_address_country_state_id:
+                details.shipping_address_country_state_id?.toString(),
+              driving_license_issued_by:
+                details.driving_license_issued_by || "",
             }
           : undefined,
         contact_persons:
@@ -142,7 +193,6 @@ export default function UpdateCustomer() {
     }
   }, [customerData, methods]);
 
-  // Stringify social media for API payload
   const stringifySocialMedia = (
     sm: ISocialMedia[] | string | null | undefined
   ): string | null => {
@@ -158,27 +208,53 @@ export default function UpdateCustomer() {
     return JSON.stringify(sm);
   };
 
-  // Handle form submission
   const onSubmit = async (formData: CustomerType) => {
     try {
-      const full_name_ar = `${formData.first_name_ar} ${formData.last_name_ar}`;
-      const full_name_en = `${formData.first_name_en} ${formData.last_name_en}`;
+      const full_name_ar = `${formData.first_name_ar || ""} ${
+        formData.last_name_ar || ""
+      }`.trim();
+      const full_name_en = `${formData.first_name_en || ""} ${
+        formData.last_name_en || ""
+      }`.trim();
 
-      // Clean contact details object
-      let contactDetails = cleanContactObject(formData.contact_details);
+      const cleanedContactDetails = cleanContactObject({
+        ...formData.contact_details,
+        social_media: stringifySocialMedia(
+          formData.contact_details?.social_media
+        ),
+        // billing_address_country_id: formData.contact_details?.billing_address_country_id || undefined,
+        // billing_address_country_state_id: formData.contact_details?.billing_address_country_state_id || undefined,
+        shipping_address_country_id:
+          formData.contact_details?.shipping_address_country_id || undefined,
+        shipping_address_country_state_id:
+          formData.contact_details?.shipping_address_country_state_id ||
+          undefined,
+        driving_license_issued_by:
+          formData.contact_details?.driving_license_issued_by || undefined,
+        billing_address_country_id:
+          formData.contact_details?.billing_address_country_id?.toString() ||
+          undefined,
+        billing_address_country_state_id:
+          formData.contact_details?.billing_address_country_state_id?.toString() ||
+          undefined,
+      });
 
-      // Process social media if contact details exist
-      if (contactDetails) {
-        contactDetails = {
-          ...contactDetails,
-          social_media: stringifySocialMedia(contactDetails.social_media),
-        };
-      }
+      const contactPersons =
+        formData.contact_persons?.map((person: any) => ({
+          ...person,
+          social_media: stringifySocialMedia(person.social_media),
+          full_name_ar: `${person.first_name_ar || ""} ${
+            person.last_name_ar || ""
+          }`.trim(),
+          full_name_en: `${person.first_name_en || ""} ${
+            person.last_name_en || ""
+          }`.trim(),
+        })) || [];
 
-      const payload: any = {
+      const payload = {
         ...formData,
         id: Number(id),
-        organization_id: organizationId?.toString()!,
+        organization_id: organizationId?.toString(),
         full_name_ar,
         full_name_en,
         branch_id: Number(formData.branch_id),
@@ -188,33 +264,23 @@ export default function UpdateCustomer() {
         nationality_id: Number(formData.nationality_id),
         exchange_rate: formData.exchange_rate.toString(),
         balance: formData.balance.toString(),
-        contact_details: contactDetails,
-        contact_persons:
-          formData?.contact_persons?.map((person: any) => ({
-            ...person,
-            social_media: stringifySocialMedia(person?.social_media),
-            full_name_ar: `${person.first_name_ar} ${person.last_name_ar}`,
-            full_name_en: `${person.first_name_en} ${person.last_name_en}`,
-          })) || [],
+        contact_details: cleanedContactDetails,
+        contact_persons: contactPersons,
       };
 
-      const updatedPayload = {
-        ...payload,
-        _method: "PUT",
-      };
+      const finalPayload = JSON.parse(JSON.stringify(payload));
 
       await updateCustomer.mutateAsync({
         id: Number(id),
-        data: updatedPayload,
+        data: {
+          ...finalPayload,
+          _method: "PUT",
+        },
       });
-
-      toast.success("Customer updated successfully");
     } catch (error) {
       console.error("Error updating customer:", error);
-      toast.error("Failed to update customer");
     }
   };
-
   if (isLoading) {
     return <Loader />;
   }
@@ -241,7 +307,7 @@ export default function UpdateCustomer() {
       <ComponentCard title="Update Vendor Details">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Vendor Type Selection */}
+            {/* Customer Type Selection */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-4">
@@ -356,37 +422,6 @@ export default function UpdateCustomer() {
                   hint={methods.formState.errors.mobile?.message}
                   placeholder="Enter phone number"
                   icon={<Phone className="w-4 h-4" />}
-                />
-              </div>
-            </div>
-
-            {/* Other Details - Exchange Rate and Balance */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label>Exchange Rate</Label>
-                <Input
-                  type="number"
-                  step={0.01}
-                  {...methods.register("exchange_rate", {
-                    valueAsNumber: true,
-                  })}
-                  error={!!methods.formState.errors.exchange_rate}
-                  hint={methods.formState.errors.exchange_rate?.message}
-                  placeholder="1.00"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Balance</Label>
-                <Input
-                  type="number"
-                  step={0.01}
-                  {...methods.register("balance", {
-                    valueAsNumber: true,
-                  })}
-                  error={!!methods.formState.errors.balance}
-                  hint={methods.formState.errors.balance?.message}
-                  placeholder="0.00"
                 />
               </div>
             </div>

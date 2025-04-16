@@ -35,16 +35,16 @@ export const accountSchema = z.object({
 
   description_en: z
     .string()
-    .min(5, {
-      message: "Description (EN) must be at least 5 characters",
+    .min(2, {
+      message: "Description (EN) must be at least 2 characters",
     })
     .optional()
     .or(z.literal("")),
 
   description_ar: z
     .string()
-    .min(5, {
-      message: "Description (AR) must be at least 5 characters",
+    .min(2, {
+      message: "Description (AR) must be at least 2 characters",
     })
     .optional()
     .or(z.literal("")),
@@ -57,7 +57,7 @@ export const accountSchema = z.object({
     .number({
       required_error: "Balance is required",
     })
-    .min(1, {
+    .min(0, {
       message: "Balance must be provided",
     }),
 

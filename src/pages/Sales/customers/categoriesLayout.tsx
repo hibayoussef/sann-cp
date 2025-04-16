@@ -11,9 +11,9 @@ import { useFetchCategories } from "@/hooks/prouducts/useCategories";
 import { Home, MoreVertical, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import CategoryDetails from "./customerDetails";
 import ComponentCardDetails from "@/components/common/ComponentCardDetails";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import CategoryDetails from "@/pages/products/Categories/categoryDetails";
 
 export default function CategoriesLayout() {
   const { data } = useFetchCategories();

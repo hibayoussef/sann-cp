@@ -36,4 +36,8 @@ export enum QueryKeys {
   ACCOUNT_TYPES = "account-types",
   QR_CODE = "qr-code",
   RECOVERY_CODES = "recovery-codes",
+  MAPSETTINGS = "mapSettings",
+  MAPSETTING = "mapSetting",
+  ALLOWED_BRANCHES = "allowedBranches",
+  PRODUCT_STATUS = "product-status",
 }

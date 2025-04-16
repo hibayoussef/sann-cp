@@ -8,7 +8,7 @@ import {
   useUpdateCategory,
 } from "@/hooks/prouducts/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, Tag } from "lucide-react";
+import { Code, Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -92,6 +92,18 @@ export default function CategoryForm() {
             <p>Loading Category data...</p>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1">
+                <Label htmlFor="code">Code</Label>
+                <Input
+                  type="text"
+                  id="code"
+                  placeholder="Please enter category code"
+                  {...register("code")}
+                  error={!!errors.code}
+                  hint={errors.code?.message}
+                  icon={<Code className="w-4 h-4" />}
+                />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="py-2">
@@ -103,7 +115,7 @@ export default function CategoryForm() {
                       {...register("category_name_ar")}
                       error={!!errors.category_name_ar}
                       hint={errors.category_name_ar?.message}
-                      icon={<Tag className="w-4 h-4" />}
+                      icon={<Type className="w-4 h-4" />}
                     />
                   </div>
                   <div>
@@ -127,7 +139,7 @@ export default function CategoryForm() {
                       {...register("category_name_en")}
                       error={!!errors.category_name_en}
                       hint={errors.category_name_en?.message}
-                      icon={<Tag className="w-4 h-4" />}
+                      icon={<Type className="w-4 h-4" />}
                     />
                   </div>
                   <div>
@@ -140,19 +152,6 @@ export default function CategoryForm() {
                     />
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-6">
-                <Label htmlFor="code">Code</Label>
-                <Input
-                  type="text"
-                  id="code"
-                  placeholder="Please enter category code"
-                  {...register("code")}
-                  error={!!errors.code}
-                  hint={errors.code?.message}
-                  icon={<Code className="w-4 h-4" />}
-                />
               </div>
 
               <div className="flex justify-end mt-6">

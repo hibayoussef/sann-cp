@@ -74,7 +74,7 @@ export const unitColumns = (permissions?: {
       <DataTableRowActions
         row={row}
         schema={unitSchema}
-        viewDetails={`/units/${row.original.id}`}
+        // viewDetails={`/units/${row.original.id}`}
         editItem={`/units/update/${row.original.id}`}
         onDelete={(id) => console.log(`Deleting unit ID: ${id}`)}
         permissions={permissions}

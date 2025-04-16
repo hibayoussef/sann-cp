@@ -27,16 +27,17 @@ export interface IContactDetails {
   work_address?: string;
   p_o_box?: string;
   billing_address_attention?: string;
-  billing_address_country_id?: string;
+
+  billing_address_country_id?: string | null;
+  billing_address_country_state_id?: string | null;
   billing_address_street_1?: string;
   billing_address_street_2?: string;
   billing_address_city?: string;
-  billing_address_country_state_id?: string;
   billing_address_zip_code?: string;
   billing_address_phone?: string;
   billing_address_fax_number?: string;
   shipping_address_attention?: string;
-  shipping_address_country_id?: string;
+  shipping_address_country_id?: string | null;
   shipping_address_street_1?: string;
   shipping_address_street_2?: string;
   shipping_address_city?: string;

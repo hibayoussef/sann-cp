@@ -28,6 +28,7 @@ export default function Accounts() {
         />
         <div className="space-y-4 pt-1">
           <DataTable
+             tableName="Chart Of Accounts"
             columns={accountColumns({
               update: hasPermission("update", "accounts"),
               delete: hasPermission("delete", "accounts"),

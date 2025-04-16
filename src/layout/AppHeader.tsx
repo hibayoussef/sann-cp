@@ -15,13 +15,21 @@ import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
 
 const AppHeader: React.FC = () => {
+  const [dir] = useState<"ltr" | "rtl">("ltr");
   const navigate = useNavigate();
   const location = useLocation();
 
   const isSettingsPage = location.pathname.startsWith("/settings");
 
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
-  const { setLanguage } = useLocaliztionStore();
+   
+
+    const { direction, setLanguage } = useLocaliztionStore();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("dir", direction);
+  }, [direction]);
+
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
   const handleToggle = () => {
@@ -53,9 +61,12 @@ const AppHeader: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+  document.documentElement.setAttribute("dir", dir);
+  }, [dir]);
+
   return (
-    <header className="sticky top-0 flex w-full bg-whiteborder-b bg-white border-gray-200 z-50 dark:border-gray-800 dark:bg-gray-900 lg:border-b h-12 shadow-md">
-      {" "}
+     <header className={`sticky top-0 flex w-full bg-white border-b  border-gray-200 z-50 dark:border-gray-800 dark:bg-gray-900 lg:border-b h-12 shadow-md ${direction === 'rtl' ? 'text-right' : 'text-left'}`}> {" "}
       <div className="flex flex-col items-center justify-between flex-grow lg:flex-row lg:px-6 ">
         <div className="flex items-center justify-between w-full gap-1  px-3 py-1 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
           {isSettingsPage && (
@@ -276,6 +287,7 @@ const AppHeader: React.FC = () => {
             </svg>
           </button>
           <div className="flex justify-end rigth">
+            
             <UserDropdown />
           </div>
           <SettingsDropdown />

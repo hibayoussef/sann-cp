@@ -8,8 +8,10 @@ import {
   useUpdateBrand,
 } from "@/hooks/prouducts/useBrands";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Type } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
@@ -17,8 +19,6 @@ import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
-import { ShoppingBag } from "lucide-react";
-import { IoAdd } from "react-icons/io5";
 
 export default function BrandForm() {
   const { id } = useParams();
@@ -100,7 +100,7 @@ export default function BrandForm() {
                     {...register("brand_name_en")}
                     error={!!errors.brand_name_en}
                     hint={errors.brand_name_en?.message}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div>
@@ -125,7 +125,7 @@ export default function BrandForm() {
                     {...register("brand_name_ar")}
                     error={!!errors.brand_name_ar}
                     hint={errors.brand_name_ar?.message}
-                    icon={<ShoppingBag className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                   />
                 </div>
                 <div>

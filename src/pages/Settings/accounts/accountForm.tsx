@@ -1,3 +1,4 @@
+import DropzoneComponent from "@/components/form/form-elements/DropZone";
 import TextArea from "@/components/form/input/TextArea";
 import {
   accountSchema,
@@ -14,16 +15,18 @@ import {
 } from "@/hooks/settings/useAccounts";
 import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchCurrencies } from "@/hooks/useCommon";
+import { FileType } from "@/types/enums/attatchementType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Banknote,
   BookOpen,
+  Code,
   Codesandbox,
   CreditCard,
   GitBranch,
   Hash,
-  Tag,
-  X,
+  Type,
+  X
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,15 +58,6 @@ export default function AccountForm() {
   const [isSubAccount, setIsSubAccount] = useState(false);
   const [isWatchlist, setIsWatchlist] = useState(false);
 
-  // Data fetching
-  const { data: accountData, isLoading }: any = useFetchAccount(Number(id), {
-    enabled: isUpdate,
-  });
-  const { data: accountTypes } = useFetchAccountTypes();
-  const { data: branches } = useFetchBranches();
-  const { data: currencies } = useFetchCurrencies();
-  const { data: accounts } = useFetchAccounts();
-
   // Form setup
   const {
     register,
@@ -87,12 +81,22 @@ export default function AccountForm() {
       parent_account_id: undefined,
     },
   });
+  // Data fetching
+  const { data: accountData, isLoading }: any = useFetchAccount(Number(id), {
+    enabled: isUpdate,
+  });
+  const { data: accountTypes } = useFetchAccountTypes();
+  const { data: branches } = useFetchBranches();
+  const remainingBranches = branches?.filter(
+    (branch) => !watch("branches")?.includes(branch.id)
+  );
+  const canAddBranch = remainingBranches && remainingBranches?.length > 0;
+  const { data: currencies } = useFetchCurrencies();
+  const { data: accounts } = useFetchAccounts();
 
   // Derived values
   const isBankAccount = selectedAccountType === "Bank";
   const isCreditCard = selectedAccountType === "Credit Card";
-
-  // Set form values when data loads (for update)
   useEffect(() => {
     if (accountData) {
       const fields: (keyof AccountType)[] = [
@@ -104,7 +108,6 @@ export default function AccountForm() {
         "description_ar",
         "account_number",
         "currency_id",
-        "branches",
         "balance",
         "parent_account_id",
       ];
@@ -113,10 +116,16 @@ export default function AccountForm() {
         setValue(field, accountData[field] ?? (field === "balance" ? 0 : ""));
       });
 
+      if (accountData.branches) {
+        setValue(
+          "branches",
+          accountData.branches.map((branch: any) => branch.id)
+        );
+      }
+
       setIsSubAccount(!!accountData.parent_account_id);
       setIsWatchlist(accountData.is_watchlist ?? false);
 
-      // Set account type name if available
       if (accountData.account_type_id && accountTypes) {
         const typeName = findAccountTypeName(
           accountData.account_type_id,
@@ -151,7 +160,7 @@ export default function AccountForm() {
         children: category.items.map((item: any) => ({
           value: item.id.toString(),
           label: item.type_en,
-          prefix_code: item.prefix_code.toString(),
+          // prefix_code: item.prefix_code.toString(),
           isParent: false,
         })),
       }));
@@ -245,7 +254,20 @@ export default function AccountForm() {
           </div>
         }
       />
-
+      <div className="mb-3">
+        <DropzoneComponent
+          id={accountData?.id}
+          initialImage={
+            accountData?.attachments?.file_path
+              ? accountData?.attachments?.file_path
+              : ""
+          }
+          type={FileType.ACCOUNT}
+          onUpload={(fileData) => {
+            console.log("Uploaded file data:", fileData);
+          }}
+        />
+      </div>
       <ComponentCard title={isUpdate ? "Update Account" : "Create Account"}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-8">
@@ -279,7 +301,7 @@ export default function AccountForm() {
                     {...register("account_code")}
                     error={!!errors.account_code}
                     hint={errors.account_code?.message}
-                    icon={<Hash className="w-4 h-4 text-gray-500" />}
+                    icon={<Code className="w-4 h-4 text-gray-500" />}
                   />
                 </div>
 
@@ -315,7 +337,7 @@ export default function AccountForm() {
                     {...register("account_name_ar")}
                     error={!!errors.account_name_ar}
                     hint={errors.account_name_ar?.message}
-                    icon={<Tag className="w-4 h-4 text-gray-500" />}
+                    icon={<Type className="w-4 h-4 text-gray-500" />}
                   />
                 </div>
 
@@ -330,7 +352,7 @@ export default function AccountForm() {
                     {...register("account_name_en")}
                     error={!!errors.account_name_en}
                     hint={errors.account_name_en?.message}
-                    icon={<Tag className="w-4 h-4 text-gray-500" />}
+                    icon={<Type className="w-4 h-4 text-gray-500" />}
                   />
                 </div>
 
@@ -414,48 +436,63 @@ export default function AccountForm() {
                         value={watch("currency_id")?.toString()}
                       />
                     </div>
-
                     {isBankAccount && (
                       <div className="md:col-span-2">
                         <Label className="mb-2 block">Branches</Label>
                         <div className="space-y-3">
-                          {(watch("branches") || []).map((_, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-3"
-                            >
-                              <div className="flex-1">
-                                <CustomSelect
-                                  name={`branches.${index}`}
-                                  options={formatOptions.branches(branches)}
-                                  placeholder="Select Branch"
-                                  error={errors.branches?.[index]?.message}
-                                  onChange={(value) =>
-                                    handleBranchChange(value, index)
-                                  }
-                                  icon={
-                                    <GitBranch className="w-4 h-4 text-gray-500" />
-                                  }
-                                  value={watch(`branches.${index}`)?.toString()}
-                                />
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveBranch(index)}
-                                className="p-2 text-red-500 hover:text-red-600 rounded-full hover:bg-red-50"
+                          {(watch("branches") || []).map((branchId, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className="flex items-center gap-3"
                               >
-                                <X className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={handleAddBranch}
-                            className="text-blue-600 hover:text-blue-700 flex items-center gap-2 text-sm font-medium mt-2"
-                          >
-                            <IoAdd className="w-4 h-4" />
-                            Add Branch
-                          </button>
+                                <div className="flex-1">
+                                  <CustomSelect
+                                    name={`branches.${index}`}
+                                    options={formatOptions.branches(branches)}
+                                    placeholder="Select Branch"
+                                    error={errors.branches?.[index]?.message}
+                                    onChange={(value) =>
+                                      handleBranchChange(value, index)
+                                    }
+                                    icon={
+                                      <GitBranch className="w-4 h-4 text-gray-500" />
+                                    }
+                                    value={branchId?.toString()}
+                                  />
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveBranch(index)}
+                                  className="p-2 text-red-500 hover:text-red-600 rounded-full hover:bg-red-50"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            );
+                          })}
+
+                          <div className="relative inline-block group">
+                            <button
+                              type="button"
+                              onClick={handleAddBranch}
+                              disabled={!canAddBranch}
+                              className={`text-blue-600 hover:text-blue-700 flex items-center gap-2 text-sm font-medium mt-2 ${
+                                !canAddBranch
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : ""
+                              }`}
+                            >
+                              <IoAdd className="w-4 h-4" />
+                              Add Branch
+                            </button>
+
+                            {!canAddBranch && (
+                              <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 bottom-full mb-2 whitespace-nowrap">
+                                No other branches available to select
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -496,10 +533,10 @@ export default function AccountForm() {
                     </div>
 
                     {isSubAccount && (
-                      <div className="flex items-center gap-6 p-3 bg-white rounded-lg border border-gray-200">
+                      <div className="flex items-center gap-1 p-3 bg-white rounded-lg border border-gray-200">
                         <Label
                           htmlFor="parent_account_id"
-                          className="min-w-[150px] block font-medium text-gray-700"
+                          className="min-w-[100px] font-medium text-gray-700 text-sm"
                         >
                           Parent Account
                         </Label>

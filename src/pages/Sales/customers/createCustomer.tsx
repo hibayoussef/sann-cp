@@ -8,7 +8,7 @@ import { useFetchBranches } from "@/hooks/settings/useBranches";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { useFetchCountries, useFetchCurrencies } from "@/hooks/useCommon";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Info, Mail, Phone } from "lucide-react";
+import { Mail, Phone, Type } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
@@ -29,6 +29,7 @@ const TABS = [
   { id: 3, name: "Contact Person" },
   { id: 4, name: "Address" },
 ];
+
 function cleanContactDetails(contactDetails: any): any {
   if (!contactDetails) return null;
 
@@ -67,8 +68,9 @@ export default function CustomerForm() {
       exchange_rate: 1,
       balance: 1,
       contact_type: "individual",
-      portal_access: "1",
-      portal_language: "ar",
+      portal_access: "0",
+      portal_language: "en", 
+
     },
   });
 
@@ -171,7 +173,7 @@ export default function CustomerForm() {
                     {...methods.register("first_name_en")}
                     error={!!methods.formState.errors.first_name_en}
                     hint={methods.formState.errors.first_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your First Name (En)"
                   />
                 </div>
@@ -182,7 +184,7 @@ export default function CustomerForm() {
                     {...methods.register("first_name_ar")}
                     error={!!methods.formState.errors.first_name_ar}
                     hint={methods.formState.errors.first_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your First Name (Ar)"
                   />
                 </div>
@@ -194,7 +196,7 @@ export default function CustomerForm() {
                     {...methods.register("last_name_en")}
                     error={!!methods.formState.errors.last_name_en}
                     hint={methods.formState.errors.last_name_en?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your Last Name (En)"
                   />
                 </div>
@@ -205,7 +207,7 @@ export default function CustomerForm() {
                     {...methods.register("last_name_ar")}
                     error={!!methods.formState.errors.last_name_ar}
                     hint={methods.formState.errors.last_name_ar?.message}
-                    icon={<Info className="w-4 h-4" />}
+                    icon={<Type className="w-4 h-4" />}
                     placeholder="Please Enter Your Last Name (Ar)"
                   />
                 </div>
@@ -220,6 +222,7 @@ export default function CustomerForm() {
                   hint={methods.formState.errors.email?.message}
                   placeholder="contact@example.com"
                   icon={<Mail className="w-4 h-4" />}
+                  className="dark:bg-gray-900"
                 />
               </div>
 

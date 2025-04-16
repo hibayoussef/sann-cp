@@ -9,6 +9,7 @@ import {
   useFetchOrganizations,
   useUpdateOrganization,
 } from "@/hooks/settings/useOrganizations";
+import { CalenderIcon } from "@/icons";
 import { FileType } from "@/types/enums/attatchementType";
 import {
   Boxes,
@@ -32,6 +33,7 @@ export const OrganizationForm = () => {
 
   const {
     register,
+      watch,
     handleSubmit,
     reset,
   } = useForm({
@@ -138,6 +140,18 @@ export const OrganizationForm = () => {
   //   formData.append("_method", "PUT");
   //   updateOrganization({ id: organizationData?.id, data: formData });
   // };
+ 
+  const formatDateForInput = (dateString: string | null | undefined) => {
+    if (!dateString || dateString === "null" || dateString === "undefined")
+      return "";
+
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime()) ? "" : date.toISOString().split("T")[0];
+    } catch {
+      return "";
+    }
+  };
 
   const onSubmit = (data: any) => {
     const formData = new FormData();
@@ -230,7 +244,7 @@ export const OrganizationForm = () => {
             </div>
 
             <div className="md:col-span-2 mt-2">
-              <h3 className="text-xs font-semibold text-gray-700 mb-1">
+              <h3 className="text-xs font-semibold text-gray-700 mb-1 dark:text-gray-500 ">
                 Currency Settings
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -267,12 +281,12 @@ export const OrganizationForm = () => {
             </div>
 
             <div className="md:col-span-2 mt-2">
-              <h3 className="text-xs font-semibold text-gray-700 mb-1">
+              <h3 className="text-xs font-semibold text-gray-700 mb-1  dark:text-gray-500">
                 Time Zone
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 <Input
-                  className="text-xs h-9"
+                  className="text-xs h-9 dark:border-gray-700"
                   readOnly
                   {...register("time_zone")}
                   value={
@@ -348,6 +362,8 @@ export const OrganizationForm = () => {
                 type="date"
                 className="text-xs h-9"
                 {...register("subscription.start_date")}
+                 value={formatDateForInput(watch("subscription.start_date"))}
+                icon={<CalenderIcon className="w-4 h-4" />}
               />
             </div>
 
@@ -359,6 +375,8 @@ export const OrganizationForm = () => {
                 type="date"
                 className="text-xs h-9"
                 {...register("subscription.end_date")}
+                  value={formatDateForInput(watch("subscription.end_date"))}
+                icon={<CalenderIcon className="w-4 h-4" />}
               />
             </div>
           </div>

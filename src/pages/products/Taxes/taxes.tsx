@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { taxColumns } from "@/columns/products/tax";
 import { useFetchTaxes } from "@/hooks/prouducts/useTaxes";
 import { usePermissions } from "@/hooks/usePermissions";
-import { ReceiptText } from "lucide-react";
+import { Wallet2 } from "lucide-react";
 
 export default function Taxes() {
   const { data } = useFetchTaxes();
@@ -27,7 +27,7 @@ export default function Taxes() {
         <PageBreadcrumb
           baseTitle={t("dashboard")}
           pageTitle={t("taxes")}
-          icon={<ReceiptText className="w-5 h-5" />}
+          icon={<Wallet2 className="w-5 h-5" />}
         />
 
         <div className="space-y-4 pt-1">

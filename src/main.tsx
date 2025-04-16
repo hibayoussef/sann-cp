@@ -20,6 +20,13 @@ const queryClient = new QueryClient({
   },
 });
 
+function preventIframeEmbedding() {
+  if (window.top !== window.self) {
+    window.top!.location.href = window.location.href;
+  }
+}
+
+preventIframeEmbedding();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Router>

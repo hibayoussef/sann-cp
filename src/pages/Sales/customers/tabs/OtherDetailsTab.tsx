@@ -9,17 +9,15 @@ import { CountriesData, CurrencyResponse } from "@/types/common";
 import { IBranch } from "@/types/settings/branches";
 import { IPaymentTerm } from "@/types/settings/payment_term";
 import {
-  Building2,
-  CalendarDays,
   CreditCard,
   Flag,
   Languages,
   Lock,
-  Wallet,
+  Wallet
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { IoSwapHorizontal } from "react-icons/io5";
+import { IoDocumentText, IoGitBranch, IoSwapHorizontal } from "react-icons/io5";
 
 const isFieldRequired = (fieldName: keyof CustomerType): boolean => {
   const schemaShape = customerSchema.shape;
@@ -211,7 +209,7 @@ export const OtherDetailsTab = ({
             error={errors.branch_id?.message}
             onChange={(value) => handleSelectChange("branch_id", value)}
             isRequired={isFieldRequired("branch_id")}
-            icon={<Building2 className="w-4 h-4" />}
+            icon={<IoGitBranch className="w-4 h-4" />}
           />
         </div>
 
@@ -225,7 +223,7 @@ export const OtherDetailsTab = ({
             error={errors.payment_term_id?.message}
             onChange={(value) => handleSelectChange("payment_term_id", value)}
             isRequired={isFieldRequired("payment_term_id")}
-            icon={<CalendarDays className="w-4 h-4" />}
+            icon={<IoDocumentText  className="w-4 h-4" />}
           />
         </div>
 

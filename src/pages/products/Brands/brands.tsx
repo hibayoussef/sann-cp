@@ -1,7 +1,7 @@
 import { brandColumns } from "@/columns/products/brand";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { usePermissions } from "@/hooks/usePermissions";
-import { Tag } from "lucide-react";
+import { Tags } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../components/common/PageMeta";
@@ -24,7 +24,7 @@ export default function Brands() {
         <PageBreadcrumb
           baseTitle={t("dashboard")}
           pageTitle={t("brands")}
-          icon={<Tag className="w-5 h-5" />}
+          icon={<Tags className="w-5 h-5 " />}
         />
 
         <div className="space-y-4 pt-1">

@@ -31,6 +31,7 @@ export default function Warranties() {
 
         <div className="space-y-4 pt-1">
           <DataTable
+            tableName="Warranties"
             columns={warrantyColumns({
               update: hasPermission("update", "warranties"),
               delete: hasPermission("delete", "warranties"),
@@ -42,6 +43,7 @@ export default function Warranties() {
               update: hasPermission("update", "warranties"),
               delete: hasPermission("delete", "warranties"),
             }}
+            // searchColumns={['warranty_name_en']} 
           />
         </div>
       </div>

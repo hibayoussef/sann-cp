@@ -5,13 +5,19 @@ import SecuritySettings from "@/components/auth/securitySettings";
 import SettingsLayout from "@/layout/SettingsLayout";
 import ShouldBeLogged from "@/middleware/shouldBeLogged";
 import ShouldNotBeLogged from "@/middleware/shouldNotBeLogged";
+import MapSettings from "@/pages/Accountant/MapSettings/MapSettings";
+import CreateMapSettings from "@/pages/Accountant/MapSettings/createMapSettings";
+import MfaVerification from "@/pages/AuthPages/2FaVerification";
 import SignOtp from "@/pages/AuthPages/SignOtp";
+import ContactForm from "@/pages/Sales/ContactForm";
 import CreateCustomer from "@/pages/Sales/customers/createCustomer";
 import Customers from "@/pages/Sales/customers/customers";
+import CustomersLayout from "@/pages/Sales/customers/customersLayout";
 import UpdateCustomer from "@/pages/Sales/customers/updateCustomer";
 import CreateVendor from "@/pages/Sales/vendors/createVendor";
 import UpdateVendor from "@/pages/Sales/vendors/updateVendor";
 import Vendors from "@/pages/Sales/vendors/vendors";
+import VendorsLayout from "@/pages/Sales/vendors/vendorsLayout";
 import Settings from "@/pages/Settings/Settings";
 import AccountForm from "@/pages/Settings/accounts/accountForm";
 import AccountLayout from "@/pages/Settings/accounts/accountLayout";
@@ -30,8 +36,10 @@ import SubUnits from "@/pages/products/SubUnits/subUnits";
 import CreateTax from "@/pages/products/Taxes/createTax";
 import Taxes from "@/pages/products/Taxes/taxes";
 import Units from "@/pages/products/Units/units";
+import ProductCloneForm from "@/pages/products/products/ProductCloneForm";
 import ProductForm from "@/pages/products/products/productForm";
 import Products from "@/pages/products/products/products";
+import ProductsLayout from "@/pages/products/products/productsLayout";
 import CreateWarranty from "@/pages/products/warranties/createWarranty";
 import Warranties from "@/pages/products/warranties/warranties";
 import { Navigate, Route, Routes } from "react-router";
@@ -55,7 +63,6 @@ import Brands from "../pages/products/Brands/brands";
 import CreateBrand from "../pages/products/Brands/createBrand";
 import CreateCategory from "../pages/products/Categories/createCategory";
 import UnitForm from "../pages/products/Units/unitForm";
-import MfaVerification from "@/pages/AuthPages/2FaVerification";
 
 const RoutesComponent = () => {
   return (
@@ -79,8 +86,10 @@ const RoutesComponent = () => {
           <Route path="/" element={<Home />} />
 
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductsLayout />} />
           <Route path="/products/create" element={<ProductForm />} />
           <Route path="/products/update/:id" element={<ProductForm />} />
+          <Route path="/products/clone/:id" element={<ProductCloneForm />} />
 
           <Route path="/brands" element={<Brands />} />
           <Route path="/brands/create" element={<CreateBrand />} />
@@ -118,13 +127,22 @@ const RoutesComponent = () => {
 
           {/* Sales */}
           <Route path="/customers" element={<Customers />} />
-          <Route path="/customers/:id" element={<CategoriesLayout />} />
+          <Route path="/customers/:id" element={<CustomersLayout />} />
           <Route path="/customers/create" element={<CreateCustomer />} />
           <Route path="/customers/update/:id" element={<UpdateCustomer />} />
+          <Route path="/contacts/clone/:id" element={<ContactForm />} />
           {/* Purchases */}
           <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendors/:id" element={<VendorsLayout />} />
           <Route path="/vendors/create" element={<CreateVendor />} />
           <Route path="/vendors/update/:id" element={<UpdateVendor />} />
+          {/* Accountant */}
+          <Route path="/map-settings" element={<MapSettings />} />
+          <Route path="/map-settings/create" element={<CreateMapSettings />} />
+          <Route
+            path="/map-settings/update/:id"
+            element={<CreateMapSettings />}
+          />
 
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/accounts/:id" element={<AccountLayout />} />

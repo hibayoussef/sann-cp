@@ -8,8 +8,8 @@ import type { ContactType } from "@/types/enums/contactType";
 // FETCH CONTACTS
 export const useFetchContacts = (type: ContactType) => {
   return useQuery({
-    queryKey: [QueryKeys.CONTACTS, type], 
-    queryFn: () => _ContactsApi.getContacts(type), 
+    queryKey: [QueryKeys.CONTACTS, type],
+    queryFn: () => _ContactsApi.getContacts(type),
   });
 };
 // FETCH CONTACT BY ID
@@ -22,13 +22,12 @@ export const useFetchContact = (id: number, options = {}) => {
   });
 };
 
-// ADD CONTACT
-export const useAddContact = () => {
+export const useAddContact = (type: "customer" | "vendor" = "customer") => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: _ContactsApi.addContact,
     onSuccess: () => {
-      navigate("/customers");
+      navigate(`/${type ? type:"/customer"}s`); 
     },
   });
 };
@@ -55,6 +54,20 @@ export const useDeleteContact = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: _ContactsApi.deleteContact,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.CONTACTS],
+      });
+    },
+  });
+};
+
+// ENABLE PORTAL ACCESS
+export const useEnablePortalAccess = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { contactId: number; portalAccess: number }) =>
+      _ContactsApi.enablePortalAccess(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.CONTACTS],

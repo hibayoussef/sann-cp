@@ -4,7 +4,7 @@ import PageMeta from "@/components/common/PageMeta";
 import { DataTable } from "@/components/ui/table-data/table-data";
 import { useFetchPaymentTerms } from "@/hooks/settings/usePaymentTerm";
 import { usePermissions } from "@/hooks/usePermissions";
-import { GitBranch } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function PaymentTerm() {
@@ -24,7 +24,7 @@ export default function PaymentTerm() {
         <PageBreadcrumb
           baseTitle={t("settings")}
           pageTitle="Payment Term"
-          icon={<GitBranch className="w-5 h-5 " />}
+          icon={<Settings className="w-5 h-5 " />}
         />
         <div className="space-y-4 pt-1">
           <DataTable

@@ -1,3 +1,4 @@
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,121 +8,282 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useFetchCategories } from "@/hooks/prouducts/useCategories";
-import { Home, MoreVertical, Plus } from "lucide-react";
+import { useFetchContacts } from "@/hooks/sales/contacts";
+import { ContactType } from "@/types/enums/contactType";
+import { Home, MoreVertical, Plus, User } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import CategoryDetails from "./customerDetails";
-import ComponentCardDetails from "@/components/common/ComponentCardDetails";
-import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-
+import { useNavigate, useParams } from "react-router";
+import VendorDetails from "./vendorDetails";
+import * as XLSX from "xlsx";
+import * as Papa from "papaparse";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 export default function VendorsLayout() {
-  const { data } = useFetchCategories();
-  const categories: any = data || [];
+  const { data } = useFetchContacts(ContactType.VENDOR);
+  const customers = data || [];
   const navigate = useNavigate();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
+  const { id } = useParams();
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(
+    +id! || null
   );
+  //  const excludedExportColumns = ['actions'];
+  const tableName = 'Vendors'; 
+   const getCustomerExportData = () => {
+    return customers.map(customer => ({
+      'Full Name (EN)': customer.full_name_en || '',
+      
+      'Email': customer.email || '',
+      
+      'Mobile': customer.mobile || '',
+      'Branch': customer.branch_id || '',
+      
+    }));
+  };
 
-  // Export handlers
   const handleExportCSV = () => {
-    console.log("Exporting to CSV...");
-    // Add CSV export logic here
+    try {
+      const exportData = getCustomerExportData();
+      const csv = Papa.unparse(exportData);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${tableName}_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+    } catch (error) {
+      console.error("Error exporting CSV:", error);
+    }
   };
 
   const handleExportExcel = () => {
-    console.log("Exporting to Excel...");
-    // Add Excel export logic here
+    try {
+      const exportData = getCustomerExportData();
+      const ws = XLSX.utils.json_to_sheet(exportData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Customers");
+      XLSX.writeFile(wb, `${tableName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    } catch (error) {
+      console.error("Error exporting Excel:", error);
+    }
+  };
+
+  const handleExportPDF = () => {
+    try {
+      const doc = new jsPDF();
+      const exportData = getCustomerExportData();
+      
+      const headers = Object.keys(exportData[0]);
+      const data = exportData.map(item => Object.values(item));
+
+      doc.text(`${tableName} `, 14, 16);
+
+      autoTable(doc, {
+        head: [headers],
+        body: data,
+        startY: 20,
+        styles: {
+          fontSize: 9,
+          cellPadding: 3,
+          overflow: 'linebreak'
+        },
+        headStyles: {
+          fillColor: [70, 95, 255],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245],
+        },
+        margin: { top: 20 },
+      });
+
+      doc.save(`${tableName}_${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+    }
+  };
+
+  const handlePrint = () => {
+    try {
+      const exportData = getCustomerExportData();
+      const headers = Object.keys(exportData[0]);
+      const data = exportData.map(item => Object.values(item));
+
+      const printContent = `
+        <html>
+          <head>
+            <title>Print ${tableName}</title>
+            <style>
+              @page { size: auto; margin: 10mm; }
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              h1 { color: #333; text-align: center; margin-bottom: 20px; }
+              table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
+              th { 
+                background-color: #465FFF !important; 
+                color: white !important; 
+                text-align: left; 
+                padding: 8px; 
+                border: 1px solid #ddd; 
+                font-weight: bold;
+              }
+              td { padding: 6px; border: 1px solid #ddd; }
+              tr:nth-child(even) { background-color: #f9f9f9; }
+              @media print {
+                body { margin: 0; padding: 0; }
+                .no-print { display: none !important; }
+                th { 
+                  -webkit-print-color-adjust: exact !important;
+                  print-color-adjust: exact !important;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <h1>${tableName}</h1>
+            <table>
+              <thead>
+                <tr>
+                  ${headers.map(header => `<th>${header}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${data.map(row => `
+                  <tr>
+                    ${row.map(cell => `<td>${cell}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+            <div class="no-print" style="margin-top: 20px; text-align: center; font-size: 11px; color: #777;">
+              Printed on ${new Date().toLocaleString()}
+            </div>
+          </body>
+        </html>
+      `;
+
+      const printWindow = window.open("", "_blank");
+      if (printWindow) {
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        printWindow.focus();
+        
+        setTimeout(() => {
+          printWindow.print();
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Error printing:", error);
+    }
   };
 
   return (
-    <>
-      <div className="py-4">
+    <div className="bg-gray-50 min-h-screen  dark:bg-gray-900  dark:text-gray-500 ">
         <PageBreadcrumb
           baseTitle="Dashboard"
-          pageTitle="Categories"
+          pageTitle="Vendors"
           icon={<Home className="w-5 h-5" />}
         />
-        <div className="py-4">
-          <ComponentCardDetails
-            title="Categories Management"
-            className="h-full"
-          >
-            <div className="grid grid-cols-5 gap-4 h-[calc(100vh-180px)]">
-              {/* Categories List Section */}
-              <div className="col-span-1 overflow-y-auto  border-r border-gray-100 flex flex-col">
-                {/* Header Section */}
-                <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                  <h3 className="text-sm px-4 font-semibold">All</h3>
-                  <div className="flex items-center  gap-2">
-                    <Button
-                      variant="outline"
-                      className="h-8 px-2 bg-[#465FFF] text-white hover:bg-[#465FFF]/90"
-                      onClick={() => navigate("/categories/create")}
-                    >
-                      <Plus className="h-4 w-4 mr-1" />
-                      <span className="text-xs">New</span>
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="h-8 w-8 p-0 hover:bg-gray-100"
-                        >
-                          <MoreVertical className="h-4 w-4 text-gray-600" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-[200px] bg-white shadow-md border border-gray-200"
-                      >
-                        <DropdownMenuLabel>Export Options</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleExportCSV}>
-                          Export by CSV
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleExportExcel}>
-                          Export by Excel
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
+        
+        <div className="mt-1 bg-white rounded-xl shadow-sm border  dark:bg-gray-900  dark:text-gray-500 border-gray-200 overflow-hidden">
+         <div className="flex flex-col md:flex-row h-[calc(100vh-120px)]">
 
-                {/* Categories List */}
-                <div className="flex-1">
-                  {categories?.map((category: any) => (
-                    <div key={category.id} className="relative">
-                      <div
-                        onClick={() => setSelectedCategoryId(category.id)}
-                        className={`px-7 py-2 cursor-pointer text-[13px] transition-colors
-                        ${
-                          selectedCategoryId === category.id
-                            ? "bg-blue-100 text-blue-600 font-medium"
-                            : "hover:bg-gray-50"
-                        }`}
+            {/* Sidebar */}
+            <div className="hidden md:flex w-60 border-r  dark:bg-gray-900  dark:text-gray-500 border-gray-100 flex-col">
+
+              <div className="p-4 border-b dark:bg-gray-900  dark:text-gray-500 border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 className="font-medium dark:text-gray-500 text-gray-800  text-[15px]">Vendors</h3>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="h-8 bg-[#465FFF] hover:bg-[#465FFF]/90 text-white"
+                    onClick={() => navigate("/vendors/create")}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    New
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="h-8 w-8 p-0 hover:bg-gray-100"
                       >
-                        {category.category_name_en}
-                      </div>
-                      {/* <span className={`px-7 py-2 cursor-pointer text-[13px] transition-colors`} style={{color: "green"}}>{category?.code}</span> */}
-                      <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-200 shadow-md" />
-                    </div>
-                  ))}
+                        <MoreVertical className="h-4 w-4 text-gray-600" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[200px]  dark:bg-gray-900  dark:text-gray-500">
+                      <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                     <DropdownMenuItem onClick={handleExportCSV} className="dark:hover:bg-gray-800 ">
+                        Export as CSV
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleExportExcel} className="dark:hover:bg-gray-800">
+                        Export as Excel
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportPDF} className="dark:hover:bg-gray-800">
+                        Export as PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handlePrint} className="dark:hover:bg-gray-800">
+                        Print
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
-              {/* Category Details Section */}
-              <div className="col-span-4 py-5 px-4 overflow-y-auto">
-                {selectedCategoryId ? (
-                  <CategoryDetails categoryId={selectedCategoryId} />
-                ) : (
-                   <CategoryDetails categoryId={Number(selectedCategoryId)} />
-                )}
+              <div className="flex-1 overflow-y-auto">
+                {customers?.map((customer: any) => (
+                  <div 
+                    key={customer.id}
+                    onClick={() => {
+                      setSelectedCustomerId(customer.id);
+                      navigate(`/vendors/${customer.id}`);
+                    }}
+                    className={`p-3 border-b border-gray-100 cursor-pointer   dark:bg-gray-900  dark:text-gray-500 transition-colors ${
+                      selectedCustomerId === customer.id 
+                        ? 'bg-blue-50 border-l-4 border-l-blue-500   dark:bg-gray-600' 
+                        : 'hover:bg-gray-50  dark:bg-gray-600'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        customer.contact_type === 'business' 
+                          ? 'bg-purple-100 text-purple-600' 
+                          : 'bg-blue-100 text-blue-600'
+                      }`}>
+                        <User className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 text-[14px]   dark:text-gray-500">
+                          {customer.full_name_en || customer.organization_name_en}
+                        </h4>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {customer.contact_type === 'business' ? 'Business' : 'Individual'} • {customer.balance} AED
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </ComponentCardDetails>
-        </div>{" "}
-      </div>
-    </>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-auto px-4 py-6">
+
+              {selectedCustomerId ? (
+                <VendorDetails vendorId={selectedCustomerId} />
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center p-8">
+                  <div className="bg-gray-100 p-6 rounded-full mb-4">
+                    <User className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-medium text-gray-900">No customer selected</h3>
+                  <p className="text-gray-500 mt-2 max-w-md">
+                    Select a customer from the list to view detailed information
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+    </div>
   );
 }

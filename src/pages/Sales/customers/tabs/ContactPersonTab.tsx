@@ -14,10 +14,8 @@ import {
   Plus,
   PlusCircle,
   Trash2,
-  User,
-  UserCheck,
-  UserCircle,
-  X,
+  Type,
+  X
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -53,6 +51,7 @@ const ContactPersonTab = () => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "contact_persons",
+      keyName: "keyId"
   });
 
   console.log("fieeee: ", fields);
@@ -107,6 +106,7 @@ const ContactPersonTab = () => {
 
   const handleAddNewContact = () => {
     const newContact = {
+           id: null,
       salutation_ar: "",
       salutation_en: "",
       full_name_ar: "",
@@ -155,7 +155,7 @@ const ContactPersonTab = () => {
 
         return (
           <div
-            key={field.id}
+            key={field?.id}
             className={`grid grid-cols-1 md:grid-cols-2 gap-6 border p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm relative ${
               isPendingContact ? "border-2 border-blue-500" : ""
             }`}
@@ -195,7 +195,7 @@ const ContactPersonTab = () => {
                   error={!!fieldErrors?.first_name_en}
                   hint={fieldErrors?.first_name_en?.message}
                   placeholder="Enter first name in English"
-                  icon={<UserCircle className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
 
@@ -204,7 +204,7 @@ const ContactPersonTab = () => {
                 <Input
                   {...register(`contact_persons.${index}.first_name_ar`)}
                   placeholder="Enter first name in Arabic"
-                  icon={<UserCircle className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               {/* <div className="space-y-2">
@@ -304,7 +304,7 @@ const ContactPersonTab = () => {
                     No social media accounts added
                   </div>
                 ) : (
-                  socialMedia.map((socialField: any, socialIndex) => (
+                  socialMedia.map((socialField: any, socialIndex: any) => (
                     <div
                       key={socialIndex}
                       className="flex gap-2 items-center mb-2 animate-fade-in"
@@ -352,7 +352,7 @@ const ContactPersonTab = () => {
                   error={!!fieldErrors?.last_name_en}
                   hint={fieldErrors?.last_name_en?.message}
                   placeholder="Enter last name in English"
-                  icon={<User className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div className="space-y-2">
@@ -360,7 +360,7 @@ const ContactPersonTab = () => {
                 <Input
                   {...register(`contact_persons.${index}.last_name_ar`)}
                   placeholder="Enter last name in Arabic"
-                  icon={<UserCheck className="w-4 h-4" />}
+                  icon={<Type className="w-4 h-4" />}
                 />
               </div>
               <div className="space-y-2">

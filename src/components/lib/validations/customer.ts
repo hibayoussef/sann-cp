@@ -8,12 +8,21 @@ const contactDetailsSchema = z.object({
   profession: z.string().optional().nullable(),
   designation: z.string().optional().nullable(),
   social_media: z
-    .array(
-      z.object({
-        platform: z.string().optional().nullable(),
-        url: z.string().optional().nullable(),
-      })
-    )
+    .union([
+      z.string().transform((str) => {
+        try {
+          return JSON.parse(str);
+        } catch {
+          return [];
+        }
+      }),
+      z.array(
+        z.object({
+          platform: z.string().optional(),
+          url: z.string().optional(),
+        })
+      ),
+    ])
     .optional()
     .nullable(),
   id_issued_date: z.string().optional().nullable(),
@@ -28,47 +37,78 @@ const contactDetailsSchema = z.object({
   ),
   driving_license_number: z.string().optional().nullable(),
   // driving_license_issued_by: z.string().optional().nullable(),
-  driving_license_issued_by: z.preprocess(
-    (val) => String(val),
-    z.string().optional()
-  ),
+  // driving_license_issued_by: z.preprocess(
+  //   (val) => String(val),
+  //   z.string().optional()
+  // ),
   driving_license_issued_date: z.string().optional().nullable(),
   driving_license_expiry_date: z.string().optional().nullable(),
   home_address: z.string().optional().nullable(),
   work_address: z.string().optional().nullable(),
   p_o_box: z.string().optional().nullable(),
-  billing_address_attention: z.string().optional().nullable(),
-  billing_address_country_id: z.preprocess(
-    (val) => String(val),
+  // driving_license_issued_by: z.preprocess(
+  //   (val) => (val === "undefined" ? undefined : val),
+  //   z.string().optional().nullable()
+  // ),
+  driving_license_issued_by: z.preprocess(
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
     z.string().optional().nullable()
   ),
+  billing_address_country_id: z.preprocess(
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
+    z.string().optional().nullable()
+  ),
+
+  billing_address_country_state_id: z.preprocess(
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
+    z.string().optional().nullable()
+  ),
+  shipping_address_country_id: z.preprocess(
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
+    z.string().optional().nullable()
+  ),
+  shipping_address_country_state_id: z.preprocess(
+    (val) =>
+      val === "undefined" || val === undefined ? undefined : String(val),
+    z.string().optional().nullable()
+  ),
+  billing_address_attention: z.string().optional().nullable(),
+  // billing_address_country_id: z.preprocess(
+  //   (val) => String(val),
+  //   z.string().optional()
+  // ),
   billing_address_street_1: z.string().optional().nullable(),
   billing_address_street_2: z.string().optional().nullable(),
   billing_address_city: z.string().optional().nullable(),
-  billing_address_country_state_id: z.preprocess(
-    (val) => String(val),
-    z.string().optional().nullable()
-  ),
+  // billing_address_country_state_id: z.preprocess(
+  //   (val) => String(val),
+  //   z.string().optional()
+  // ),
   billing_address_zip_code: z.string().optional().nullable(),
   billing_address_phone: z.string().optional().nullable(),
   billing_address_fax_number: z.string().optional().nullable(),
   shipping_address_attention: z.string().optional().nullable(),
-  shipping_address_country_id: z.preprocess(
-    (val) => String(val),
-    z.string().optional().nullable()
-  ),
+  // shipping_address_country_id: z.preprocess(
+  //   (val) => String(val),
+  //   z.string().optional()
+  // ),
   shipping_address_street_1: z.string().optional().nullable(),
   shipping_address_street_2: z.string().optional().nullable(),
   shipping_address_city: z.string().optional().nullable(),
-  shipping_address_country_state_id: z.preprocess(
-    (val) => String(val),
-    z.string().optional().nullable()
-  ),
+  // shipping_address_country_state_id: z.preprocess(
+  //   (val) => String(val),
+  //   z.string().optional()
+  // ),
   shipping_address_zip_code: z.string().optional().nullable(),
   shipping_address_fax_number: z.string().optional().nullable(),
 });
 
 const contactPersonSchema = z.object({
+  id: z.number().nullable(),
   salutation_ar: z.string().optional().nullable(),
   salutation_en: z.string().optional().nullable(),
   full_name_ar: z.string().optional().nullable(),
@@ -81,13 +121,23 @@ const contactPersonSchema = z.object({
   department: z.string().optional().nullable(),
   designation: z.string().optional().nullable(),
   social_media: z
-    .array(
-      z.object({
-        platform: z.string().optional().nullable(),
-        url: z.string().optional().nullable(),
-      })
-    )
-    .optional(),
+    .union([
+      z.string().transform((str) => {
+        try {
+          return JSON.parse(str);
+        } catch {
+          return [];
+        }
+      }),
+      z.array(
+        z.object({
+          platform: z.string().optional(),
+          url: z.string().optional(),
+        })
+      ),
+    ])
+    .optional()
+    .nullable(),
 });
 
 export const customerSchema = z.object({
@@ -133,6 +183,7 @@ export const customerSchema = z.object({
   portal_language: z.enum(["en", "ar"]).default("en").optional().nullable(),
   first_name_ar: z.string().optional().nullable(),
   last_name_ar: z.string().optional().nullable(),
+  // contact_details: z.object({}).optional(),
   contact_details: contactDetailsSchema.optional(),
   contact_persons: z.array(contactPersonSchema).optional().nullable(),
 });

@@ -14,6 +14,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import { useMeStore } from "../../../store/useMeStore";
+import Loader from "@/components/ui/loader/loader";
 
 export default function UnitForm() {
   const { id } = useParams();
@@ -58,13 +59,15 @@ export default function UnitForm() {
     name: "sub_units",
   });
 
+
+  
   useEffect(() => {
     if (unitData) {
       setValue("unit_name_en", unitData.unit_name_en ?? "");
       setValue("unit_name_ar", unitData.unit_name_ar ?? "");
       setValue("short_name_en", unitData.short_name_en ?? "");
       setValue("short_name_ar", unitData.short_name_ar ?? "");
-      setValue("allow_decimal", unitData.allow_decimal ?? 0);
+      setValue("allow_decimal", unitData?.allow_decimal ?? 0);
       setValue("multiplier", unitData.multiplier ?? 0);
       // setValue("sub_units", unitData.sub_units ?? []);
     }
@@ -102,7 +105,7 @@ export default function UnitForm() {
 
       <ComponentCard title={isUpdate ? "Update Unit" : "Create Unit"}>
         {isUpdate && isLoading ? (
-          <p>Loading unit data...</p>
+          <Loader />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6">

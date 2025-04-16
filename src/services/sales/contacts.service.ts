@@ -7,7 +7,7 @@ import type { IContact } from "@/types/sales/contact";
 export const _ContactsApi = {
   // GET ALL CONTACTS
   getContacts: async (type: ContactType) => {
-    const response = await _axios.get<AxiosResponse<{ contacts: IContact[] }>>(
+    const response = await _axios.get<AxiosResponse<IContact[]>>(
       `/settings/contacts?type=${type}`
     );
     return response?.data?.data;
@@ -43,6 +43,18 @@ export const _ContactsApi = {
   deleteContact: async (id: string) => {
     const response = await _axios.delete<AxiosResponse<{ success: boolean }>>(
       `/settings/contacts/${id}`
+    );
+    return response.data.data.success;
+  },
+
+  // ENABLE PORTAL ACCESS FOR A CONTACT
+  enablePortalAccess: async (data: {
+    contactId: number;
+    portalAccess: number;
+  }) => {
+    const response = await _axios.post<AxiosResponse<{ success: boolean }>>(
+      `/settings/contacts/${data.contactId}/portal-access`,
+      { portal_access: data.portalAccess } 
     );
     return response.data.data.success;
   },
